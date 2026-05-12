@@ -1,0 +1,8304 @@
+[
+  {
+    "category": "PLA",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA-BK-1KG",
+    "stock": 1225,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA-WT-1KG",
+    "stock": 1022,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA-GY-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLA-RD-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "蓝",
+    "store_sku": "克莱因蓝",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明",
+    "store_sku": "DLZ-UK-SL-PLA-TP-1KG",
+    "stock": 231,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "橙色",
+    "store_sku": "DLZ-UK-SL-PLA-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "银色",
+    "store_sku": "DLZ-UK-SL-PLA-SV-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "咖啡色",
+    "store_sku": "DLZ-UK-SL-PLA-CO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "黄色",
+    "store_sku": "DLZ-UK-SL-PLA-YL-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PLA-GN-1KG",
+    "stock": 10,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "草绿",
+    "store_sku": "DLZ-UK-SL-PLA-GG-1KG",
+    "stock": 8,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "肤色",
+    "store_sku": "DLZ-UK-SL-PLA-SK-1KG",
+    "stock": 17,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "金色",
+    "store_sku": "DLZ-UK-SL-PLA-GD-1KG",
+    "stock": 4,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "柠檬黄Lemon Yellow",
+    "store_sku": "DLZ-UK-SL-PLA-LY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "天空蓝",
+    "store_sku": "DLZ-UK-SL-PLA-SB-1KG",
+    "stock": 7,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "紫色",
+    "store_sku": "薰衣草紫",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-UK-SL-PLA-PP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-PLA-SO-1KG",
+    "stock": 107,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "青色",
+    "store_sku": "DLZ-UK-SL-PLA-CY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLA-OG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-UK-SL-PLA-MG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "樱桃红",
+    "store_sku": "DLZ-UK-SL-PLA-CR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "樱花粉",
+    "store_sku": "DLZ-UK-SL-PLA-SP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "咖棕色",
+    "store_sku": "DLZ-UK-SL-PLA-CBN-1KG",
+    "stock": 10,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "瓷白色",
+    "store_sku": "DLZ-UK-SL-PLA-CM-1KG",
+    "stock": 40,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "骨白色",
+    "store_sku": "DLZ-UK-SL-PLA-BWT-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-UK-SL-PLA-MN-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "栗黑",
+    "store_sku": "DLZ-UK-SL-PLA-RCN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "明黄色",
+    "store_sku": "DLZ-UK-SL-PLA-VY-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "橡木色",
+    "store_sku": "DLZ-UK-SL-PLA-OK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明红",
+    "store_sku": "DLZ-UK-SL-PLA-TRD2-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明绿",
+    "store_sku": "DLZ-UK-SL-PLA-TG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明蓝",
+    "store_sku": "DLZ-UK-SL-PLA-TB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明黄",
+    "store_sku": "DLZ-UK-SL-PLA-TY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明紫",
+    "store_sku": "DLZ-UK-SL-PLA-TPP2-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "透明橙",
+    "store_sku": "DLZ-UK-SL-PLA-TO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLA-BL-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "巧克力",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "PLA 拓竹黑色",
+    "store_sku": "DLZ-UK-SL-PLAYG-BK-1KG-TZ",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "紫色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "蓝色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "黄色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "红色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "橙色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+-BK-1KG",
+    "stock": 2631,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+-WT-1KG",
+    "stock": 1525,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+-GY-1KG",
+    "stock": 162,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLA+-RD-1KG",
+    "stock": 5,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "蓝",
+    "store_sku": "克莱因蓝",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "黄",
+    "store_sku": "DLZ-UK-SL-PLA+-YL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PLA+-GN-1KG",
+    "stock": 20,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "橙",
+    "store_sku": "DLZ-UK-SL-PLA+-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "银",
+    "store_sku": "DLZ-UK-SL-PLA+-SV-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "樱花粉Sakura Pink",
+    "store_sku": "DLZ-UK-SL-PLA+-SP-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "阳光橙Sunny Orange",
+    "store_sku": "DLZ-UK-SL-PLA+-SO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "樱桃红Cherry Red",
+    "store_sku": "DLZ-UK-SL-PLA+-CR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "薄荷绿Mint Green",
+    "store_sku": "DLZ-UK-SL-PLA+-MG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "柠檬黄Lemon Yellow",
+    "store_sku": "DLZ-UK-SL-PLA+-LY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "天空蓝",
+    "store_sku": "DLZ-UK-SL-PLA+-SB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "草绿",
+    "store_sku": "DLZ-UK-SL-PLA+-GG-1KG",
+    "stock": 22,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "肤色",
+    "store_sku": "DLZ-UK-SL-PLA+-SK-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "金色",
+    "store_sku": "DLZ-UK-SL-PLA+-GD-1KG",
+    "stock": 4,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "紫色",
+    "store_sku": "薰衣草紫",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-UK-SL-PLA+-PP-1KG",
+    "stock": 93,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "紫红",
+    "store_sku": "DLZ-UK-SL-PLA+-FS-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLA+-OG-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明蓝",
+    "store_sku": "DLZ-UK-SL-PLA+-TPBL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明红",
+    "store_sku": "DLZ-UK-SL-PLA+-TPRD-1KG",
+    "stock": 407,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明绿",
+    "store_sku": "DLZ-UK-SL-PLA+-TPGN-1KG",
+    "stock": 402,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLA+-BL-1KG",
+    "stock": 8,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "品红色（紫红",
+    "store_sku": "DLZ-UK-SL-PLA+-MAG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明",
+    "store_sku": "DLZ-UK-SL-PLA+-TP-1KG",
+    "stock": 8,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "瓷白色",
+    "store_sku": "DLZ-UK-SL-PLA+-CM-1KG",
+    "stock": 45,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "骨白色",
+    "store_sku": "DLZ-UK-SL-PLA+-BWT-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-UK-SL-PLA+-MN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "栗黑",
+    "store_sku": "DLZ-UK-SL-PLA+-RCN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "明黄色",
+    "store_sku": "DLZ-UK-SL-PLA+-VY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "橡木色",
+    "store_sku": "DLZ-UK-SL-PLA+-OK-1KG",
+    "stock": 53,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明黄",
+    "store_sku": "DLZ-UK-SL-PLA+-TPYL-1KG",
+    "stock": 10,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明紫",
+    "store_sku": "DLZ-UK-SL-PLA+-TPPP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明橙",
+    "store_sku": "DLZ-UK-SL-PLA+-TPOR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+V2-BK-1KG",
+    "stock": 251,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+V2-WT-1KG",
+    "stock": 667,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+V2-GY-1KG",
+    "stock": 146,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "蓝",
+    "store_sku": "克莱因蓝",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "正黄",
+    "store_sku": "明黄色",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橙色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-PLA+V2-SO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "蓝灰",
+    "store_sku": "DLZ-UK-SL-PLA+V2-BG-1KG",
+    "stock": 8,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLA+V2-RD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PLA+V2-GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "紫红色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-FS-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "银色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-SV-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "金色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-GD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLA+V2-BL-1KG",
+    "stock": 19,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "明黄色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-PY-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "咖棕色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-CBN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "瓷白色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-CM-1KG",
+    "stock": 240,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "骨白色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-BWT-1KG",
+    "stock": 54,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-UK-SL-PLA+V2-MN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "栗黑",
+    "store_sku": "DLZ-UK-SL-PLA+V2-RCN-1KG",
+    "stock": 122,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橡木色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-OK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "青色",
+    "store_sku": "DLZ-UK-SL-PLA+V2-CY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-UK-SL-PLA+V2-LP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLA+V2-OG-1KG",
+    "stock": 5,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLAMT-BK-1KG",
+    "stock": 247,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLAMT-WT-1KG",
+    "stock": 493,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLAMT-GY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "樱桃红=红(旧)",
+    "store_sku": "DLZ-UK-SL-PLAMT-RD-1KG",
+    "stock": 74,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "天空蓝=蓝(旧)",
+    "store_sku": "DLZ-UK-SL-PLAMT-BL-1KG",
+    "stock": 18,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "柠檬黄=黄(旧)",
+    "store_sku": "DLZ-UK-SL-PLAMT-YL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "薄荷绿=绿(旧)",
+    "store_sku": "DLZ-UK-SL-PLAMT-GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "巧克力",
+    "store_sku": "DLZ-UK-SL-PLAMT-CC-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "香芋紫",
+    "store_sku": "DLZ-UK-SL-PLAMT-TOP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "奶油白",
+    "store_sku": "DLZ-UK-SL-PLAMT-CW-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLAMT-OG-1KG",
+    "stock": 5,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-PLAMT-SO-1KG",
+    "stock": 163,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "冰蓝",
+    "store_sku": "DLZ-UK-SL-PLAMT-IB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA META",
+    "color": "苹果绿",
+    "store_sku": "DLZ-UK-SL-PLAMT-AG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLAYG-BK-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLAYG-WT-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLAYG-GY-1KG",
+    "stock": 104,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLAYG-RD-1KG",
+    "stock": 116,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-PLAYG-BL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PLAYG-GN-1KG",
+    "stock": 228,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "粉色",
+    "store_sku": "DLZ-UK-SL-PLAYG-PK-1KG",
+    "stock": 4,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "陶泥色",
+    "store_sku": "DLZ-UK-SL-PLAYG-CA-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "浅蓝色(淡蓝色)",
+    "store_sku": "DLZ-UK-SL-PLAYG-LB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "淡黄色",
+    "store_sku": "DLZ-UK-SL-PLAYG-BY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "紫色",
+    "store_sku": "DLZ-UK-SL-PLAYG-PP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "粉蓝色",
+    "store_sku": "DLZ-UK-SL-PLAYG-PB-1KG",
+    "stock": 18,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLAYG-OG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "黄色",
+    "store_sku": "DLZ-UK-SL-PLAYG-YL-1KG",
+    "stock": 100,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLAYG-KB-1KG",
+    "stock": 582,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-PLAYG-SO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "嫩芽绿",
+    "store_sku": "DLZ-UK-SL-PLAYG-SG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "海盐蓝",
+    "store_sku": "DLZ-UK-SL-PLAYG-OB-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-UK-SL-PLAYG-LP-1KG",
+    "stock": 139,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PETG-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PETG-WT-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PETG-GY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PETG-RD-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-PETG-BL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PETG-KB-1KG",
+    "stock": 83,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PETG-GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明",
+    "store_sku": "DLZ-UK-SL-PETG-TP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "橙",
+    "store_sku": "DLZ-UK-SL-PETG-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "樱桃红",
+    "store_sku": "DLZ-UK-SL-PETG-CR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-UK-SL-PETG-LY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-UK-SL-PETG-MG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-PETG-OG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-PETG-SO-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "咖棕色",
+    "store_sku": "DLZ-UK-SL-PETG-CBN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "瓷白色",
+    "store_sku": "DLZ-UK-SL-PETG-CM-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "骨白色",
+    "store_sku": "DLZ-UK-SL-PETG-BWT-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明黄色",
+    "store_sku": "DLZ-UK-SL-PETG-TPYL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明蓝色",
+    "store_sku": "DLZ-UK-SL-PETG-TPBL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明绿色",
+    "store_sku": "DLZ-UK-SL-PETG-TPGN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明紫色",
+    "store_sku": "DLZ-UK-SL-PETG-TPPP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明红色",
+    "store_sku": "DLZ-UK-SL-PETG-TPRD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "透明橙色",
+    "store_sku": "DLZ-UK-SL-PETG-TPOR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "樱花粉",
+    "store_sku": "DLZ-UK-SL-PETG-SP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "天空蓝",
+    "store_sku": "DLZ-UK-SL-PETG-SB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG",
+    "color": "巧克力",
+    "store_sku": "DLZ-UK-SL-PETG-CC-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-APLA-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "奶油白色",
+    "store_sku": "DLZ-UK-SL-APLA-CW-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-APLA-GY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "浅蓝色",
+    "store_sku": "DLZ-UK-SL-APLA-LB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "深绿色",
+    "store_sku": "DLZ-UK-SL-APLA-DG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-HSPLA-BK-1KG",
+    "stock": 424,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "白色",
+    "store_sku": "DLZ-UK-SL-HSPLA-WT-1KG",
+    "stock": 567,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-HSPLA-RD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-HSPLA-BL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "克莱因蓝",
+    "store_sku": "",
+    "stock": 18,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-HSPLA-GY-1KG",
+    "stock": 101,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-HSPLA-GN-1KG",
+    "stock": 485,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "黄",
+    "store_sku": "DLZ-UK-SL-HSPLA-YL-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "橙",
+    "store_sku": "DLZ-UK-SL-HSPLA-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "阳光橙",
+    "store_sku": "",
+    "stock": 96,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-HSPLA-OG-1KG",
+    "stock": 37,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "珊瑚粉",
+    "store_sku": "DLZ-UK-SL-HSPLA-CP-1KG",
+    "stock": 37,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "摩卡慕斯棕",
+    "store_sku": "DLZ-UK-SL-HSPLA-MM-1KG",
+    "stock": 30,
+    "region": "英国"
+  },
+  {
+    "category": "快速PLA",
+    "color": "薄荷果冻",
+    "store_sku": "DLZ-UK-SL-HSPLA-JG-1KG",
+    "stock": 38,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "黑",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "白",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "红",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "蓝",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "灰",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "黄",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "橙",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "粉",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+2.0",
+    "color": "橄榄绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-HSPLA+-BK-1KG",
+    "stock": 416,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "白色",
+    "store_sku": "DLZ-UK-SL-HSPLA+-WT-1KG",
+    "stock": 698,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-HSPLA+-RD-1KG",
+    "stock": 354,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-HSPLA+-BL-1KG",
+    "stock": 351,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-HSPLA+-GY-1KG",
+    "stock": 237,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "黄",
+    "store_sku": "DLZ-UK-SL-HSPLA+-YL-1KG",
+    "stock": 67,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-HSPLA+-GN-1KG",
+    "stock": 148,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "橙",
+    "store_sku": "DLZ-UK-SL-HSPLA+-OR-1KG",
+    "stock": 103,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "粉色",
+    "store_sku": "DLZ-UK-SL-HSPLA+-PK-1KG",
+    "stock": 69,
+    "region": "英国"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "橄榄绿",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-HSMPLA-BK-1KG",
+    "stock": 390,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "白色",
+    "store_sku": "DLZ-UK-SL-HSMPLA-WT-1KG",
+    "stock": 515,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-HSMPLA-GY-1KG",
+    "stock": 35,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "天空蓝",
+    "store_sku": "DLZ-UK-SL-HSMPLA-SB-1KG",
+    "stock": 128,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-UK-SL-HSMPLA-OG-1KG",
+    "stock": 284,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "樱桃红",
+    "store_sku": "DLZ-UK-SL-HSMPLA-CR-1KG",
+    "stock": 929,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-HSMPLA-SO-1KG",
+    "stock": 478,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "樱花粉",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快打哑光CMYK",
+    "color": "原品红+原白色+原黄色+原青色",
+    "store_sku": "DLZ-UK-SL-HSPLAYG-PM+PW+PYL+PC-1KG*4",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-HSMPETG-BK-1KG",
+    "stock": 245,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-HSMPETG-WT-1KG",
+    "stock": 240,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-HSMPETG-GY-1KG",
+    "stock": 223,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-HSMPETG-RD-1KG",
+    "stock": 301,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-HSMPETG-BL-1KG",
+    "stock": 177,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-HSMPETG-GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "橙",
+    "store_sku": "DLZ-UK-SL-HSMPETG-OR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-UK-SL-HSMPETG-MG-1KG",
+    "stock": 80,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "天空蓝",
+    "store_sku": "DLZ-UK-SL-HSMPETG-SB-1KG",
+    "stock": 150,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "粉色",
+    "store_sku": "DLZ-UK-SL-HSMPETG-PK-1KG",
+    "stock": 79,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "黄色",
+    "store_sku": "DLZ-UK-SL-HSMPETG-YL-1KG",
+    "stock": 139,
+    "region": "英国"
+  },
+  {
+    "category": "PLA彩虹",
+    "color": "PLA-彩虹01 8M",
+    "store_sku": "DLZ-UK-SL-PLA-RB01-8M-1KG",
+    "stock": 122,
+    "region": "英国"
+  },
+  {
+    "category": "PLA彩虹",
+    "color": "PLA-彩虹02 8M",
+    "store_sku": "DLZ-UK-SL-PLA-RB02-8M-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA彩虹",
+    "color": "PLA-彩虹03 8M",
+    "store_sku": "DLZ-UK-SL-PLA-RB03-8M-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA彩虹",
+    "color": "PLA-彩虹04 8M",
+    "store_sku": "DLZ-UK-SL-PLA-RB04-8M-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹01",
+    "store_sku": "DLZ-UK-SL-PLATPRB-RB01-8M-1KG",
+    "stock": 112,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹02",
+    "store_sku": "DLZ-UK-SL-PLATPRB-RB02-8M-1KG",
+    "stock": 121,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹03",
+    "store_sku": "DLZ-UK-SL-PLATPRB-RB03-8M-1KG",
+    "stock": 85,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹04",
+    "store_sku": "DLZ-UK-SL-PLATPRB-RB04-8M-1KG",
+    "stock": 95,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸-彩虹01 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB01-8M-1KG",
+    "stock": 53,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸-彩虹02 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB02-8M-1KG",
+    "stock": 136,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹03 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB03-8M-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 04 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB04-8M-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 05 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB05-8M-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 06 8M",
+    "store_sku": "DLZ-UK-SL-SILK-RB06-8M-1KG",
+    "stock": 186,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-SILK-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-SILK-WT-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-SILK-GY-1KG",
+    "stock": 34,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "银",
+    "store_sku": "DLZ-UK-SL-SILK-SV-1KG",
+    "stock": 34,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "黄金",
+    "store_sku": "DLZ-UK-SL-SILK-LG-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "SILK",
+    "color": "红铜",
+    "store_sku": "DLZ-UK-SL-SILK-RC-1KG",
+    "stock": 21,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑金",
+    "store_sku": "DLZ-UK-SL-SILKDC-BK+GD-1KG",
+    "stock": 239,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑蓝",
+    "store_sku": "DLZ-UK-SL-SILKDC-BK+BL-1KG",
+    "stock": 144,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑绿",
+    "store_sku": "DLZ-UK-SL-SILKDC-BK+GN-1KG",
+    "stock": 31,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑紫",
+    "store_sku": "DLZ-UK-SL-SILKDC-BK+PP-1KG",
+    "stock": 11,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "粉金",
+    "store_sku": "DLZ-UK-SL-SILKDC-PK+GD-1KG",
+    "stock": 14,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "红金",
+    "store_sku": "DLZ-UK-SL-SILKDC-RD+GD-1KG",
+    "stock": 176,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "红蓝",
+    "store_sku": "DLZ-UK-SL-SILKDC-RD+BL-1KG",
+    "stock": 133,
+    "region": "英国"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "蓝绿",
+    "store_sku": "DLZ-EU-SL-SILKDC-BL+GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "蓝绿紫",
+    "store_sku": "DLZ-UK-SL-SILKTC-BL+GN+PP-1KG",
+    "stock": 66,
+    "region": "英国"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "红黄绿",
+    "store_sku": "DLZ-UK-SL-SILKTC-RD+YL+GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "橙蓝绿",
+    "store_sku": "DLZ-UK-SL-SILKTC-OR+BL+GN-1KG",
+    "stock": 147,
+    "region": "英国"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "红黄蓝",
+    "store_sku": "DLZ-UK-SL-SILKTC-RD+YL+BL-1KG",
+    "stock": 128,
+    "region": "英国"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "黑金紫",
+    "store_sku": "DLZ-UK-SL-SILKTC-BK+GD+PP-1KG",
+    "stock": 149,
+    "region": "英国"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "黑灰红黄",
+    "store_sku": "DLZ-UK-SL-SILKFC-BK+GY+RD+YL-1KG",
+    "stock": 113,
+    "region": "英国"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "蓝紫橙黄",
+    "store_sku": "DLZ-UK-SL-SILKFC-BL+PP+OR+YL-1KG",
+    "stock": 69,
+    "region": "英国"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "蓝紫红金",
+    "store_sku": "DLZ-UK-SL-SILKFC-BL+PP+RD+GD-1KG",
+    "stock": 56,
+    "region": "英国"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "红黄绿黑",
+    "store_sku": "DLZ-UK-SL-SILKFC-RD+YL+GN+BK-1KG",
+    "stock": 56,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "花岗岩",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-SS-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "碳烟黑",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-OM-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "栗木杨",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-CB-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "砖红",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-BR-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "水泥灰",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-AC-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "森林绿",
+    "store_sku": "DLZ-UK-SL-HSPLA_MB-FG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "胡桃木",
+    "store_sku": "DLZ-UK-SL-OWOOD-WL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "枫木",
+    "store_sku": "DLZ-UK-SL-OWOOD-MW-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "原木",
+    "store_sku": "DLZ-UK-SL-OWOOD-WD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "樱桃木",
+    "store_sku": "DLZ-UK-SL-OWOOD-CW-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "红蓝色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-RD+BL-1KG",
+    "stock": 241,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "红黄色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-RD+YL-1KG",
+    "stock": 208,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黄青色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-YL+CY-1KG",
+    "stock": 116,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "绿紫色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-GN+PP-1KG",
+    "stock": 109,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黑蓝色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-BK+BL-1KG",
+    "stock": 123,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黑红色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-BK+RD-1KG",
+    "stock": 84,
+    "region": "英国"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "橙红色",
+    "store_sku": "DLZ-UK-SL-PLAYG_DC-OR+RD-1KG",
+    "stock": 110,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "碎星流彩",
+    "store_sku": "DLZ-UK-SL-PLAGL-SF-1KG",
+    "stock": 151,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "银河绿",
+    "store_sku": "DLZ-UK-SL-PLAGL-GLG-1KG",
+    "stock": 287,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "星尘紫",
+    "store_sku": "DLZ-UK-SL-PLAGL-SDP-1KG",
+    "stock": 275,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "碎星褐",
+    "store_sku": "DLZ-UK-SL-PLAGL-SBN-1KG",
+    "stock": 325,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 金属",
+    "color": "PLA金属马拉喀什青铜",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 金属",
+    "color": "PLA金属飞机石",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 金属",
+    "color": "PLA金属玄铜金",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光白-发蓝光",
+    "store_sku": "DLZ-UK-SL-PLANT-WTB-1KG",
+    "stock": 7,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光白-发绿光",
+    "store_sku": "DLZ-UK-SL-PLANT-WTG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光红*",
+    "store_sku": "DLZ-UK-SL-PLANT-RD-1KG",
+    "stock": 5,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光黄*",
+    "store_sku": "DLZ-UK-SL-PLANT-YL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光绿*",
+    "store_sku": "DLZ-UK-SL-PLANT-GN-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "未来绿*",
+    "store_sku": "DLZ-UK-SL-PLANT-FGN-1KG",
+    "stock": 8,
+    "region": "英国"
+  },
+  {
+    "category": "PLA夜光 （升级款）",
+    "color": "夜光蓝*",
+    "store_sku": "DLZ-UK-SL-PLANT-BL-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PETGNOC-RD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-UK-SL-PETGNOC-BL-1KG",
+    "stock": 2,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "黄",
+    "store_sku": "DLZ-UK-SL-PETGNOC-YL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-PETGNOC-GN-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "夜光白-发绿光",
+    "store_sku": "DLZ-UK-SL-PETGNOC-WTG-1KG",
+    "stock": 23,
+    "region": "英国"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "夜光白-发蓝光*",
+    "store_sku": "DLZ-UK-SL-PETGNOC-WTB-1KG",
+    "stock": 19,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "柳橙汁",
+    "store_sku": "DLZ-UK-SL-PLA-TPOJ-1KG",
+    "stock": 125,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "草莓酱",
+    "store_sku": "DLZ-UK-SL-PLA-TPSJ-1KG",
+    "stock": 123,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "紫提冻",
+    "store_sku": "DLZ-UK-SL-PLA-TPGJ-1KG",
+    "stock": 115,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "薄荷冰",
+    "store_sku": "DLZ-UK-SL-PLA-TPMI-1KG",
+    "stock": 110,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "雾海蓝",
+    "store_sku": "DLZ-UK-SL-PLA-TPOH-1KG",
+    "stock": 102,
+    "region": "英国"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "薄雾黑",
+    "store_sku": "DLZ-UK-SL-PLA-TPMB-1KG",
+    "stock": 134,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光黄色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-YL-1KG",
+    "stock": 82,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光蓝色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-BL-1KG",
+    "stock": 89,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光绿色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-GR-1KG",
+    "stock": 84,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光紫色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-PP-1KG",
+    "stock": 92,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光红色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-RD-1KG",
+    "stock": 94,
+    "region": "英国"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光橙色",
+    "store_sku": "DLZ-UK-SL-PLAFLU-OR-1KG",
+    "stock": 94,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 碳纤维",
+    "color": "黑",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 碳纤维",
+    "color": "黑",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "EASY PA",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-EPA-BK-1KG",
+    "stock": 132,
+    "region": "英国"
+  },
+  {
+    "category": "PC/ABS",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PCABS-BK-1KG",
+    "stock": 41,
+    "region": "英国"
+  },
+  {
+    "category": "PC/ABS",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PCABS-WT-1KG",
+    "stock": 82,
+    "region": "英国"
+  },
+  {
+    "category": "PA6-CF",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PA6CF-BK-1KG",
+    "stock": 226,
+    "region": "英国"
+  },
+  {
+    "category": "PA12-CF",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PA12CF-BK-1KG",
+    "stock": 173,
+    "region": "英国"
+  },
+  {
+    "category": "PA12-CF",
+    "color": "白",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PA6-GF",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PA6GF-BK-1KG",
+    "stock": 60,
+    "region": "英国"
+  },
+  {
+    "category": "PA6-GF",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PA6GF-GY-1KG",
+    "stock": 11,
+    "region": "英国"
+  },
+  {
+    "category": "PA6-CF",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PA6CF-BK-0.5KG",
+    "stock": 56,
+    "region": "英国"
+  },
+  {
+    "category": "PA12-CF",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PA12CF-BK-0.5KG",
+    "stock": 59,
+    "region": "英国"
+  },
+  {
+    "category": "PP",
+    "color": "",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "EASY ABS",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-EABS-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "EASY ABS",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-EABS-BK-0.9KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "ABS阻燃",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-ABSFR-BK-1KG",
+    "stock": 41,
+    "region": "英国"
+  },
+  {
+    "category": "ABS-GF",
+    "color": "本色",
+    "store_sku": "DLZ-UK-SL-ABSGF-BS-1KG",
+    "stock": 34,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-ABS-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-ABS-BK-0.9KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-ABS-WT-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-ABS-GY-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-ABS-RD-1KG",
+    "stock": 26,
+    "region": "英国"
+  },
+  {
+    "category": "ABS",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-ABS-KB-1KG",
+    "stock": 25,
+    "region": "英国"
+  },
+  {
+    "category": "TPU",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-TPU-BK-1KG",
+    "stock": 52,
+    "region": "英国"
+  },
+  {
+    "category": "TPU",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-TPU-WT-1KG",
+    "stock": 25,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-TPU90A-WT-1KG",
+    "stock": 139,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-TPU90A-GY-1KG",
+    "stock": 67,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "阳光橙",
+    "store_sku": "DLZ-UK-SL-TPU90A-SO-1KG",
+    "stock": 62,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "绿",
+    "store_sku": "DLZ-UK-SL-TPU90A-GN-1KG",
+    "stock": 72,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "晴空蓝",
+    "store_sku": "DLZ-UK-SL-TPU90A-AZ-1KG",
+    "stock": 49,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-TPU90A-BK-1KG",
+    "stock": 25,
+    "region": "英国"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-TPU90A-RD-1KG",
+    "stock": 51,
+    "region": "英国"
+  },
+  {
+    "category": "ASA",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-ASA-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PVB",
+    "color": "黑",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+-BK-RF-1KG",
+    "stock": 911,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+-WT-RF-1KG",
+    "stock": 1435,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+-GY-RF-1KG",
+    "stock": 693,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLA+-RD-RF-1KG",
+    "stock": 297,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLA+-KB-RF-1KG",
+    "stock": 307,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 无线盘",
+    "color": "草绿",
+    "store_sku": "DLZ-UK-SL-PLA+-GG-RF-1KG",
+    "stock": 321,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+V2-BK-RF-1KG",
+    "stock": 357,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+V2-WT-RF-1KG",
+    "stock": 870,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+V2-GY-RF-1KG",
+    "stock": 726,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "红",
+    "store_sku": "DLZ-UK-SL-PLA+V2-RD-RF-1KG",
+    "stock": 410,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-UK-SL-PLA+V2-KB-RF-1KG",
+    "stock": 199,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+2.0 无线盘",
+    "color": "草绿",
+    "store_sku": "DLZ-UK-SL-PLA+V2-GG-RF-1KG",
+    "stock": 256,
+    "region": "英国"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "黑",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "白",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "灰",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "红",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "克莱因蓝",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 3KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 3KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA-WT-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 3KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA-GY-3KGSPOOL",
+    "stock": 4,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 3KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 3KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+-WT-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 3KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+-GY-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 3KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PETG-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 3KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PETG-WT-3KGSPOOL",
+    "stock": 43,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 3KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PETG-GY-3KGSPOOL",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA-BK-5KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA-WT-5KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA 5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA-GY-5KG",
+    "stock": 14,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PLA+-BK-5KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PLA+-WT-5KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PLA+-GY-5KG",
+    "stock": 13,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-PETG-BK-5KG",
+    "stock": 13,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-PETG-WT-5KG",
+    "stock": 33,
+    "region": "英国"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-PETG-GY-5KG",
+    "stock": 33,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA黑色+PLA白色+PLA灰色+PLA透明色+PLA克莱因蓝+PLA红色+PLA阳光橙+PLA绿色",
+    "store_sku": "DLZ-UK-SL-PLA-BK+WT+GY+TP+KB+RD+SO+GN-0.25*8",
+    "stock": 127,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "丝绸PLA+彩虹色01+丝绸PLA+彩虹色02+丝绸PLA+彩虹色03+丝绸PLA+彩虹色04+丝绸PLA+彩虹色05+丝绸PLA+彩虹色06+丝绸PLA+黄金色+丝绸PLA+银色",
+    "store_sku": "DLZ-UK-SL-PLA+SKRB_V1+SK-RB01+RB02+RB03+RB04+RB05+RB06+LG+SV-0.25",
+    "stock": 129,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+2.0黑色+PLA+2.0白色+PLA+2.0灰色+PLA+2.0克莱因蓝+PLA+2.0红色+PLA+2.0黄色+PLA+2.0橄榄绿+PLA+2.0阳光橙",
+    "store_sku": "DLZ-UK-SL-PLA+2-BK+WT+GY+KB+RD+YL+OG+SO-0.25*8",
+    "stock": 145,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+黑色+PLA+白色+PLA+灰色+PLA+克莱因蓝+PLA+绿色+PLA+红色+PLA+阳光橙+PLA+明黄色",
+    "store_sku": "DLZ-UK-SL-PLA+-BK+WT+GY+KB+GN+RD+SO+VY-0.25*8",
+    "stock": 145,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA栗黑色+PLA骨白色+PLA灰色+PLA咖棕色+PLA红色+PLA克莱因蓝+PLA明黄色+PLA橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLA-RCN+BWT+GY+CBN+RD+KB+VY+OG-0.25*8",
+    "stock": 134,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "High Speed Matte PETG黑色+High Speed Matte PETG白色+High Speed Matte PETG灰色+High Speed Matte PETG红色+High Speed Matte PETG天空蓝+High Speed Matte PETG粉色+High Speed Matte PETG橙色+High Speed Matte PETG薄荷绿",
+    "store_sku": "DLZ-UK-SL-HSMPETG-BK+WT+GY+RD+SB+PK+OR+MG-0.25*8",
+    "stock": 295,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+栗黑色+PLA+骨白色+PLA+灰色+PLA+克莱因蓝+PLA+红色+PLA+黄色+PLA+咖棕色+PLA+橄榄绿",
+    "store_sku": "DLZ-UK-SL-PLA+-RCN+BWT+GY+KB+RD+YL+CBN+OG-0.25*8",
+    "stock": 145,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA Meta黑色+PLA Meta白色+PLA Meta灰色+PLA Meta天空蓝+PLA Meta薄荷绿+PLA Meta樱桃红+PLA Meta柠檬黄+PLA Meta樱花粉",
+    "store_sku": "DLZ-UK-SL-PLAMT-BK+WT+GY+SB+MG+CR+LY+SP-0.25*8",
+    "stock": 145,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PETG黑色+PETG白色+PETG红色+PETG克莱因蓝+PETG绿色+PETG黄色+PETG阳光橙+PETG薰衣草紫",
+    "store_sku": "DLZ-UK-SL-PETG-BK+WT+RD+KB+GN+YL+SO+LP-0.25*8",
+    "stock": 292,
+    "region": "英国"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA哑光黑色+PLA哑光白色+PLA哑光红色+PLA哑光蓝色+PLA哑光绿色+PLA哑光粉色+PLA哑光灰色+PLA哑光陶泥色",
+    "store_sku": "DLZ-UK-SL-PLAYG-BK+WT+RD+KB+GN+PK+GY+CA-0.25*8",
+    "stock": 143,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-BK-1KG",
+    "stock": 25,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-WT-1KG",
+    "stock": 112,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "灰",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-GY-1KG",
+    "stock": 39,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "深灰",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-DG-1KG",
+    "stock": 482,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "肤色",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-BE-1KG",
+    "stock": 31,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "透明（旧）",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-TP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "刚性 1KG",
+    "color": "透明",
+    "store_sku": "DLZ-UK-SL-RESIN-ST-TP-1KG",
+    "stock": 78,
+    "region": "英国"
+  },
+  {
+    "category": "刚性+ 1KG",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-RESIN-STPLUS-GY-1KG",
+    "stock": 197,
+    "region": "英国"
+  },
+  {
+    "category": "刚性+ 1KG",
+    "color": "深灰",
+    "store_sku": "DLZ-UK-SL-RESIN-STPLUS-DG-1KG",
+    "stock": 142,
+    "region": "英国"
+  },
+  {
+    "category": "刚性+ 1KG",
+    "color": "白色",
+    "store_sku": "DLZ-UK-SL-RESIN-STPLUS-WT-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "刚性+ 1KG",
+    "color": "蓝灰",
+    "store_sku": "DLZ-UK-SL-RESIN-STPLUS-BG-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "红蜡树脂 1KG",
+    "color": "红蜡色",
+    "store_sku": "DLZ-UK-SL-RESIN-RWR-RD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "水洗树脂",
+    "color": "水洗树脂-黑色",
+    "store_sku": "DLZ-UK-SL-WASHABLE-BK-1KG",
+    "stock": 69,
+    "region": "英国"
+  },
+  {
+    "category": "水洗树脂",
+    "color": "水洗树脂-白色",
+    "store_sku": "DLZ-UK-SL-WASHABLE-WT-1KG",
+    "stock": 43,
+    "region": "英国"
+  },
+  {
+    "category": "水洗树脂",
+    "color": "水洗树脂-灰色",
+    "store_sku": "DLZ-UK-SL-WASHABLE-GY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "水洗树脂",
+    "color": "水洗树脂-深灰",
+    "store_sku": "DLZ-UK-SL-WASHABLE-DG-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS",
+    "color": "类ABS-灰",
+    "store_sku": "DLZ-UK-SL-RESIN-ABS-GY-1KG",
+    "stock": 209,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS",
+    "color": "类ABS-黑",
+    "store_sku": "DLZ-UK-SL-RESIN-ABS-BK-1KG",
+    "stock": 462,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-WT-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "水洗类ABS",
+    "color": "浅灰",
+    "store_sku": "DLZ-UK-SL-RESIN-WWAL-GY-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "水洗类ABS",
+    "color": "深灰",
+    "store_sku": "DLZ-UK-SL-RESIN-WWAL-DG-1KG",
+    "stock": 53,
+    "region": "英国"
+  },
+  {
+    "category": "水洗类ABS",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-WWAL-WT-1KG",
+    "stock": 50,
+    "region": "英国"
+  },
+  {
+    "category": "类PA尼龙",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-RESIN-PA-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "高韧性树脂",
+    "color": "黑色",
+    "store_sku": "DLZ-UK-SL-RESIN-TH-BK-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "高韧性树脂",
+    "color": "白色",
+    "store_sku": "DLZ-UK-SL-RESIN-TH-WT-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "高韧性树脂",
+    "color": "灰色",
+    "store_sku": "DLZ-UK-SL-RESIN-TH-GY-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "耐高温树脂",
+    "color": "透明色",
+    "store_sku": "DLZ-UK-SL-RESIN-HT-TP-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "黑",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-BK-1KG",
+    "stock": 12,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "白",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-WT-1KG",
+    "stock": 6,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "浅灰",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-GY-1KG",
+    "stock": 14,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "深灰",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-DG-1KG",
+    "stock": 252,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "蓝灰",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-BG-1KG",
+    "stock": 3,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "胡桃木",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-WAL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "枫木",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-MAP-1KG",
+    "stock": 1,
+    "region": "英国"
+  },
+  {
+    "category": "14K 刚性",
+    "color": "桃花心木",
+    "store_sku": "DLZ-UK-SL-RESIN-14KST-MAH-1KG",
+    "stock": 5,
+    "region": "英国"
+  },
+  {
+    "category": "14K 红蜡",
+    "color": "红蜡色",
+    "store_sku": "DLZ-UK-SL-RESIN-14KRWR-RD-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "高透树脂",
+    "color": "透明色",
+    "store_sku": "DLZ-UK-SL-RESIN-HC-CL-1KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "AB滴胶（环氧树脂）",
+    "color": "透明色",
+    "store_sku": "DLZ-UK-SL-RESIN-AB-CL-1.5KG",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "刚性光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "刚性光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "刚性光敏树脂透明色",
+    "color": "透明色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS光敏树脂透明色",
+    "color": "透明色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS光敏树脂黑色",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "类ABS光敏树脂肤色",
+    "color": "肤色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "水洗刚性光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "水洗刚性光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "14K刚性光敏树脂白色",
+    "color": "白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S1 白",
+    "store_sku": "DLZ-S1PLUS-FD-UK",
+    "stock": 150,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S2 黑",
+    "store_sku": "DLZ-UK-SL-S2FD-UK",
+    "stock": 125,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4 黑",
+    "store_sku": "DLZ-SL-UK-S4FD-UK",
+    "stock": 74,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4白色",
+    "store_sku": "DLZ-SL-UK-S4FD-WT-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4Pro",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "E2",
+    "store_sku": "DLZ-SL-FD-E2-BK-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "SP2干燥箱",
+    "store_sku": "DLZ-SL-FD-SP2-BK-UK",
+    "stock": 106,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "SP2腔体+两卷PLA+2.0黑",
+    "store_sku": "DLZ-SL-FD-SP2_CB-BK-UK",
+    "stock": 10,
+    "region": "英国"
+  },
+  {
+    "category": "干燥箱",
+    "color": "AMS加热器",
+    "store_sku": "S-SL-FD-AMS-BK-UK-NA-CD",
+    "stock": 836,
+    "region": "英国"
+  },
+  {
+    "category": "熔接器",
+    "color": "单个",
+    "store_sku": "DLZ-UK-SL-FC-UK",
+    "stock": 109,
+    "region": "英国"
+  },
+  {
+    "category": "熔接器+1包",
+    "color": "熔接器+1包",
+    "store_sku": "DLZ-UK-SL-FC-UK+PTFE*1",
+    "stock": 23,
+    "region": "英国"
+  },
+  {
+    "category": "熔接器+2包",
+    "color": "熔接器+2包",
+    "store_sku": "DLZ-UK-SL-FC-UK+PTFE*2",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PTFE套管 200pacs/包",
+    "color": "常规",
+    "store_sku": "DLZ-UK-SL-PTFE-PT2-TP-GN*2",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "打印笔",
+    "color": "青色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "儿童打印机",
+    "color": "",
+    "store_sku": "P-DL-KD-KD-OR-UK-NA-KT",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "超声波清洗机",
+    "color": "BK",
+    "store_sku": "DLZ-UK-SL-UC01-BK-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "二代光固箱",
+    "color": "",
+    "store_sku": "DLZ-UK-SL-RC02-BK-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "空气净化器",
+    "color": "白+黑 活性炭2个装",
+    "store_sku": "DLZ-UK-SL-AP01-BK+WT-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "配件 （海外仓）",
+    "color": "真空袋",
+    "store_sku": "DLZ-AS-SL-VSBT-UK",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "配件 （海外仓）",
+    "color": "打印机保温罩",
+    "store_sku": "DLZ-SL-UK-ENCLOSURE-235X235",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "配件 （海外仓）",
+    "color": "不锈钢漏斗套装",
+    "store_sku": "DLZ-UK-ACC-FUNNEL-SETS",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "配件 （海外仓）",
+    "color": "光敏树脂清洗剂 2000g",
+    "store_sku": "DLZ-SL-UK-RESIN-DETERGENT-2000G",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "配件 （海外仓）",
+    "color": "耗材料架-黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA破碎料",
+    "color": "黑色*10",
+    "store_sku": "DLZ-UK-SL-PLA-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA破碎料",
+    "color": "杂色/随机",
+    "store_sku": "DLZ-UK-SL-PLA-Random-1KG*10-PS",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA+ 破碎料",
+    "color": "黑色*10",
+    "store_sku": "DLZ-UK-SL-PLA+-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PETG破碎料",
+    "color": "黑色*10",
+    "store_sku": "DLZ-UK-SL-PETG-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "英国"
+  },
+  {
+    "category": "PLA",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA-BK-1KG",
+    "stock": 10166,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA-WT-1KG",
+    "stock": 5389,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA-GY-1KG",
+    "stock": 4536,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA-RD-1KG",
+    "stock": 3220,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-PLA-BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "克莱因蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "黄色",
+    "store_sku": "DLZ-EU-SL-PLA-YL-1KG",
+    "stock": 977,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PLA-GN-1KG",
+    "stock": 900,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "草绿",
+    "store_sku": "DLZ-EU-SL-PLA-GG-1KG",
+    "stock": 1101,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-PLA-SK-1KG",
+    "stock": 836,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-PLA-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "金色",
+    "store_sku": "DLZ-EU-SL-PLA-GD-1KG",
+    "stock": 769,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "银色",
+    "store_sku": "DLZ-EU-SL-PLA-SV-1KG",
+    "stock": 1049,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "品红色",
+    "store_sku": "DLZ-EU-SL-PLA-MAG-1KG",
+    "stock": 702,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "紫色",
+    "store_sku": "DLZ-EU-SL-PLA-PP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "薰衣草紫",
+    "store_sku": "",
+    "stock": 1179,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "紫红",
+    "store_sku": "DLZ-EU-SL-PLA-FC-1KG",
+    "stock": 267,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-EU-SL-PLA-MG-1KG",
+    "stock": 982,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-PLA-LY-1KG",
+    "stock": 1255,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "樱花粉",
+    "store_sku": "DLZ-EU-SL-PLA-SP-1KG",
+    "stock": 159,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLA-SO-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "樱桃红",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-PLA-SB-1KG",
+    "stock": 337,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "青色",
+    "store_sku": "DLZ-EU-SL-PLA-CY-1KG",
+    "stock": 76,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PLA-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA-OG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "蓝灰",
+    "store_sku": "DLZ-EU-SL-PLA-BG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-PLA-TPRD-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明绿",
+    "store_sku": "DLZ-EU-SL-PLA-TPGN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-PLA-TPBL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "瓷白色",
+    "store_sku": "DLZ-EU-SL-PLA-CM-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "骨白色",
+    "store_sku": "DLZ-EU-SL-PLA-BWT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-EU-SL-PLA-MN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "栗黑",
+    "store_sku": "DLZ-EU-SL-PLA-RCN-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "明黄色",
+    "store_sku": "DLZ-EU-SL-PLA-VY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "橡木色",
+    "store_sku": "DLZ-EU-SL-PLA-OK-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明黄",
+    "store_sku": "DLZ-EU-SL-PLA-TY2-1KG",
+    "stock": 226,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明紫",
+    "store_sku": "DLZ-EU-SL-PLA-TPP2-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "透明橙",
+    "store_sku": "DLZ-EU-SL-PLA-TO2-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA",
+    "color": "咖棕色",
+    "store_sku": "DLZ-EU-SL-PLA-CBN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 拓竹",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PLAYG-BK-1KG-TZ",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+-BK-1KG",
+    "stock": 1970,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+-WT-1KG",
+    "stock": 5047,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA+-KB-1KG",
+    "stock": 258,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "黄",
+    "store_sku": "DLZ-EU-SL-PLA+-YL-1KG",
+    "stock": 276,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PLA+-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-PLA+-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "银",
+    "store_sku": "DLZ-EU-SL-PLA+-SV-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "草绿",
+    "store_sku": "DLZ-EU-SL-PLA+-GG-1KG",
+    "stock": 322,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-PLA+-SK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "金色",
+    "store_sku": "DLZ-EU-SL-PLA+-GD-1KG",
+    "stock": 5,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-EU-SL-PLA+-LP-1KG",
+    "stock": 237,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "紫红",
+    "store_sku": "DLZ-EU-SL-PLA+-FS-1KG",
+    "stock": 153,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "樱花粉",
+    "store_sku": "DLZ-EU-SL-PLA+-SP-1KG",
+    "stock": 550,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLA+-SO-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "樱桃红",
+    "store_sku": "DLZ-EU-SL-PLA+-CR-1KG",
+    "stock": 29,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-EU-SL-PLA+-MG-1KG",
+    "stock": 1032,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-PLA+-LY-1KG",
+    "stock": 302,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-PLA+-SB-1KG",
+    "stock": 407,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA+-OG-1KG",
+    "stock": 132,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PLA+-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明橙",
+    "store_sku": "DLZ-EU-SL-PLA+-TPOR-1KG",
+    "stock": 600,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-PLA+-TPBL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-PLA+-TPRD-1KG",
+    "stock": 687,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明绿",
+    "store_sku": "DLZ-EU-SL-PLA+-TPGN-1KG",
+    "stock": 296,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "咖棕色",
+    "store_sku": "DLZ-EU-SL-PLA+-CBN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "瓷白色",
+    "store_sku": "DLZ-EU-SL-PLA+-CM-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "骨白色",
+    "store_sku": "DLZ-EU-SL-PLA+-BWT-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-EU-SL-PLA+-MN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "栗黑",
+    "store_sku": "DLZ-EU-SL-PLA+-RCN-1KG",
+    "stock": 89,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "明黄色",
+    "store_sku": "DLZ-EU-SL-PLA+-VY-1KG",
+    "stock": 91,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "橡木色",
+    "store_sku": "DLZ-EU-SL-PLA+-OK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明黄",
+    "store_sku": "DLZ-EU-SL-PLA+-TY2-1KG",
+    "stock": 400,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+",
+    "color": "透明紫",
+    "store_sku": "DLZ-EU-SL-PLA+-TPP2-1KG",
+    "stock": 319,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+V2-BK-1KG",
+    "stock": 122,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+V2-WT-1KG",
+    "stock": 1172,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+V2-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA+V2-BL-1KG",
+    "stock": 69,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "明黄",
+    "store_sku": "DLZ-EU-SL-PLA+V2-PY-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLA+V2-SO-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "蓝灰",
+    "store_sku": "DLZ-EU-SL-PLA+V2-BG-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+V2-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PLA+V2-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "紫红色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-FS-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "银色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-SV-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "金色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-GD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "咖棕色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-CBN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "瓷白色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-CM-1KG",
+    "stock": 6,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "骨白色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-BWT-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-EU-SL-PLA+V2-MN-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "栗黑",
+    "store_sku": "DLZ-EU-SL-PLA+V2-RCN-1KG",
+    "stock": 4,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橡木色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-OK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "青色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-CY-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-EU-SL-PLA+V2-LP-1KG",
+    "stock": 37,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA+V2-OG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "黄色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-YL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "草绿",
+    "store_sku": "DLZ-EU-SL-PLA+V2-GG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 2.0",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-SK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLAMT-BK-1KG",
+    "stock": 1713,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLAMT-WT-1KG",
+    "stock": 2863,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLAMT-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "樱桃红=红(旧)",
+    "store_sku": "DLZ-EU-SL-PLAMT-RD-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "天空蓝=蓝(旧)",
+    "store_sku": "DLZ-EU-SL-PLAMT-BL-1KG",
+    "stock": 236,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "柠檬黄=黄(旧)",
+    "store_sku": "DLZ-EU-SL-PLAMT-YL-1KG",
+    "stock": 151,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "薄荷绿=绿(旧)",
+    "store_sku": "DLZ-EU-SL-PLAMT-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "樱花粉=粉(旧)",
+    "store_sku": "DLZ-EU-SL-PLAMT-SP-1KG",
+    "stock": 276,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "巧克力",
+    "store_sku": "DLZ-EU-SL-PLAMT-CC-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "香芋紫",
+    "store_sku": "DLZ-EU-SL-PLAMT-TOP-1KG",
+    "stock": 389,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "奶油白",
+    "store_sku": "DLZ-EU-SL-PLAMT-CW-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLAMT-OG-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLAMT-SO-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "冰蓝",
+    "store_sku": "DLZ-EU-SL-PLAMT-IB-1KG",
+    "stock": 237,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META",
+    "color": "苹果绿",
+    "store_sku": "DLZ-EU-SL-PLAMT-AG-1KG",
+    "stock": 181,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLAYG-BK-1KG",
+    "stock": 2577,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLAYG-WT-1KG",
+    "stock": 1892,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLAYG-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLAYG-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-PLAYG-BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLAYG-KB-1KG",
+    "stock": 233,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PLAYG-GN-1KG",
+    "stock": 341,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "粉色",
+    "store_sku": "DLZ-EU-SL-PLAYG-PK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "陶泥色",
+    "store_sku": "DLZ-EU-SL-PLAYG-CA-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "浅蓝色(淡蓝色)",
+    "store_sku": "DLZ-EU-SL-PLAYG-LB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "淡黄色",
+    "store_sku": "DLZ-EU-SL-PLAYG-BY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLAYG-OG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "黄色",
+    "store_sku": "DLZ-EU-SL-PLAYG-YL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-EU-SL-PLAYG-LP-1KG",
+    "stock": 247,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "粉蓝色",
+    "store_sku": "DLZ-EU-SL-PLAYG-PB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLAYG-SO-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "嫩芽绿",
+    "store_sku": "DLZ-EU-SL-PLAYG-SG-1KG",
+    "stock": 424,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光",
+    "color": "海盐蓝",
+    "store_sku": "DLZ-EU-SL-PLAYG-OB-1KG",
+    "stock": 583,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "阳光橙",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "樱桃红",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "柠檬黄",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "薄荷绿",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "樱花粉",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "天空蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光 Kidoodle",
+    "color": "白色+柠檬黄+薄荷绿+天空蓝+阳光橙+黑色+樱桃红+樱花粉",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PETG-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PETG-WT-1KG",
+    "stock": 5000,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PETG-GY-1KG",
+    "stock": 914,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PETG-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-PETG-BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PETG-KB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PETG-GN-1KG",
+    "stock": 330,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PETG-TP-1KG",
+    "stock": 369,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-PETG-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "黄",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "咖啡色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "樱桃红",
+    "store_sku": "DLZ-EU-SL-PETG-CR-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-PETG-LY-1KG",
+    "stock": 67,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-EU-SL-PETG-MG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PETG-OG-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明黄",
+    "store_sku": "DLZ-EU-SL-PETG-TPYL-1KG",
+    "stock": 72,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PETG-SO-1KG",
+    "stock": 222,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "瓷白色",
+    "store_sku": "DLZ-EU-SL-PETG-CM-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "骨白色",
+    "store_sku": "DLZ-EU-SL-PETG-BWT-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "暗夜黑",
+    "store_sku": "DLZ-EU-SL-PETG-MN-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "栗黑",
+    "store_sku": "DLZ-EU-SL-PETG-RCN-1KG",
+    "stock": 143,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "咖棕色",
+    "store_sku": "DLZ-EU-SL-PETG-CBN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "明黄色",
+    "store_sku": "DLZ-EU-SL-PETG-VY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "青色",
+    "store_sku": "DLZ-EU-SL-PETG-CY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "薰衣草紫",
+    "store_sku": "DLZ-EU-SL-PETG-LP-1KG",
+    "stock": 4,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "品红色",
+    "store_sku": "DLZ-EU-SL-PETG-MAG-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-PETG-SK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "橡木色",
+    "store_sku": "DLZ-EU-SL-PETG-OK-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明蓝色",
+    "store_sku": "DLZ-EU-SL-PETG-TPBL-1KG",
+    "stock": 132,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明绿色",
+    "store_sku": "DLZ-EU-SL-PETG-TPGN-1KG",
+    "stock": 114,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明紫色",
+    "store_sku": "DLZ-EU-SL-PETG-TPPP-1KG",
+    "stock": 105,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明红色",
+    "store_sku": "DLZ-EU-SL-PETG-TPRD-1KG",
+    "stock": 11,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "透明橙色",
+    "store_sku": "DLZ-EU-SL-PETG-TPOR-1KG",
+    "stock": 58,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "樱花粉",
+    "store_sku": "DLZ-EU-SL-PETG-SP-1KG",
+    "stock": 76,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-PETG-SB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG",
+    "color": "巧克力",
+    "store_sku": "DLZ-EU-SL-PETG-CC-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-APLA-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "奶油白色",
+    "store_sku": "DLZ-EU-SL-APLA-CW-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-APLA-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "浅蓝色(淡蓝色)",
+    "store_sku": "DLZ-EU-SL-APLA-LB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "不拉丝PLA",
+    "color": "橄榄绿 =深绿色(旧)",
+    "store_sku": "DLZ-EU-SL-APLA-DG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-HSPLA-BK-1KG",
+    "stock": 381,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-HSPLA-WT-1KG",
+    "stock": 415,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-HSPLA-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-HSPLA-BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "克莱因蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-HSPLA-GY-1KG",
+    "stock": 314,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "黄色",
+    "store_sku": "DLZ-EU-SL-HSPLA-YL-1KG",
+    "stock": 346,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "绿色",
+    "store_sku": "DLZ-EU-SL-HSPLA-GN-1KG",
+    "stock": 422,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-HSPLA-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "阳光橙",
+    "store_sku": "",
+    "stock": 548,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "粉色",
+    "store_sku": "DLZ-EU-SL-HSPLA-PK-1KG",
+    "stock": 1537,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-HSPLA-OG-1KG",
+    "stock": 2271,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "珊瑚粉",
+    "store_sku": "DLZ-EU-SL-HSPLA-CP-1KG",
+    "stock": 265,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "摩卡慕斯棕",
+    "store_sku": "DLZ-EU-SL-HSPLA-MM-1KG",
+    "stock": 253,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速PLA",
+    "color": "薄荷果冻",
+    "store_sku": "DLZ-EU-SL-HSPLA-JG-1KG",
+    "stock": 308,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-HSPLA+-BK-1KG",
+    "stock": 248,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-HSPLA+-WT-1KG",
+    "stock": 477,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-HSPLA+-GY-1KG",
+    "stock": 1304,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-HSPLA+-RD-1KG",
+    "stock": 708,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-HSPLA+-BL-1KG",
+    "stock": 548,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "黄",
+    "store_sku": "DLZ-EU-SL-HSPLA+-YL-1KG",
+    "stock": 168,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-HSPLA+-GN-1KG",
+    "stock": 520,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-HSPLA+-OR-1KG",
+    "stock": 456,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "橄榄绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+",
+    "color": "粉",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-HSMPLA-BK-1KG",
+    "stock": 920,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-HSMPLA-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-HSMPLA-GY-1KG",
+    "stock": 513,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-HSMPLA-SB-1KG",
+    "stock": 351,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-HSMPLA-OG-1KG",
+    "stock": 463,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "樱桃红",
+    "store_sku": "DLZ-EU-SL-HSMPLA-CR-1KG",
+    "stock": 457,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-HSMPLA-SO-1KG",
+    "stock": 369,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "樱花粉",
+    "store_sku": "DLZ-EU-SL-HSMPLA-SP-1KG",
+    "stock": 103,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "巧克力",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打哑光PLA",
+    "color": "原品红+原白色+原黄色+原青色",
+    "store_sku": "DLZ-EU-SL-HSPLAYG-PM+PW+PYL+PC-1KG*4",
+    "stock": 195,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-WT-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-GY-1KG",
+    "stock": 23,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-RD-1KG",
+    "stock": 418,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-BL-1KG",
+    "stock": 270,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "黄",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-YL-1KG",
+    "stock": 272,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-GN-1KG",
+    "stock": 301,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "粉",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-PK-1KG",
+    "stock": 175,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-OG-1KG",
+    "stock": 896,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA+ 2.0",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-HSPLA+V2-OR-1KG",
+    "stock": 108,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-HSMPETG-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-HSMPETG-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-HSMPETG-GY-1KG",
+    "stock": 172,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-HSMPETG-RD-1KG",
+    "stock": 227,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-HSMPETG-BL-1KG",
+    "stock": 165,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-HSMPETG-GN-1KG",
+    "stock": 281,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-HSMPETG-OR-1KG",
+    "stock": 317,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "粉色",
+    "store_sku": "DLZ-EU-SL-HSMPETG-PK-1KG",
+    "stock": 323,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "黄色",
+    "store_sku": "DLZ-EU-SL-HSMPETG-YL-1KG",
+    "stock": 450,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "薄荷绿",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印哑光PETG",
+    "color": "天空蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA彩虹  8M",
+    "color": "PLA-彩虹01 8M",
+    "store_sku": "DLZ-EU-SL-PLA-RB01-8M-1KG",
+    "stock": 558,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA彩虹  8M",
+    "color": "PLA-彩虹02 8M",
+    "store_sku": "DLZ-EU-SL-PLA-RB02-8M-1KG",
+    "stock": 616,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA彩虹  8M",
+    "color": "PLA-彩虹03 8M",
+    "store_sku": "DLZ-EU-SL-PLA-RB03-8M-1KG",
+    "stock": 518,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA彩虹  8M",
+    "color": "PLA-彩虹04 8M",
+    "store_sku": "DLZ-EU-SL-PLA-RB04-8M-1KG",
+    "stock": 379,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹01",
+    "store_sku": "DLZ-EU-SL-PLATPRB-RB01-1KG",
+    "stock": 124,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹02",
+    "store_sku": "DLZ-EU-SL-PLATPRB-RB02-1KG",
+    "stock": 138,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹03",
+    "store_sku": "DLZ-EU-SL-PLATPRB-RB03-1KG",
+    "stock": 112,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明彩虹",
+    "color": "PLA透明彩虹 彩虹04",
+    "store_sku": "DLZ-EU-SL-PLATPRB-RB04-1KG",
+    "stock": 130,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸-彩虹01 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB01-8M-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸-彩虹02 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB02-8M-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 03 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB03-8M-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 04 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB04-8M-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 05 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB05-8M-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "丝绸彩虹",
+    "color": "丝绸彩虹 06 8M",
+    "store_sku": "DLZ-EU-SL-SILK-RB06-8M-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG彩虹",
+    "color": "PETG彩虹01",
+    "store_sku": "DLZ-EU-SL-PETG-RB01-16M-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-SILK-BK-1KG",
+    "stock": 359,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-SILK-WT-1KG",
+    "stock": 275,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-SILK-GY-1KG",
+    "stock": 695,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-SILK-BL-1KG",
+    "stock": 737,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "黄金色",
+    "store_sku": "DLZ-EU-SL-SILK-LG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "银",
+    "store_sku": "DLZ-EU-SL-SILK-SV-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "红铜",
+    "store_sku": "DLZ-EU-SL-SILK-RC-1KG",
+    "stock": 367,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "黄",
+    "store_sku": "DLZ-EU-SL-SILK-YL-1KG",
+    "stock": 168,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "黄铜",
+    "store_sku": "DLZ-EU-SL-SILK-BS-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "紫色",
+    "store_sku": "DLZ-EU-SL-SILK-PP-1KG",
+    "stock": 212,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "粉色",
+    "store_sku": "DLZ-EU-SL-SILK-PK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "红色",
+    "store_sku": "DLZ-EU-SL-SILK-RD-1KG",
+    "stock": 11,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "青铜",
+    "store_sku": "DLZ-EU-SL-SILK-BZ-1KG",
+    "stock": 78,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-SILK-OR-1KG",
+    "stock": 113,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK",
+    "color": "绿色",
+    "store_sku": "DLZ-EU-SL-SILK-GN-1KG",
+    "stock": 47,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑金",
+    "store_sku": "DLZ-EU-SL-SILKDC-BK+GD-1KG",
+    "stock": 425,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑蓝",
+    "store_sku": "DLZ-EU-SL-SILKDC-BK+BL-1KG",
+    "stock": 101,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑绿",
+    "store_sku": "DLZ-EU-SL-SILKDC-BK+GN-1KG",
+    "stock": 220,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑紫",
+    "store_sku": "DLZ-EU-SL-SILKDC-BK+PP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "粉金",
+    "store_sku": "DLZ-EU-SL-SILKDC-PK+GD-1KG",
+    "stock": 378,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "红金",
+    "store_sku": "DLZ-EU-SL-SILKDC-RD+GD-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "红蓝",
+    "store_sku": "DLZ-EU-SL-SILKDC-RD+BL-1KG",
+    "stock": 518,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "黑白",
+    "store_sku": "DLZ-EU-SL-SILKDC-BK+WT-1KG",
+    "stock": 470,
+    "region": "欧洲"
+  },
+  {
+    "category": "双色丝绸",
+    "color": "蓝绿",
+    "store_sku": "DLZ-EU-SL-SILKDC-BL+GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "蓝绿紫",
+    "store_sku": "DLZ-EU-SL-SILKTC-BL+GN+PP-1KG",
+    "stock": 601,
+    "region": "欧洲"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "红黄绿",
+    "store_sku": "DLZ-EU-SL-SILKTC-RD+YL+GN-1KG",
+    "stock": 1469,
+    "region": "欧洲"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "橙蓝绿",
+    "store_sku": "DLZ-EU-SL-SILKTC-OR+BL+GN-1KG",
+    "stock": 582,
+    "region": "欧洲"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "红黄蓝",
+    "store_sku": "DLZ-EU-SL-SILKTC-RD+YL+BL-1KG",
+    "stock": 537,
+    "region": "欧洲"
+  },
+  {
+    "category": "三色丝绸",
+    "color": "黑金紫",
+    "store_sku": "DLZ-EU-SL-SILKTC-BK+GD+PP-1KG",
+    "stock": 572,
+    "region": "欧洲"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "黑灰红黄",
+    "store_sku": "DLZ-EU-SL-SILKFC-BK+GY+RD+YL-1KG",
+    "stock": 442,
+    "region": "欧洲"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "蓝紫橙黄",
+    "store_sku": "DLZ-EU-SL-SILKFC-BL+PP+OR+YL-1KG",
+    "stock": 345,
+    "region": "欧洲"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "蓝紫红金",
+    "store_sku": "DLZ-EU-SL-SILKFC-BL+PP+RD+GD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "四色丝绸",
+    "color": "红黄绿黑",
+    "store_sku": "DLZ-EU-SL-SILKFC-RD+YL+GN+BK-1KG",
+    "stock": 476,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "水泥灰",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-AC-1KG",
+    "stock": 270,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "花岗岩",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-SS-1KG",
+    "stock": 255,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "碳烟黑",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-OM-1KG",
+    "stock": 228,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "栗木杨",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-CB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "森林绿",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-FG-1KG",
+    "stock": 353,
+    "region": "欧洲"
+  },
+  {
+    "category": "快速打印大理石",
+    "color": "砖红",
+    "store_sku": "DLZ-EU-SL-HSPLA_MB-BR-1KG",
+    "stock": 457,
+    "region": "欧洲"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "原木",
+    "store_sku": "DLZ-EU-SL-OWOOD-WD-1KG",
+    "stock": 269,
+    "region": "欧洲"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "枫木",
+    "store_sku": "DLZ-EU-SL-OWOOD-MW-1KG",
+    "stock": 367,
+    "region": "欧洲"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "胡桃木",
+    "store_sku": "DLZ-EU-SL-OWOOD-WL-1KG",
+    "stock": 446,
+    "region": "欧洲"
+  },
+  {
+    "category": "木质（升级款）",
+    "color": "樱桃木",
+    "store_sku": "DLZ-EU-SL-OWOOD-CW-1KG",
+    "stock": 508,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "红蓝色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-RD+BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "红黄色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-RD+YL-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黄青色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-YL+CY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "绿紫色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-GN+PP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黑蓝色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-BK+BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "黑红色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-BK+RD-1KG",
+    "stock": 12,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 双色",
+    "color": "橙红色",
+    "store_sku": "DLZ-EU-SL-PLAYG_DC-OR+RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "碎星流彩",
+    "store_sku": "DLZ-EU-SL-PLAGL-SF-1KG",
+    "stock": 112,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "银河绿",
+    "store_sku": "DLZ-EU-SL-PLAGL-GLG-1KG",
+    "stock": 234,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "星尘紫",
+    "store_sku": "DLZ-EU-SL-PLAGL-SDP-1KG",
+    "stock": 159,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 银河",
+    "color": "碎星褐",
+    "store_sku": "DLZ-EU-SL-PLAGL-SBN-1KG",
+    "stock": 285,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "柳橙汁",
+    "store_sku": "DLZ-EU-SL-PLA-TPOJ-1KG",
+    "stock": 271,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "草莓酱",
+    "store_sku": "DLZ-EU-SL-PLA-TPSJ-1KG",
+    "stock": 262,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "紫提冻",
+    "store_sku": "DLZ-EU-SL-PLA-TPGJ-1KG",
+    "stock": 271,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "薄荷冰",
+    "store_sku": "DLZ-EU-SL-PLA-TPMI-1KG",
+    "stock": 267,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "雾海蓝",
+    "store_sku": "DLZ-EU-SL-PLA-TPOH-1KG",
+    "stock": 248,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA透明色系",
+    "color": "薄雾黑",
+    "store_sku": "DLZ-EU-SL-PLA-TPMB-1KG",
+    "stock": 269,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光黄色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-YL-1KG",
+    "stock": 220,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光蓝色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-BL-1KG",
+    "stock": 239,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光绿色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-GN-1KG",
+    "stock": 195,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光紫色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-PP-1KG",
+    "stock": 244,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光红色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-RD-1KG",
+    "stock": 245,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA荧光色系",
+    "color": "荧光橙色",
+    "store_sku": "DLZ-EU-SL-PLAFLU-OR-1KG",
+    "stock": 249,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA金属",
+    "color": "",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA金属",
+    "color": "",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA金属",
+    "color": "",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PETGNOC-RD-1KG",
+    "stock": 328,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-PETGNOC-BL-1KG",
+    "stock": 276,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "黄",
+    "store_sku": "DLZ-EU-SL-PETGNOC-YL-1KG",
+    "stock": 44,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-PETGNOC-GN-1KG",
+    "stock": 155,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "夜光白-发绿光",
+    "store_sku": "DLZ-EU-SL-PETGNOC-WTG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "夜光PETG",
+    "color": "夜光白-发蓝光*",
+    "store_sku": "DLZ-EU-SL-PETGNOC-WTB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光白-发蓝光*",
+    "store_sku": "DLZ-EU-SL-PLANT-WTB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光白-发绿光*",
+    "store_sku": "DLZ-EU-SL-PLANT-WTG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光红*",
+    "store_sku": "DLZ-EU-SL-PLANT-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光黄*",
+    "store_sku": "DLZ-EU-SL-PLANT-YL-1KG",
+    "stock": 62,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光绿*",
+    "store_sku": "DLZ-EU-SL-PLANT-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "未来绿*",
+    "store_sku": "DLZ-EU-SL-PLANT-FGN-1KG",
+    "stock": 204,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "夜光蓝*",
+    "store_sku": "DLZ-EU-SL-PLANT-BL-1KG",
+    "stock": 101,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA夜光 (升级款)",
+    "color": "赛博橙",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA木质",
+    "color": "木质色",
+    "store_sku": "DLZ-EU-SL-WOOD-WD-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA轻质",
+    "color": "白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA碳纤维",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PLACF-BK-1KG",
+    "stock": 195,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 碳纤维",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PETGCF-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ASA",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-ASA-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ASA",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-ASA-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ASA",
+    "color": "本色",
+    "store_sku": "/",
+    "stock": 22,
+    "region": "欧洲"
+  },
+  {
+    "category": "ASA",
+    "color": "红色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ASA",
+    "color": "克莱因蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-ABS-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-ABS-WT-1KG",
+    "stock": 64,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-ABS-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-ABS-RD-1KG",
+    "stock": 150,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-ABS-BL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-ABS-KB-1KG",
+    "stock": 256,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "黄",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "阳光橙",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "橄榄绿",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS",
+    "color": "咖棕色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS 新款可拆卸",
+    "color": "黑色C",
+    "store_sku": "DLZ-EU-SL-ABS-BK-0.9KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS 新款可拆卸",
+    "color": "白色C",
+    "store_sku": "DLZ-EU-SL-ABS-WT-0.9KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-TPU-BK-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-TPU-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-TPU-BK-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-TPU-WT-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-TPU90A-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-TPU90A-WT-1KG",
+    "stock": 4,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-TPU90A-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-TPU90A-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "晴空蓝",
+    "store_sku": "DLZ-EU-SL-TPU90A-AZ-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-TPU90A-GN-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU 90A",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-TPU90A-SO-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU-SILK",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-TPUSK-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU-SILK",
+    "color": "酒红色",
+    "store_sku": "DLZ-EU-SL-TPUSK-BD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU-SILK",
+    "color": "奶油白色",
+    "store_sku": "DLZ-EU-SL-TPUSK-CW-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU-SILK",
+    "color": "深蓝色",
+    "store_sku": "DLZ-EU-SL-TPUSK-DB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "EASY ABS",
+    "color": "EASY ABS 黑",
+    "store_sku": "DLZ-EU-SL-EABS-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "EASY ABS",
+    "color": "EASY ABS 灰",
+    "store_sku": "DLZ-EU-SL-EABS-GY-1KG",
+    "stock": 14,
+    "region": "欧洲"
+  },
+  {
+    "category": "EASY ABS",
+    "color": "Easy ABS 本色",
+    "store_sku": "DLZ-EU-SL-EABS-NT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "Easy PA",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-EPA-BK-1KG",
+    "stock": 155,
+    "region": "欧洲"
+  },
+  {
+    "category": "PVB",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PVB-BK-0.9KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PVB",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PVB-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PVB",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PVB-TP-1KG",
+    "stock": 72,
+    "region": "欧洲"
+  },
+  {
+    "category": "PC",
+    "color": "",
+    "store_sku": "DLZ-EU-SL-PC-BS-1KG",
+    "stock": 97,
+    "region": "欧洲"
+  },
+  {
+    "category": "PP",
+    "color": "",
+    "store_sku": "DLZ-EU-SL-PP-BS-0.8KG",
+    "stock": 15,
+    "region": "欧洲"
+  },
+  {
+    "category": "PC/ABS",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PCABS-BK-1KG",
+    "stock": 23,
+    "region": "欧洲"
+  },
+  {
+    "category": "PC/ABS",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PCABS-WT-1KG",
+    "stock": 63,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA6-CF",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PA6CF-BK-1KG",
+    "stock": 297,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA6-CF",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PA6CF-BK-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA12-CF",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PA12CF-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA12-CF",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PA12CF-BK-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA6-GF",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PA6GF-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PA6-GF",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-PA6GF-GY-1KG",
+    "stock": 76,
+    "region": "欧洲"
+  },
+  {
+    "category": "PEEK",
+    "color": "本色",
+    "store_sku": "DLZ-EU-SL-PEEK-BS-1KG",
+    "stock": 20,
+    "region": "欧洲"
+  },
+  {
+    "category": "PEEK",
+    "color": "本色",
+    "store_sku": "DLZ-EU-SL-PEEK-BS-0.25KG",
+    "stock": 50,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS阻燃",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-ABSFR-BK-1KG",
+    "stock": 193,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS-GF",
+    "color": "本色",
+    "store_sku": "DLZ-EU-SL-ABSGF-BS-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "本色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "",
+    "store_sku": "DLZ-EU-SL-EPA-BS-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "本色",
+    "store_sku": "",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "本色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "工程耗材  PP",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  3KG装",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA-BK-3KGSPOOL",
+    "stock": 149,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  3KG装",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA-WT-3KGSPOOL",
+    "stock": 292,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  3KG装",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA-GY-3KGSPOOL",
+    "stock": 83,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  3KG装",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA-RD-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  3KG装",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PLA-TP-3KGSPOOL",
+    "stock": 65,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+-WT-3KGSPOOL",
+    "stock": 87,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+-GY-3KGSPOOL",
+    "stock": 41,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+-RD-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "蓝",
+    "store_sku": "DLZ-EU-SL-PLA+-BL-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "银",
+    "store_sku": "DLZ-EU-SL-PLA+-SV-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  3KG装",
+    "color": "金",
+    "store_sku": "DLZ-EU-SL-PLA+-GD-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光  3KG装",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLAYG-BK-3KGSPOOL",
+    "stock": 52,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光  3KG装",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLAYG-WT-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 哑光  3KG装",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLAYG-GY-3KGSPOOL",
+    "stock": 59,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  3KG装",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-HSPLA-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  3KG装",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-HSPLA-WT-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  3KG装",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-HSPLA-GY-3KGSPOOL",
+    "stock": 18,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK 3KG装",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-SILK-BK-3KGSPOOL",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK 3KG装",
+    "color": "银",
+    "store_sku": "DLZ-EU-SL-SILK-SV-3KGSPOOL",
+    "stock": 28,
+    "region": "欧洲"
+  },
+  {
+    "category": "SILK 3KG装",
+    "color": "黄金",
+    "store_sku": "DLZ-EU-SL-SILK-LG-3KGSPOOL",
+    "stock": 79,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 3KG装",
+    "color": "黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 3KG装",
+    "color": "白",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 3KG装",
+    "color": "灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 3KG装",
+    "color": "红",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 3KG装",
+    "color": "克莱因蓝",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+-BK-5KG",
+    "stock": 84,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+-WT-5KG",
+    "stock": 163,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+-GY-5KG",
+    "stock": 215,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  5KG线盘",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+-RD-5KG",
+    "stock": 38,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+  5KG线盘",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA+-OG-5KG",
+    "stock": 14,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA-BK-5KG",
+    "stock": 225,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA-WT-5KG",
+    "stock": 280,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "银",
+    "store_sku": "DLZ-EU-SL-PLA-SV-5KG",
+    "stock": 17,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "金",
+    "store_sku": "DLZ-EU-SL-PLA-GD-5KG",
+    "stock": 100,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA-RD-5KG",
+    "stock": 97,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA  5KG线盘",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA-KB-5KG",
+    "stock": 97,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PETG-BK-5KG",
+    "stock": 302,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PETG-GY-5KG",
+    "stock": 76,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PETG-WT-5KG",
+    "stock": 16,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "红",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 5KG线盘",
+    "color": "克莱因蓝",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS  5KG线盘",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-ABS-BK-5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS  5KG线盘",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-ABS-WT-5KG",
+    "stock": 44,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  5KG线盘",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-HSPLA-BK-5KG",
+    "stock": 90,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  5KG线盘",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-HSPLA-WT-5KG",
+    "stock": 49,
+    "region": "欧洲"
+  },
+  {
+    "category": "快打PLA  5KG线盘",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-HSPLA-GY-5KG",
+    "stock": 91,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0 5KG",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+2-BK-5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0 5KG",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+2-WT-5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0 5KG",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+2-GY-5KG",
+    "stock": 20,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA-BK-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA-WT-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA-GY-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA-RD-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA-KB-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "草绿",
+    "store_sku": "DLZ-EU-SL-PLA-GG-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "金色",
+    "store_sku": "DLZ-EU-SL-PLA-GD-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "阳光橙",
+    "store_sku": "DLZ-EU-SL-PLA-SO-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-PLA-LY-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-PLA-SB-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "银色",
+    "store_sku": "DLZ-EU-SL-PLA-SV-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "瓷白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "骨白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "暗夜黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "栗黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "明黄色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "橡木色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "透明黄",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "透明紫",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA无线盘耗材",
+    "color": "透明橙",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+-BK-RF-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+-WT-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+-GY-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+-RD-RF-1KG",
+    "stock": 4,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA+-KB-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA+-OG-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "金色",
+    "store_sku": "DLZ-EU-SL-PLA+-GD-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "橙",
+    "store_sku": "DLZ-EU-SL-PLA+-OR-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "阳光橙",
+    "store_sku": "",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-PLA+-TP-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "紫红",
+    "store_sku": "DLZ-EU-SL-PLA+-FS-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "银色",
+    "store_sku": "DLZ-EU-SL-PLA+-SV-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "瓷白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "骨白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "暗夜黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "栗黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "明黄色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 无线盘耗材",
+    "color": "橡木色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PLA+V2-BK-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PLA+V2-WT-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA+V2-GY-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PLA+V2-RD-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PLA+V2-KB-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "银色",
+    "store_sku": "DLZ-EU-SL-PLA+V2-SV-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "明黄",
+    "store_sku": "DLZ-EU-SL-PLA+V2-VY-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "金色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "咖棕色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "瓷白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "骨白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "暗夜黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "栗黑",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "橡木色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "薰衣草紫",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+2.0  无线盘耗材",
+    "color": "橄榄绿",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-PETG-BK-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-PETG-WT-RF-1KG",
+    "stock": 3,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PETG-GY-RF-1KG",
+    "stock": 1,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "红",
+    "store_sku": "DLZ-EU-SL-PETG-RD-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "克莱因蓝",
+    "store_sku": "DLZ-EU-SL-PETG-KB-RF-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "樱桃红",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "柠檬黄",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "薄荷绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "橄榄绿",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "透明黄",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "樱花粉",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "阳光橙",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "透明",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "瓷白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "骨白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG无线盘",
+    "color": "橡木色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA黑色+PLA白色+PLA灰色+PLA透明色+PLA克莱因蓝+PLA红色+PLA阳光橙+PLA绿色",
+    "store_sku": "DLZ-EU-SL-PLA-BK+WT+GY+TP+KB+RD+SO+GN-0.25*8",
+    "stock": 165,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "丝绸PLA+彩虹色01+丝绸PLA+彩虹色02+丝绸PLA+彩虹色03+丝绸PLA+彩虹色04+丝绸PLA+彩虹色05+丝绸PLA+彩虹色06+丝绸PLA+黄金色+丝绸PLA+银色",
+    "store_sku": "DLZ-EU-SL-SKRB-01+02+03+04+05+06+SKLG+SKSV-0.25*8",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+2.0黑色+PLA+2.0白色+PLA+2.0灰色+PLA+2.0克莱因蓝+PLA+2.0红色+PLA+2.0黄色+PLA+2.0橄榄绿+PLA+2.0阳光橙",
+    "store_sku": "DLZ-EU-SL-PLA+2-BK+WT+GY+KB+RD+YL+OG+SO-0.25*8",
+    "stock": 193,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+黑色+PLA+白色+PLA+灰色+PLA+克莱因蓝+PLA+绿色+PLA+红色+PLA+阳光橙+PLA+明黄色",
+    "store_sku": "DLZ-EU-SL-PLA+-BK+WT+GY+KB+GN+RD+SO+VY-0.25*8",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA栗黑色+PLA骨白色+PLA灰色+PLA咖棕色+PLA红色+PLA克莱因蓝+PLA明黄色+PLA橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA-RCN+BWT+GY+CBN+RD+KB+VY+OG-0.25*8",
+    "stock": 115,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "High Speed Matte PETG黑色+High Speed Matte PETG白色+High Speed Matte PETG灰色+High Speed Matte PETG红色+High Speed Matte PETG天空蓝+High Speed Matte PETG粉色+High Speed Matte PETG橙色+High Speed Matte PETG薄荷绿",
+    "store_sku": "DLZ-EU-SL-HSMPETG-BK+WT+GY+RD+SB+PK+OR+MG-0.25*8",
+    "stock": 202,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA+栗黑色+PLA+骨白色+PLA+灰色+PLA+克莱因蓝+PLA+红色+PLA+黄色+PLA+咖棕色+PLA+橄榄绿",
+    "store_sku": "DLZ-EU-SL-PLA+-RCN+BWT+GY+KB+RD+YL+CBN+OG-0.25*8",
+    "stock": 212,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA Meta黑色+PLA Meta白色+PLA Meta灰色+PLA Meta天空蓝+PLA Meta薄荷绿+PLA Meta樱桃红+PLA Meta柠檬黄+PLA Meta樱花粉",
+    "store_sku": "DLZ-EU-SL-PLAMT-BK+WT+GY+SB+MG+CR+LY+SP-0.25*8",
+    "stock": 179,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PETG黑色+PETG白色+PETG红色+PETG克莱因蓝+PETG绿色+PETG黄色+PETG阳光橙+PETG薰衣草紫",
+    "store_sku": "DLZ-EU-SL-PETG-BK+WT+RD+KB+GN+YL+SO+LP-0.25*8",
+    "stock": 431,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA哑光黑色+PLA哑光白色+PLA哑光红色+PLA哑光蓝色+PLA哑光绿色+PLA哑光粉色+PLA哑光灰色+PLA哑光陶泥色",
+    "store_sku": "DLZ-EU-SL-PLAYG-BK+WT+RD+KB+GN+PK+GY+CA-0.25*8",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "250G线盘",
+    "color": "PLA彩虹01*2+PLA彩虹02*2+PLA彩虹03*2+PLA彩虹04*2-0.25kg",
+    "store_sku": "新品",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-BK-1KG",
+    "stock": 257,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-WT-1KG",
+    "stock": 856,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GY-1KG",
+    "stock": 1616,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-SK-1KG",
+    "stock": 213,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-DG-1KG",
+    "stock": 1629,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TP-1KG",
+    "stock": 9,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TPRD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TPBL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "透明绿",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TPGN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-OR-1KG",
+    "stock": 51,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-LY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "香芋紫",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TOP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-SB-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "绿",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "樱花粉",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-SP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂",
+    "color": "薄荷绿",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-MG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "韧性树脂",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-RESIN-TH-BK-1KG",
+    "stock": 83,
+    "region": "欧洲"
+  },
+  {
+    "category": "韧性树脂",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-RESIN-TH-WT-1KG",
+    "stock": 191,
+    "region": "欧洲"
+  },
+  {
+    "category": "韧性树脂",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-TH-GY-1KG",
+    "stock": 33,
+    "region": "欧洲"
+  },
+  {
+    "category": "耐高温树脂",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-RESIN-HT-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "植物基树脂",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-RESIN-PB-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "植物基树脂",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-RESIN-PB-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "植物基树脂",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-PB-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "植物基树脂",
+    "color": "深灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-PB-DG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "植物基树脂",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-RESIN-PB-SK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-WT-1KG",
+    "stock": 201,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-GY-1KG",
+    "stock": 2,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "深灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-DG-1KG",
+    "stock": 6,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "肤色",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-SK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "透明色（旧）",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-TP-1KG",
+    "stock": 218,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "透明色",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-TPBL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-TPRD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类PA树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-PA-BK-1KG",
+    "stock": 83,
+    "region": "欧洲"
+  },
+  {
+    "category": "类PA树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-PA-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类PA树脂",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-PA-GY-1KG",
+    "stock": 25,
+    "region": "欧洲"
+  },
+  {
+    "category": "类PA树脂",
+    "color": "肤",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类PA树脂",
+    "color": "类PA-深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-PA-DG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-WASHABLE-BK-1KG",
+    "stock": 275,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-WASHABLE-WT-1KG",
+    "stock": 231,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "浅灰",
+    "store_sku": "DLZ-EU-SL-WASHABLE-LG-1KG",
+    "stock": 360,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-WASHABLE-DG-1KG",
+    "stock": 472,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "肤",
+    "store_sku": "DLZ-EU-SL-WASHABLE-BE-1KG",
+    "stock": 4,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "橙色",
+    "store_sku": "DLZ-EU-SL-WASHABLE-OR-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "绿色",
+    "store_sku": "DLZ-EU-SL-WASHABLE-GN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-WASHABLE-TPRD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-WASHABLE-TPBL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "透明绿",
+    "store_sku": "DLZ-EU-SL-WASHABLE-TPGN-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂",
+    "color": "透明色",
+    "store_sku": "DLZ-EU-SL-WASHABLE-TP-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS树脂",
+    "color": "浅灰",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-GY-1KG",
+    "stock": 154,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS树脂",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-DG-1KG",
+    "stock": 451,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS树脂",
+    "color": "蓝灰",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-BG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "红蜡树脂",
+    "color": "红蜡色",
+    "store_sku": "DLZ-EU-SL-RESIN-RWR-RD-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗ABS树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-WWAL-BK-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗ABS树脂",
+    "color": "浅灰",
+    "store_sku": "DLZ-EU-SL-RESIN-WWAL-GY-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗ABS树脂",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-WWAL-DG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗ABS树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-WWAL-WT-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-BK-1KG",
+    "stock": 112,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-WT-1KG",
+    "stock": 91,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "浅灰",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-GY-1KG",
+    "stock": 60,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-DG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "蓝灰",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-BG-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "胡桃木",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-WAL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "枫木",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-MAP-1KG",
+    "stock": 67,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 刚性树脂",
+    "color": "桃花心木",
+    "store_sku": "DLZ-EU-SL-RESIN-14KST-MAH-1KG",
+    "stock": 58,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K 红蜡树脂",
+    "color": "红蜡色",
+    "store_sku": "DLZ-EU-SL-RESIN-14KRWR-RD-1KG",
+    "stock": 138,
+    "region": "欧洲"
+  },
+  {
+    "category": "高透树脂",
+    "color": "高透树脂",
+    "store_sku": "DLZ-EU-SL-RESIN-HC-CL-1KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "AB滴胶（环氧树脂）",
+    "color": "透明色",
+    "store_sku": "DLZ-EU-SL-RESIN-AB-CL-1.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GY-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-DG-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TP-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "透明红",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TPRD-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "透明蓝",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TPBL-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "香芋紫",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TOP-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "天空蓝",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-SB-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 0.5KG瓶",
+    "color": "柠檬黄",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-LY-0.5KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 2KG瓶",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-BK-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 2KG瓶",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-WT-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 2KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GY-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 2KG瓶",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-DG-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 2KG瓶",
+    "color": "透明",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-TP-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂 2KG瓶",
+    "color": "白",
+    "store_sku": "DLZ-EU-SL-WASHABLE-WT-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂 2KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-WASHABLE-GY-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂 2KG瓶",
+    "color": "黑",
+    "store_sku": "DLZ-EU-SL-WASHABLE-BK-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "韧性树脂 2KG瓶",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-TH-GY-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂 2KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-GY-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂 2KG瓶",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-DG-2KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 3KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GY-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性树脂 3KG瓶",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-DG-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性树脂 3KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-WASHABLE-GY-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "韧性树脂 3KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-TH-GY-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性PLUS 3KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-STPLUS-GY-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS树脂 3KG瓶",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ABS-GY-3KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-GY-4KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-ST-DG-4KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-RESIN-WW-GY-4KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗",
+    "color": "深灰",
+    "store_sku": "DLZ-EU-SL-RESIN-WW-DG-4KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS- CMYK+W彩色树脂套装",
+    "color": "青色+品红色+黑色+黄色+白色",
+    "store_sku": "DLZ-EU-SL-RESIN-CMYKW-1KG*5",
+    "stock": 85,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "刚性光敏树脂透明色",
+    "color": "透明色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS光敏树脂透明色",
+    "color": "透明色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS光敏树脂黑色",
+    "color": "黑色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "类ABS光敏树脂肤色",
+    "color": "肤色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性光敏树脂深灰色",
+    "color": "深灰",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "水洗刚性光敏树脂灰色",
+    "color": "灰色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "14K刚性光敏树脂白色",
+    "color": "白色",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S1 plus白",
+    "store_sku": "DLZ-S1PLUS-FD-EU",
+    "stock": 877,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S2 黑",
+    "store_sku": "DLZ-EU-SL-S2FD-EU",
+    "stock": 753,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S2 白",
+    "store_sku": "DLZ-EU-SL-S2FD-EU-WT",
+    "stock": 140,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4黑色",
+    "store_sku": "DLZ-SL-EU-S4FD-EU",
+    "stock": 894,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4白色",
+    "store_sku": "DLZ-SL-EU-S4FD-WT-EU",
+    "stock": 57,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "S4Pro",
+    "store_sku": "",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "E2",
+    "store_sku": "DLZ-SL-FD-E2-BK-EU",
+    "stock": 39,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "SP2干燥箱",
+    "store_sku": "DLZ-SL-FD-SP2-BK-EU",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "腔体+两卷PLA+2.0黑",
+    "store_sku": "DLZ-SL-FD-SP2_CB-BK-EU",
+    "stock": 17,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "AMS加热器",
+    "store_sku": "S-SL-FD-AMS-BK-EU-NA-CD",
+    "stock": 4528,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "干燥箱",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "熔接器",
+    "color": "单个",
+    "store_sku": "DLZ-EU-SL-FC-EU",
+    "stock": 662,
+    "region": "欧洲"
+  },
+  {
+    "category": "熔接器+1包",
+    "color": "熔接器+1包",
+    "store_sku": "DLZ-EU-SL-FC-EU+PTFE*1",
+    "stock": 273,
+    "region": "欧洲"
+  },
+  {
+    "category": "熔接器+2包",
+    "color": "熔接器+2包",
+    "store_sku": "DLZ-EU-SL-FC-EU+PTFE*2",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PTFE套管 海外仓",
+    "color": "常规200pacs/包 *2",
+    "store_sku": "DLZ-EU-SL-PTFE-PT2-TP-GN*2",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PTFE套管 海外仓",
+    "color": "常规200pacs/包 *5",
+    "store_sku": "DLZ-EU-SL-PTFE-PT5-TP-GN*5",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印笔",
+    "color": "青色",
+    "store_sku": "DLZ-EU-SL-SL200-1SET",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印笔",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印笔",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印笔",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "儿童打印机",
+    "color": "",
+    "store_sku": "P-DL-KD-KD-OR-EU-NA-KT",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "超声波清洗机",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-UC01-BK-EU",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "固化箱PLUS",
+    "color": "白色",
+    "store_sku": "DLZ-EU-SL-RC01PLUS-WT-EU",
+    "stock": 27,
+    "region": "欧洲"
+  },
+  {
+    "category": "二代光固箱",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-RC02-BK-EU",
+    "stock": 48,
+    "region": "欧洲"
+  },
+  {
+    "category": "空气净化器",
+    "color": "白+黑",
+    "store_sku": "DLZ-EU-SL-AP01-BK+WT-EU",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 250G线盘",
+    "color": "灰",
+    "store_sku": "DLZ-EU-SL-PLA-GY-0.25KG",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-REC-PLA-1KG-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PLA-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "灰色",
+    "store_sku": "DLZ-EU-SL-PLA-GY-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "杂色/随机",
+    "store_sku": "DLZ-EU-SL-PLA-Random-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "黄色系",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "绿色系",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA 破碎料",
+    "color": "PLA和哑光，META混装",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 破碎料",
+    "color": "杂色/随机色",
+    "store_sku": "DLZ-EU-REC-PLA-1KG-PS*3",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA+ 破碎料",
+    "color": "丝绸，PLA+, 快打， PLA+2.0  混搭",
+    "store_sku": "DLZ-EU-SL-PLA+-Random-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-plamt-bk-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META 破碎料",
+    "color": "杂色/随机",
+    "store_sku": "DLZ-EU-REC-PLAMT-1KG-PS*3",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA META 破碎料",
+    "color": "杂色/随机",
+    "store_sku": "DLZ-EU-SL-plamt-Random-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PLAYG-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA哑光 破碎料",
+    "color": "粉色(杂色)",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-PETG-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 破碎料",
+    "color": "杂色/随机",
+    "store_sku": "DLZ-EU-SL-PETG-random-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PETG 破碎料",
+    "color": "PETG杂色混装",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SIlk 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-SILK-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SIlk 破碎料",
+    "color": "随机色*1",
+    "store_sku": "DLZ-EU-SL-SILK-RANDOM-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "SIlk 破碎料",
+    "color": "黄金",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "ABS 破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-ABS-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "PLA大理石破碎料",
+    "color": "大理石色-1KG装",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "TPU破碎料",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-TPU-BK-1KG*10-PS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "常规",
+    "store_sku": "DLZ-AS-SL-VSBT-EU",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "",
+    "store_sku": "DLZ-EU-SL-ABPT-310x310",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "/",
+    "store_sku": "DLZ-EU-SL-ABPT-235x235",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "",
+    "store_sku": "DLZ-EU-PEI-2A1B",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "/",
+    "store_sku": "DLZ-SL-EU-ENCLOSURE-235X235",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "/",
+    "store_sku": "DLZ-SL-EU-TPPE-TP",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "/",
+    "store_sku": "DLZ-EU-ACC-FUNNEL-SETS",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "透明*3+闪光金*3+闪光银*2",
+    "store_sku": "DLZ-SL-EU-UV-CC-RESIN-35G*8",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "黑色",
+    "store_sku": "DLZ-EU-SL-FH-BK",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "枪灰色",
+    "store_sku": "/",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "1000g装",
+    "store_sku": "DLZ-SL-EU-RESIN-DETERGENT-1000G",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "2000g装",
+    "store_sku": "DLZ-SL-EU-RESIN-DETERGENT-2000G",
+    "stock": 0,
+    "region": "欧洲"
+  },
+  {
+    "category": "打印机 及其它配件",
+    "color": "3000g装",
+    "store_sku": "DLZ-SL-EU-RESIN-DETERGENT-3000G",
+    "stock": 0,
+    "region": "欧洲"
+  }
+]
