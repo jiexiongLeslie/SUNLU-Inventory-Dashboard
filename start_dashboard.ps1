@@ -4,7 +4,7 @@
 # 局域网访问: http://<本机IP>:5002
 
 $port = 5002
-$workDir = "C:\Users\Administrator\Documents\trae"
+$workDir = $PSScriptRoot
 
 # 检查是否已在运行
 $existing = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue | Where-Object { $_.State -eq 'Listen' }

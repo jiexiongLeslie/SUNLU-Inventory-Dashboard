@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SUNLU 英美欧库存数据看板</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231a365d'/%3E%3Cpath d='M6 10h20v14H6z' fill='none' stroke='%233182ce' stroke-width='2'/%3E%3Cpath d='M6 14h20M13 10v14M19 10v14' stroke='%233182ce' stroke-width='1.5'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="/excelParser.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -206,9 +207,12 @@ tr:hover { background: #f7fafc; }
   <div class="header">
     <div>
       <h1><svg class="icon icon-lg"><use href="#icon-logo"/></svg> SUNLU 英美欧库存数据看板</h1>
-      <div class="meta" id="metaInfo">数据更新：库存更新5.6 | 统计范围：英国站 + 欧洲站 + 美国站 | 按店铺SKU汇总</div>
+      <div class="meta" id="metaInfo">数据更新：加载中 | 统计范围：英国站 + 欧洲站 + 美国站 | 按店铺SKU汇总</div>
     </div>
-    <div style="font-size:13px;opacity:.9" id="updateTime"></div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <a href="/shopify.html" style="color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.4);padding:7px 11px;border-radius:6px;font-size:13px">Shopify 库存</a>
+      <div style="font-size:13px;opacity:.9" id="updateTime"></div>
+    </div>
   </div>
 
   <div class="upload-section">
@@ -363,6 +367,7 @@ tr:hover { background: #f7fafc; }
 
 <script>
 let DATA = [], ukTotal = 0, euTotal = 0, usTotal = 0, grandTotal = 0, maxStock = 1, ukSku = 0, euSku = 0, usSku = 0;
+let dashboardMeta = null;
 let filteredData = [], sortKey = 'stock', sortDir = -1, currentPage = 1;
 const PAGE_SIZE = 10;
 
@@ -13691,6 +13696,21 @@ const DEFAULT_DATA = [
 ];
 
 function parseExcelFile(workbook) {
+  if (window.SunluExcelParser) {
+    var parsedWorkbook = window.SunluExcelParser.parseExcelWorkbook(workbook);
+    window.lastExcelParseReport = parsedWorkbook.report;
+    console.table(parsedWorkbook.report.sheets.map(function(sheet) {
+      return {
+        sheet: sheet.sheetName || sheet.sheetPattern,
+        region: sheet.region,
+        records: sheet.records,
+        missing: sheet.missingColumns.join(', '),
+        stockColumn: sheet.columns.stock ? sheet.columns.stock.column : ''
+      };
+    }));
+    return parsedWorkbook.records;
+  }
+
   var results = [];
   var configs = [
     { pattern: '英国站', region: '英国', stockKeywords: ['总库存'] },
@@ -13804,16 +13824,18 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
       }
       DATA = parsed;
       refreshAll();
-      var timeStr = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-      document.getElementById('metaInfo').textContent = '数据更新：' + file.name + ' | 更新于 ' + timeStr;
+      dashboardMeta = buildDashboardMeta(file);
+      applyDashboardMeta(dashboardMeta);
       document.getElementById('updateTime').textContent = new Date().toLocaleDateString('zh-CN');
       statusEl.className = 'upload-status success';
       statusEl.textContent = '解析成功';
-      showToast('成功解析 ' + parsed.length + ' 条记录');
+      var reportSummary = window.lastExcelParseReport ? window.lastExcelParseReport.summary : '';
+      showToast('成功解析 ' + parsed.length + ' 条记录' + (reportSummary ? '；' + reportSummary : ''));
       renderPieChart();
       renderHeatmap();
       // 保存到服务器
-      saveDataToServer().then(() => showToast('数据已保存到服务器', 'success'));
+      Promise.all([saveDataToServer(), saveMetaToServer(dashboardMeta)])
+        .then(() => showToast('数据和更新时间已保存到服务器', 'success'));
     } catch (err) {
       statusEl.className = 'upload-status error';
       statusEl.textContent = '解析失败';
@@ -14234,6 +14256,67 @@ function updateTime() {
   document.getElementById('updateTime').textContent = dateStr + ' ' + timeStr;
 }
 
+function extractInventoryLabelFromFilename(name) {
+  var match = String(name || '').match(/库存更新\s*([0-9]{1,2}(?:\.[0-9]{1,2})?)/);
+  return match ? '库存更新' + match[1] : '';
+}
+
+function getRegionScope() {
+  var regionLabels = { '英国': '英国站', '欧洲': '欧洲站', '美国': '美国站' };
+  var preferredOrder = ['英国', '欧洲', '美国'];
+  var present = new Set(DATA.map(d => d.region).filter(Boolean));
+  var ordered = preferredOrder.filter(region => present.has(region));
+
+  DATA.forEach(function(item) {
+    if (item.region && ordered.indexOf(item.region) < 0) {
+      ordered.push(item.region);
+    }
+  });
+
+  return ordered.map(region => regionLabels[region] || region + '站').join(' + ') || '英国站 + 欧洲站 + 美国站';
+}
+
+function buildDashboardMeta(file) {
+  return {
+    source_file: file && file.name ? file.name : '',
+    inventory_label: extractInventoryLabelFromFilename(file && file.name),
+    uploaded_at: new Date().toISOString(),
+    regions: Array.from(new Set(DATA.map(d => d.region).filter(Boolean)))
+  };
+}
+
+function formatDashboardDate(value) {
+  var date = value ? new Date(value) : null;
+  if (!date || isNaN(date.getTime())) return '';
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function inventoryLabelFromDate(value) {
+  var date = value ? new Date(value) : null;
+  if (!date || isNaN(date.getTime())) return '';
+  return '库存更新' + (date.getMonth() + 1) + '.' + date.getDate();
+}
+
+function applyDashboardMeta(meta) {
+  var savedMeta = meta || {};
+  var label = savedMeta.inventory_label || extractInventoryLabelFromFilename(savedMeta.source_file) || inventoryLabelFromDate(savedMeta.uploaded_at) || '服务器数据';
+  var uploadedAt = formatDashboardDate(savedMeta.uploaded_at);
+  var text = '数据更新：' + label;
+
+  if (uploadedAt) {
+    text += ' | 上传于 ' + uploadedAt;
+  }
+
+  text += ' | 统计范围：' + getRegionScope() + ' | 按店铺SKU汇总';
+  document.getElementById('metaInfo').textContent = text;
+}
+
 // 从服务器加载数据
 function loadDataFromServer() {
   return fetch('/api/data')
@@ -14257,15 +14340,34 @@ function saveDataToServer() {
   }).catch(err => console.error('保存失败:', err));
 }
 
+function loadMetaFromServer() {
+  return fetch('/api/meta')
+    .then(res => res.json())
+    .then(meta => {
+      dashboardMeta = meta && Object.keys(meta).length > 0 ? meta : null;
+      return dashboardMeta;
+    })
+    .catch(() => null);
+}
+
+function saveMetaToServer(meta) {
+  return fetch('/api/meta', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(meta || {})
+  }).catch(err => console.error('保存更新时间失败:', err));
+}
+
 function init() {
   // 先尝试从服务器加载，如果没有则使用默认数据
-  loadDataFromServer().then(hasData => {
+  Promise.all([loadDataFromServer(), loadMetaFromServer()]).then(([hasData]) => {
     if (!hasData) {
       DATA = DEFAULT_DATA;
     }
     updateTime();
     setInterval(updateTime, 1000);
     refreshAll();
+    applyDashboardMeta(dashboardMeta);
     bindEvents();
     renderPieChart();
     renderHeatmap();

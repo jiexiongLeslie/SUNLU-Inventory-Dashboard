@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SUNLU inventory dashboard">
+  <defs>
+    <linearGradient id="bg" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1a365d"/>
+      <stop offset="1" stop-color="#2f80ed"/>
+    </linearGradient>
+    <linearGradient id="box" x1="18" y1="18" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <path d="M19 22.5 32 15l13 7.5v17L32 47l-13-7.5z" fill="url(#box)" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M19 22.5 32 30l13-7.5M32 30v17" fill="none" stroke="#1a365d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M25 19.2 38 26.7" fill="none" stroke="#2f80ed" stroke-width="2" stroke-linecap="round"/>
+  <rect x="40" y="38" width="12" height="12" rx="4" fill="#22c55e" stroke="#ffffff" stroke-width="2"/>
+  <path d="m43.5 44.2 2.4 2.4 4.3-5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

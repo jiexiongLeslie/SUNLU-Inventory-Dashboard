@@ -44,6 +44,7 @@ SUNLU-Inventory-Dashboard/
 服务启动后访问:
 - 本机: http://localhost:5002
 - 局域网: http://<本机IP>:5002
+- Shopify 库存页: http://localhost:5002/shopify.html
 
 ### 2. 上传数据
 
@@ -96,3 +97,48 @@ Excel文件需包含以下工作表:
 1. 首次启动前请确保已安装 Node.js
 2. Excel文件上传后数据会持久化到服务器，刷新页面不会丢失
 3. 如需重置数据，可删除 `data/data.json` 文件后重启服务
+
+## 开发约定：Excel 列定位
+
+这个项目依赖的 Excel 文件是宽表结构：列名相对稳定，但列序号会随着每日新增日期、销量、补货和库存列而变化。后续开发不要按固定列号读取数据，必须按表头文本动态定位。
+
+当前前端统一解析入口是 `frontend/excelParser.js`，它会按工作表和列名规则查找：
+
+- 商品维度：`品类`、`颜色`、`店铺SKU`
+- 库存字段：如 `总库存`、`独立站 库存`、`总库存 欧洲所有通用`、`库存总计`
+- 销量字段：`7天日均销量`、`7天总销量`、`14天总销量`、`近30天总销量`
+- 在途字段：`在途库存` / `在途 库存`
+
+新增统计口径时，优先在 `frontend/excelParser.js` 中增加配置规则，再让页面消费解析后的结构化字段。不要在页面渲染逻辑或历史 Python 脚本中散落新的列号判断。
+
+命令行解析可使用新版脚本：
+
+```powershell
+py scripts\extract_inventory_dynamic.py "C:\path\to\inventory.xlsx" --summary
+py scripts\extract_inventory_dynamic.py "C:\path\to\inventory.xlsx" -o data\data.json
+```
+
+解析后的数据会额外保留这些统计字段：
+
+- `in_transit`：在途库存
+- `sales_7d_avg`：7 天日均销量
+- `sales_7d` / `sales_14d` / `sales_30d`：近 7/14/30 天销量
+- `days_of_cover`：库存可售天数
+- `risk_level`：库存风险状态
+- `source_sheet`：来源工作表
+
+## Shopify 库存统计
+
+Shopify 统计页位于 `frontend/shopify.html`，后端接口会读取项目根目录下的 `shopify_token.env`。这个文件包含敏感凭证，已加入 `.gitignore`，不要提交到仓库。
+
+当前支持的配置格式：
+
+```env
+SHOPIFY_UK_STORE=sunluuk.myshopify.com
+SHOPIFY_DE_STORE=sunlude.myshopify.com
+
+client_id=your_client_id
+client_secret=your_client_secret
+```
+
+后端会使用 `client_id + client_secret` 通过 Shopify client credentials flow 换取临时 access token，再通过 Admin GraphQL API 拉取产品变体库存。页面会展示产品数、变体数、SKU 数、总库存、零库存和低库存变体，并支持按店铺、库存状态和关键词筛选。
