@@ -142,3 +142,10 @@ client_secret=your_client_secret
 ```
 
 后端会使用 `client_id + client_secret` 通过 Shopify client credentials flow 换取临时 access token，再通过 Admin GraphQL API 拉取产品变体库存。页面会展示产品数、变体数、SKU 数、总库存、零库存和低库存变体，并支持按店铺、库存状态和关键词筛选。
+
+### Shopify 缓存、SKU 映射和数据诊断
+
+- Shopify 页面默认读取缓存；点击“刷新 Shopify 并更新缓存”才会实时调用 Shopify API，并写入 `data/shopify_inventory_cache.json`。
+- SKU 映射维护页：`http://localhost:5002/sku-mapping.html`。用于把疑似未匹配 SKU 标记为“单品”并指定产品分类，或标记为“排除”。
+- 数据质量诊断页：`http://localhost:5002/quality.html`。用于检查库存表空 SKU、重复 SKU、零库存有销量、Shopify 未匹配单品 SKU、同 SKU 多库存等问题。
+- 映射规则保存到 `data/sku_mappings.json`，属于运行时业务配置，已加入 `.gitignore`。

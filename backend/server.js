@@ -8,6 +8,8 @@ const MAX_BODY_SIZE = 10 * 1024 * 1024;
 const ROOT_DIR = path.resolve(__dirname, '..');
 const DATA_FILE = path.join(ROOT_DIR, 'data', 'data.json');
 const META_FILE = path.join(ROOT_DIR, 'data', 'meta.json');
+const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
+const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
 const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-10';
@@ -44,6 +46,55 @@ const shopifyTokenCache = new Map();
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(JSON.stringify(payload));
+}
+
+function readJsonFile(filePath, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function writeJsonFile(filePath, payload) {
+  const dataDir = path.dirname(filePath);
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  fs.writeFileSync(filePath, JSON.stringify(payload, null, 2), 'utf8');
+}
+
+function readRequestJson(req, limit = MAX_BODY_SIZE) {
+  return new Promise((resolve, reject) => {
+    let body = '';
+    let bodyTooLarge = false;
+
+    req.on('data', chunk => {
+      if (bodyTooLarge) {
+        return;
+      }
+
+      body += chunk;
+      if (Buffer.byteLength(body, 'utf8') > limit) {
+        bodyTooLarge = true;
+        reject(Object.assign(new Error('Request body is too large'), { statusCode: 413 }));
+      }
+    });
+
+    req.on('end', () => {
+      if (bodyTooLarge) {
+        return;
+      }
+
+      try {
+        resolve(JSON.parse(body || '{}'));
+      } catch (e) {
+        reject(Object.assign(new Error('Invalid JSON'), { statusCode: 400 }));
+      }
+    });
+
+    req.on('error', () => reject(Object.assign(new Error('Request failed'), { statusCode: 400 })));
+  });
 }
 
 function normalizeShopDomain(value) {
@@ -349,6 +400,59 @@ function summarizeShopifyInventory(records) {
   };
 }
 
+function getShopifyCacheKey(stores) {
+  return stores.map(store => store.key).sort().join('+') || 'all';
+}
+
+function readShopifyCache() {
+  const cache = readJsonFile(SHOPIFY_CACHE_FILE, { version: 1, entries: {} });
+  if (!cache || typeof cache !== 'object' || !cache.entries) {
+    return { version: 1, entries: {} };
+  }
+  return cache;
+}
+
+function getShopifyCacheEntry(cacheKey) {
+  return readShopifyCache().entries[cacheKey] || null;
+}
+
+function saveShopifyCacheEntry(cacheKey, payload) {
+  const cache = readShopifyCache();
+  cache.version = 1;
+  cache.entries[cacheKey] = {
+    saved_at: new Date().toISOString(),
+    payload
+  };
+  writeJsonFile(SHOPIFY_CACHE_FILE, cache);
+}
+
+async function fetchShopifyInventoryPayload(selectedStores, config) {
+  const storeResults = [];
+  const rawRecords = [];
+  for (const store of selectedStores) {
+    const result = await fetchShopifyInventoryForStore(store, config.clientId, config.clientSecret);
+    storeResults.push({
+      store_key: result.store_key,
+      store_label: result.store_label,
+      shop: result.shop,
+      records: result.records.length,
+      page_count: result.page_count
+    });
+    rawRecords.push(...result.records);
+  }
+  const records = dedupeShopifyInventory(rawRecords);
+
+  return {
+    generated_at: new Date().toISOString(),
+    api_version: SHOPIFY_API_VERSION,
+    stores: storeResults,
+    raw_records: rawRecords.length,
+    dedupe_key: 'store + sku, inventory selected by most frequent value',
+    summary: summarizeShopifyInventory(records),
+    records
+  };
+}
+
 async function handleShopifyShops(req, res) {
   const config = getShopifyConfig();
   sendJson(res, 200, {
@@ -380,32 +484,40 @@ async function handleShopifyInventory(parsedUrl, res) {
     return;
   }
 
-  try {
-    const storeResults = [];
-    const rawRecords = [];
-    for (const store of selectedStores) {
-      const result = await fetchShopifyInventoryForStore(store, config.clientId, config.clientSecret);
-      storeResults.push({
-        store_key: result.store_key,
-        store_label: result.store_label,
-        shop: result.shop,
-        records: result.records.length,
-        page_count: result.page_count
-      });
-      rawRecords.push(...result.records);
-    }
-    const records = dedupeShopifyInventory(rawRecords);
+  const cacheKey = getShopifyCacheKey(selectedStores);
+  const shouldRefresh = parsedUrl.query.refresh === '1';
+  const cacheEntry = getShopifyCacheEntry(cacheKey);
 
+  if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
-      generated_at: new Date().toISOString(),
-      api_version: SHOPIFY_API_VERSION,
-      stores: storeResults,
-      raw_records: rawRecords.length,
-      dedupe_key: 'store + sku, inventory selected by most frequent value',
-      summary: summarizeShopifyInventory(records),
-      records
+      ...cacheEntry.payload,
+      from_cache: true,
+      cache_key: cacheKey,
+      cached_at: cacheEntry.saved_at
+    });
+    return;
+  }
+
+  try {
+    const payload = await fetchShopifyInventoryPayload(selectedStores, config);
+    saveShopifyCacheEntry(cacheKey, payload);
+    sendJson(res, 200, {
+      ...payload,
+      from_cache: false,
+      cache_key: cacheKey,
+      cached_at: new Date().toISOString()
     });
   } catch (e) {
+    if (cacheEntry?.payload) {
+      sendJson(res, 200, {
+        ...cacheEntry.payload,
+        from_cache: true,
+        cache_key: cacheKey,
+        cached_at: cacheEntry.saved_at,
+        warning: e.message || 'Refresh failed, returned cached Shopify inventory'
+      });
+      return;
+    }
     sendJson(res, 502, { error: e.message || 'Failed to fetch Shopify inventory' });
   }
 }
@@ -481,6 +593,36 @@ function normalizeDashboardMeta(meta) {
     regions: Array.isArray(meta.regions)
       ? meta.regions.map(region => String(region || '').trim()).filter(Boolean).slice(0, 10)
       : []
+  };
+}
+
+function normalizeSkuMappingList(payload) {
+  const items = Array.isArray(payload) ? payload : payload.items;
+  if (!Array.isArray(items)) {
+    throw new Error('Mappings must be an array');
+  }
+
+  return {
+    version: 1,
+    updated_at: new Date().toISOString(),
+    items: items.map((item, index) => {
+      const sku = String(item?.sku || '').trim();
+      const kind = String(item?.kind || 'single').trim();
+      if (!sku) {
+        throw new Error(`Missing sku at index ${index}`);
+      }
+      if (!['single', 'excluded'].includes(kind)) {
+        throw new Error(`Invalid kind at index ${index}`);
+      }
+
+      return {
+        sku,
+        kind,
+        category: String(item?.category || '').trim().slice(0, 120),
+        note: String(item?.note || '').trim().slice(0, 500),
+        updated_at: item?.updated_at || new Date().toISOString()
+      };
+    })
   };
 }
 
@@ -660,6 +802,36 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/shopify/inventory' && req.method === 'GET') {
     handleShopifyInventory(parsedUrl, res);
+    return;
+  }
+
+  if (pathname === '/api/shopify/cache' && req.method === 'GET') {
+    const cache = readShopifyCache();
+    sendJson(res, 200, {
+      entries: Object.keys(cache.entries).map(key => ({
+        key,
+        saved_at: cache.entries[key].saved_at,
+        records: cache.entries[key].payload?.records?.length || 0,
+        stores: cache.entries[key].payload?.stores || [],
+        summary: cache.entries[key].payload?.summary || {}
+      }))
+    });
+    return;
+  }
+
+  if (pathname === '/api/sku-mappings' && req.method === 'GET') {
+    sendJson(res, 200, readJsonFile(SKU_MAPPING_FILE, { version: 1, updated_at: null, items: [] }));
+    return;
+  }
+
+  if (pathname === '/api/sku-mappings' && req.method === 'POST') {
+    readRequestJson(req, 1024 * 1024)
+      .then(payload => {
+        const mappings = normalizeSkuMappingList(payload);
+        writeJsonFile(SKU_MAPPING_FILE, mappings);
+        sendJson(res, 200, { success: true, count: mappings.items.length, updated_at: mappings.updated_at });
+      })
+      .catch(e => sendJson(res, e.statusCode || 400, { error: e.message || 'Invalid mappings' }));
     return;
   }
 

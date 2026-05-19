@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUNLU SKU 映射维护</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --primary:#16325c; --accent:#2f80ed; --bg:#f4f7fb; --card:#fff; --text:#172033; --muted:#6b7280; --border:#dfe7f1; --ok:#218a54; --warn:#b7791f; --bad:#c53030; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 1440px; margin: 0 auto; padding: 24px; }
+.header { background: var(--primary); color: #fff; padding: 24px 28px; border-radius: 10px; display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-bottom: 18px; }
+.header h1 { font-size: 24px; }
+.header .meta { color: rgba(255,255,255,.78); font-size: 13px; margin-top: 4px; }
+.header a { color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.4); padding:8px 12px; border-radius:6px; font-size:13px; }
+.toolbar, .panel { background: var(--card); border:1px solid var(--border); border-radius:8px; }
+.toolbar { padding: 12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+select, input { height:36px; border:1px solid var(--border); border-radius:6px; background:#fff; padding:0 10px; font-size:13px; color:var(--text); }
+input[type="search"] { min-width: 300px; flex: 1; }
+button { height:36px; border:0; border-radius:6px; background:var(--primary); color:#fff; padding:0 14px; font-weight:650; cursor:pointer; }
+button.secondary { background:#eef3f8; color:var(--primary); }
+button.warn { background:var(--warn); }
+.status { font-size:13px; color:var(--muted); }
+.panel-head { padding:13px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.count { font-size:12px; color:var(--muted); background:#eef3f8; border-radius:999px; padding:4px 10px; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:1180px; }
+th, td { padding:10px 12px; border-bottom:1px solid #edf2f7; text-align:left; vertical-align:top; font-size:13px; }
+th { background:#f8fafc; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; }
+.sku { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size:12px; }
+.muted { color:var(--muted); }
+.badge { display:inline-block; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; }
+.badge.ok { background:#e9f8ef; color:var(--ok); }
+.badge.warn { background:#fff7e6; color:var(--warn); }
+.badge.bad { background:#fff0f0; color:var(--bad); }
+.empty { padding:36px; text-align:center; color:var(--muted); }
+@media (max-width: 860px) { .container { padding:12px; } .header { flex-direction:column; align-items:flex-start; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div>
+      <h1>SKU 映射维护</h1>
+      <div class="meta" id="meta">确认 Shopify SKU 是单品、捆绑/套装，或手动指定产品分类</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="/shopify.html">Shopify 库存</a>
+      <a href="/quality.html">数据诊断</a>
+      <a href="/">主看板</a>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <input id="searchInput" type="search" placeholder="搜索 SKU、标题、颜色、备注">
+    <select id="viewSelect">
+      <option value="suspected">疑似未匹配单品</option>
+      <option value="excluded">自动排除捆绑/套装</option>
+      <option value="mapped">已保存映射</option>
+      <option value="all">全部未匹配</option>
+    </select>
+    <button id="saveBtn">保存映射</button>
+    <button class="secondary" id="reloadBtn">重新读取缓存</button>
+    <span class="status" id="statusText">准备就绪</span>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>SKU 列表</h2>
+      <span class="count" id="rowCount">0 条</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>SKU</th>
+            <th>Shopify 产品</th>
+            <th>颜色/变体</th>
+            <th>库存</th>
+            <th>判断</th>
+            <th>处理方式</th>
+            <th>产品分类</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+<script src="/sku-mapping.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SUNLU 数据质量诊断</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --primary:#16325c; --bg:#f4f7fb; --card:#fff; --text:#172033; --muted:#6b7280; --border:#dfe7f1; --ok:#218a54; --warn:#b7791f; --bad:#c53030; }
+body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif; background:var(--bg); color:var(--text); }
+.container { max-width:1440px; margin:0 auto; padding:24px; }
+.header { background:var(--primary); color:#fff; padding:24px 28px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:18px; }
+.header h1 { font-size:24px; }
+.header .meta { color:rgba(255,255,255,.78); font-size:13px; margin-top:4px; }
+.header a { color:#fff; text-decoration:none; border:1px solid rgba(255,255,255,.4); padding:8px 12px; border-radius:6px; font-size:13px; }
+.toolbar { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
+button { height:36px; border:0; border-radius:6px; background:var(--primary); color:#fff; padding:0 14px; font-weight:650; cursor:pointer; }
+.status { color:var(--muted); font-size:13px; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:16px; }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px; }
+.kpi .label { color:var(--muted); font-size:12px; margin-bottom:4px; }
+.kpi .value { font-size:26px; font-weight:800; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.panel { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.panel-head { padding:13px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.count { color:var(--muted); font-size:12px; background:#eef3f8; border-radius:999px; padding:4px 10px; }
+table { width:100%; border-collapse:collapse; }
+th, td { padding:10px 12px; border-bottom:1px solid #edf2f7; text-align:left; vertical-align:top; font-size:13px; }
+th { background:#f8fafc; color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+.sku { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:12px; }
+.muted { color:var(--muted); }
+.badge { display:inline-block; border-radius:999px; padding:2px 8px; font-size:11px; font-weight:700; }
+.badge.ok { background:#e9f8ef; color:var(--ok); }
+.badge.warn { background:#fff7e6; color:var(--warn); }
+.badge.bad { background:#fff0f0; color:var(--bad); }
+.wide { grid-column:1 / -1; }
+.empty { padding:28px; text-align:center; color:var(--muted); }
+@media (max-width: 980px) { .container { padding:12px; } .header { flex-direction:column; align-items:flex-start; } .grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div>
+      <h1>数据质量诊断</h1>
+      <div class="meta" id="meta">检查库存表、Shopify 缓存和 SKU 映射覆盖率</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="/sku-mapping.html">SKU 映射</a>
+      <a href="/shopify.html">Shopify 库存</a>
+      <a href="/">主看板</a>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <button id="refreshBtn">重新诊断</button>
+    <span class="status" id="statusText">准备就绪</span>
+  </section>
+
+  <section class="kpis" id="kpiGrid"></section>
+
+  <section class="grid">
+    <div class="panel">
+      <div class="panel-head"><h2>库存表问题</h2><span class="count" id="inventoryCount">0 项</span></div>
+      <table><thead><tr><th>类型</th><th>说明</th><th>数量</th></tr></thead><tbody id="inventoryBody"></tbody></table>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Shopify / 映射问题</h2><span class="count" id="shopifyCount">0 项</span></div>
+      <table><thead><tr><th>类型</th><th>说明</th><th>数量</th></tr></thead><tbody id="shopifyBody"></tbody></table>
+    </div>
+    <div class="panel wide">
+      <div class="panel-head"><h2>需要优先检查的 SKU</h2><span class="count" id="skuCount">0 条</span></div>
+      <table><thead><tr><th>SKU</th><th>问题</th><th>产品/颜色</th><th>库存</th></tr></thead><tbody id="skuBody"></tbody></table>
+    </div>
+  </section>
+</div>
+<script src="/quality.js"></script>
+</body>
+</html>

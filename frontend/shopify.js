@@ -13,6 +13,7 @@
     categoryOrder: [],
     categoryMeta: {},
     skuReference: {},
+    skuMappings: {},
     activeView: 'summary',
     loading: false
   };
@@ -133,6 +134,22 @@
       });
   }
 
+  function loadSkuMappings() {
+    return fetch('/api/sku-mappings')
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        state.skuMappings = {};
+        (data.items || []).forEach(function(item) {
+          if (item.sku) {
+            state.skuMappings[normalizeSku(item.sku)] = item;
+          }
+        });
+      })
+      .catch(function() {
+        state.skuMappings = {};
+      });
+  }
+
   function pickReferenceCategory(item) {
     var sku = normalizeSku(item.sku);
     var refs = state.skuReference[sku];
@@ -232,6 +249,29 @@
   }
 
   function enrichRecord(item) {
+    var mapping = state.skuMappings[normalizeSku(item.sku)];
+    if (mapping && mapping.kind === 'excluded') {
+      return Object.assign({}, item, {
+        mapped_category: UNMATCHED_CATEGORY,
+        mapped_color: item.color || item.variant_title || '',
+        matched_reference: false,
+        is_excluded_non_single: true,
+        is_suspected_single_unmatched: false,
+        mapping_note: mapping.note || ''
+      });
+    }
+
+    if (mapping && mapping.kind === 'single' && mapping.category) {
+      return Object.assign({}, item, {
+        mapped_category: mapping.category,
+        mapped_color: item.color || item.variant_title || '',
+        matched_reference: true,
+        is_excluded_non_single: false,
+        is_suspected_single_unmatched: false,
+        mapping_note: mapping.note || ''
+      });
+    }
+
     var ref = pickReferenceCategory(item);
     var category = ref ? ref.category : UNMATCHED_CATEGORY;
     var excluded = !ref && isBundleOrNonSingleSku(item);
@@ -559,20 +599,23 @@
       });
   }
 
-  function loadInventory() {
+  function loadInventory(forceRefresh) {
     if (state.loading) return;
     var store = storeSelect.value;
-    var url = '/api/shopify/inventory' + (store ? '?store=' + encodeURIComponent(store) : '');
-    setLoading(true, '正在从 Shopify 拉取库存...');
+    var params = [];
+    if (store) params.push('store=' + encodeURIComponent(store));
+    if (forceRefresh) params.push('refresh=1');
+    var url = '/api/shopify/inventory' + (params.length ? '?' + params.join('&') : '');
+    setLoading(true, forceRefresh ? '正在从 Shopify 拉取最新库存...' : '正在读取 Shopify 库存缓存...');
     fetch(url)
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data.error) throw new Error(data.error);
         state.records = data.records || [];
-        meta.textContent = '更新：' + new Date(data.generated_at).toLocaleString('zh-CN') +
+        meta.textContent = (data.from_cache ? '缓存：' : '更新：') + new Date(data.cached_at || data.generated_at).toLocaleString('zh-CN') +
           ' | Shopify店铺：' + (data.stores || []).map(function(s) { return s.store_label; }).join(', ') +
           ' | 分类口径：独立站欧洲产品汇总 ' + formatNumber(state.categoryOrder.length) + ' 个产品';
-        setLoading(false, '已加载 ' + formatNumber(state.records.length) + ' 条 Shopify SKU，正在按欧洲产品口径去重汇总');
+        setLoading(false, '已加载 ' + formatNumber(state.records.length) + ' 条 Shopify SKU' + (data.from_cache ? '（缓存）' : '（已刷新缓存）'));
         applyFilters();
       })
       .catch(function(err) {
@@ -583,8 +626,8 @@
       });
   }
 
-  refreshBtn.addEventListener('click', loadInventory);
-  storeSelect.addEventListener('change', loadInventory);
+  refreshBtn.addEventListener('click', function() { loadInventory(true); });
+  storeSelect.addEventListener('change', function() { loadInventory(false); });
   riskSelect.addEventListener('change', applyFilters);
   searchInput.addEventListener('input', applyFilters);
   document.querySelectorAll('.tab').forEach(function(tab) {
@@ -606,8 +649,8 @@
   renderKpis([]);
   renderSummary([]);
   renderTable([]);
-  Promise.all([loadReferenceData(), loadShops()])
-    .then(loadInventory)
+  Promise.all([loadReferenceData(), loadSkuMappings(), loadShops()])
+    .then(function() { loadInventory(false); })
     .catch(function(err) {
       setLoading(false, '配置读取失败：' + err.message);
     });
