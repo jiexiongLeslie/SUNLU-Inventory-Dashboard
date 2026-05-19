@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var EUROPE_REGION = '欧洲';
+  var DEFAULT_REGION = '欧洲';
   var UNMATCHED_CATEGORY = '未匹配库存项';
 
   var state = {
@@ -9,7 +9,9 @@
     records: [],
     displayRecords: [],
     filtered: [],
+    allDataRows: [],
     referenceRows: [],
+    referenceRegion: DEFAULT_REGION,
     categoryOrder: [],
     categoryMeta: {},
     skuReference: {},
@@ -69,6 +71,17 @@
     });
   }
 
+  function getReferenceRegion() {
+    var store = storeSelect.value;
+    if (store === 'SHOPIFY_UK_STORE') return '英国';
+    if (store === 'SHOPIFY_DE_STORE') return '欧洲';
+    return DEFAULT_REGION;
+  }
+
+  function referenceScopeLabel() {
+    return state.referenceRegion + '产品汇总 ' + formatNumber(state.categoryOrder.length) + ' 个产品';
+  }
+
   function buildReferenceMaps(rows) {
     var byCategory = {};
     state.skuReference = {};
@@ -123,15 +136,22 @@
     return fetch('/api/data')
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        state.referenceRows = Array.isArray(data)
-          ? data.filter(function(row) { return row.region === EUROPE_REGION; })
-          : [];
-        buildReferenceMaps(state.referenceRows);
+        state.allDataRows = Array.isArray(data) ? data : [];
+        rebuildReferenceForSelectedStore();
       })
       .catch(function() {
+        state.allDataRows = [];
         state.referenceRows = [];
         buildReferenceMaps([]);
       });
+  }
+
+  function rebuildReferenceForSelectedStore() {
+    state.referenceRegion = getReferenceRegion();
+    state.referenceRows = state.allDataRows.filter(function(row) {
+      return row.region === state.referenceRegion;
+    });
+    buildReferenceMaps(state.referenceRows);
   }
 
   function loadSkuMappings() {
@@ -430,7 +450,7 @@
   function renderKpis(records) {
     var s = computeSummary(records);
     var items = [
-      ['欧洲产品口径', s.reference_products],
+      [state.referenceRegion + '产品口径', s.reference_products],
       ['已匹配产品', s.matched_products],
       ['匹配单品SKU', s.skus],
       ['单品SKU库存', s.single_inventory],
@@ -490,7 +510,7 @@
       .map(function(item) {
         var risk = riskLabel(item.risk_level);
         return '<tr>' +
-          '<td><strong>' + escapeHtml(item.mapped_category) + '</strong><div class="muted">' + (item.matched_reference ? '欧洲SKU匹配' : '未匹配到欧洲SKU') + '</div></td>' +
+          '<td><strong>' + escapeHtml(item.mapped_category) + '</strong><div class="muted">' + (item.matched_reference ? state.referenceRegion + 'SKU匹配' : '未匹配到' + state.referenceRegion + 'SKU') + '</div></td>' +
           '<td>' + escapeHtml(item.mapped_color || item.color || '-') + '<div class="muted">' + escapeHtml(item.variant_title || '') + '</div></td>' +
           '<td class="sku">' + (item.sku ? escapeHtml(item.sku) : '<span class="muted">无 SKU</span>') + '</td>' +
           '<td class="number">' + formatNumber(item.inventory_quantity) + '</td>' +
@@ -509,7 +529,7 @@
     var groups = buildProductSummary(records);
     var referenceCount = state.categoryOrder.length;
     var extraCount = groups.filter(function(group) { return group.product_title === UNMATCHED_CATEGORY && group.items.length; }).length;
-    summaryCount.textContent = formatNumber(referenceCount) + ' 个欧洲单品' + (extraCount ? ' + 疑似未匹配单品' : '');
+    summaryCount.textContent = formatNumber(referenceCount) + ' 个' + state.referenceRegion + '单品' + (extraCount ? ' + 疑似未匹配单品' : '');
 
     if (!groups.length) {
       summaryBody.innerHTML = '<tr><td colspan="8"><div class="empty">没有匹配的数据</div></td></tr>';
@@ -547,7 +567,7 @@
 
       return '<tr>' +
         '<td><div class="rank-cell"><span class="rank-badge ' + rankCls + '">' + (index + 1) + '</span></div></td>' +
-        '<td><span class="expand-btn" data-target="' + id + '"><span class="arrow" id="arrow_' + id + '">&#9654;</span><span class="summary-name" title="' + escapeHtml(group.product_title) + '">' + escapeHtml(group.product_title) + '</span></span><div class="muted">欧洲表SKU ' + formatNumber(group.reference_sku_count) + ' / 参考库存 ' + formatNumber(group.reference_stock) + '</div></td>' +
+        '<td><span class="expand-btn" data-target="' + id + '"><span class="arrow" id="arrow_' + id + '">&#9654;</span><span class="summary-name" title="' + escapeHtml(group.product_title) + '">' + escapeHtml(group.product_title) + '</span></span><div class="muted">' + state.referenceRegion + '表SKU ' + formatNumber(group.reference_sku_count) + ' / 参考库存 ' + formatNumber(group.reference_stock) + '</div></td>' +
         '<td><span class="badge ' + (group.items.length ? 'ok' : 'warn') + '">' + formatNumber(group.sku_count) + ' SKU</span></td>' +
         '<td>' + formatNumber(group.color_count) + ' 色</td>' +
         '<td class="number">' + formatNumber(group.total_inventory) + '</td>' +
@@ -601,6 +621,7 @@
 
   function loadInventory(forceRefresh) {
     if (state.loading) return;
+    rebuildReferenceForSelectedStore();
     var store = storeSelect.value;
     var params = [];
     if (store) params.push('store=' + encodeURIComponent(store));
@@ -614,7 +635,7 @@
         state.records = data.records || [];
         meta.textContent = (data.from_cache ? '缓存：' : '更新：') + new Date(data.cached_at || data.generated_at).toLocaleString('zh-CN') +
           ' | Shopify店铺：' + (data.stores || []).map(function(s) { return s.store_label; }).join(', ') +
-          ' | 分类口径：独立站欧洲产品汇总 ' + formatNumber(state.categoryOrder.length) + ' 个产品';
+          ' | 分类口径：独立站' + referenceScopeLabel();
         setLoading(false, '已加载 ' + formatNumber(state.records.length) + ' 条 Shopify SKU' + (data.from_cache ? '（缓存）' : '（已刷新缓存）'));
         applyFilters();
       })
