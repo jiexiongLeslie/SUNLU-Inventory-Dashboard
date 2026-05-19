@@ -207,7 +207,7 @@ tr:hover { background: #f7fafc; }
   <div class="header">
     <div>
       <h1><svg class="icon icon-lg"><use href="#icon-logo"/></svg> SUNLU 英美欧库存数据看板</h1>
-      <div class="meta" id="metaInfo">数据更新：加载中 | 统计范围：英国站 + 欧洲站 + 美国站 | 按店铺SKU汇总</div>
+      <div class="meta" id="metaInfo">数据更新：加载中 | 统计范围：英国站 + 欧洲站 | 按店铺SKU汇总</div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
       <a href="/shopify.html" style="color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.4);padding:7px 11px;border-radius:6px;font-size:13px">Shopify 库存</a>
@@ -14264,18 +14264,7 @@ function extractInventoryLabelFromFilename(name) {
 }
 
 function getRegionScope() {
-  var regionLabels = { '英国': '英国站', '欧洲': '欧洲站', '美国': '美国站' };
-  var preferredOrder = ['英国', '欧洲', '美国'];
-  var present = new Set(DATA.map(d => d.region).filter(Boolean));
-  var ordered = preferredOrder.filter(region => present.has(region));
-
-  DATA.forEach(function(item) {
-    if (item.region && ordered.indexOf(item.region) < 0) {
-      ordered.push(item.region);
-    }
-  });
-
-  return ordered.map(region => regionLabels[region] || region + '站').join(' + ') || '英国站 + 欧洲站 + 美国站';
+  return '英国站 + 欧洲站';
 }
 
 function buildDashboardMeta(file) {
