@@ -148,5 +148,5 @@ client_secret=your_client_secret
 - Shopify 页面默认读取缓存；点击“刷新 Shopify 并更新缓存”才会实时调用 Shopify API，并写入 `data/shopify_inventory_cache.json`。
 - SKU 映射维护页：`http://localhost:5002/sku-mapping.html`。用于把疑似未匹配 SKU 标记为“单品”并指定产品分类，或标记为“排除”。
 - 数据质量诊断页：`http://localhost:5002/quality.html`。用于检查库存表空 SKU、重复 SKU、零库存有销量、Shopify 未匹配单品 SKU、同 SKU 多库存等问题。
-- 库龄结构分析页：`http://localhost:5002/inventory-age.html`。从 V3.5 单页系统接入，用于上传库龄文件、查看库龄结构、预警和动销快照。
+- 库龄结构分析页：`http://localhost:5002/inventory-age.html`。从 V3.5 单页系统接入，用于上传库龄文件、查看库龄结构、预警和动销快照。标准表头会自动导入；数据会同步保存到 `data/inventory_age.json`。
 - 映射规则保存到 `data/sku_mappings.json`，属于运行时业务配置，已加入 `.gitignore`。

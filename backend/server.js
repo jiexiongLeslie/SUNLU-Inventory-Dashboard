@@ -10,6 +10,7 @@ const DATA_FILE = path.join(ROOT_DIR, 'data', 'data.json');
 const META_FILE = path.join(ROOT_DIR, 'data', 'meta.json');
 const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
 const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
+const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
 const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-10';
@@ -626,6 +627,74 @@ function normalizeSkuMappingList(payload) {
   };
 }
 
+function normalizeAgeRows(rows) {
+  if (!Array.isArray(rows)) {
+    return [];
+  }
+
+  return rows.map((row, index) => {
+    const skuCode = String(row?.sku_code || '').trim();
+    if (!skuCode) {
+      throw new Error(`Missing sku_code at index ${index}`);
+    }
+    const qty = Number(row?.qty);
+    const age = Number(row?.age);
+    if (!Number.isFinite(qty) || qty < 0) {
+      throw new Error(`Invalid qty at index ${index}`);
+    }
+    if (!Number.isFinite(age) || age < 0) {
+      throw new Error(`Invalid age at index ${index}`);
+    }
+
+    return {
+      sku_code: skuCode,
+      sku_name: String(row?.sku_name || '').trim(),
+      warehouse: String(row?.warehouse || '').trim(),
+      warehouse_raw: String(row?.warehouse_raw || row?.warehouse || '').trim(),
+      warehouse_region: String(row?.warehouse_region || '').trim(),
+      age,
+      qty,
+      bucket: String(row?.bucket || '').trim()
+    };
+  });
+}
+
+function normalizeAgePayload(payload) {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    throw new Error('Age data must be an object');
+  }
+
+  const current = payload.current || {};
+  const previous = payload.previous || null;
+  const history = Array.isArray(payload.history) ? payload.history : [];
+  const meta = payload.meta || {};
+
+  return {
+    version: 1,
+    updated_at: new Date().toISOString(),
+    current: {
+      rows: normalizeAgeRows(current.rows || payload.rows || []),
+      date: String(current.date || payload.date || '').trim(),
+      column_map: current.column_map || payload.column_map || null,
+      meta: {
+        file_name: String(meta.file_name || current.meta?.file_name || '').trim().slice(0, 255),
+        data_label: String(meta.data_label || current.meta?.data_label || '').trim().slice(0, 80),
+        uploaded_at: String(meta.uploaded_at || current.meta?.uploaded_at || new Date().toISOString()).trim(),
+        record_count: Number(meta.record_count || current.meta?.record_count || 0),
+        total_qty: Number(meta.total_qty || current.meta?.total_qty || 0),
+        warehouse_count: Number(meta.warehouse_count || current.meta?.warehouse_count || 0)
+      }
+    },
+    previous: previous ? {
+      rows: normalizeAgeRows(previous.rows || []),
+      date: String(previous.date || '').trim(),
+      column_map: previous.column_map || null,
+      meta: previous.meta || null
+    } : null,
+    history: history.slice(-30)
+  };
+}
+
 function resolveFrontendPath(pathname) {
   const requestedPath = pathname === '/' ? '/index.html' : pathname;
   let decodedPath;
@@ -832,6 +901,27 @@ const server = http.createServer((req, res) => {
         sendJson(res, 200, { success: true, count: mappings.items.length, updated_at: mappings.updated_at });
       })
       .catch(e => sendJson(res, e.statusCode || 400, { error: e.message || 'Invalid mappings' }));
+    return;
+  }
+
+  if (pathname === '/api/age-data' && req.method === 'GET') {
+    sendJson(res, 200, readJsonFile(AGE_DATA_FILE, { version: 1, updated_at: null, current: null, previous: null, history: [] }));
+    return;
+  }
+
+  if (pathname === '/api/age-data' && req.method === 'POST') {
+    readRequestJson(req, MAX_BODY_SIZE)
+      .then(payload => {
+        const ageData = normalizeAgePayload(payload);
+        writeJsonFile(AGE_DATA_FILE, ageData);
+        sendJson(res, 200, {
+          success: true,
+          updated_at: ageData.updated_at,
+          records: ageData.current.rows.length,
+          history: ageData.history.length
+        });
+      })
+      .catch(e => sendJson(res, e.statusCode || 400, { error: e.message || 'Invalid age data' }));
     return;
   }
 

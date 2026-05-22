@@ -463,6 +463,7 @@ tr:hover td{background:var(--row-hover);color:var(--tx)}
     <div class="lu" id="luInfo">
       <div>更新 <span id="luDate">—</span></div>
       <div><span id="luRows">0</span>条·<span id="luWh">0</span>仓</div>
+      <div>文件 <span id="luFile">—</span></div>
     </div>
     <button class="upbtn" id="upbtn" onclick="document.getElementById('fi').click()">
       <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -954,7 +955,7 @@ function tCol(){return isDark()?"#6e7681":"#8c959f";}
 function bkColors(){return BK.map(b=>getComputedStyle(document.documentElement).getPropertyValue('--'+b.v).trim()||b.c);}
 
 /* ═══ STATE ═══════════════════════════════════════════════════ */
-let CD=[],PD=[],pendH=[],pendR=null;
+let CD=[],PD=[],pendH=[],pendR=null,pendFileMeta=null;
 let dtSK="age",dtSD="desc",dtPg=1,dtPS=50,dtFl=[];
 let mvSK="delta",mvSD="asc",mvPg=1,mvFl=[]; const MSZ=50;
 let _mvData=[],barCI=null,dnutCI=null,mvTrendCI=null;
@@ -966,25 +967,41 @@ let mvHistory=[],mvFromIdx=0,mvToIdx=1; // indices into mvHistory
 /* ═══ LOCAL STORAGE ════════════════════════════════════════════ */
 const HIST_MAX=30;
 
-function saveS(data,cm,date){
+function buildAgeMeta(data,fileMeta){
+  const total=data.reduce((s,d)=>s+(Number(d.qty)||0),0);
+  const whCount=[...new Set(data.map(d=>d.warehouse).filter(Boolean))].length;
+  const fileName=fileMeta?.name||"";
+  const dateMatch=fileName.match(/(\d{2,4}[.\-年]\d{1,2}[.\-月]\d{1,2})/);
+  return {
+    file_name:fileName,
+    data_label:dateMatch?dateMatch[1].replace("年",".").replace("月","."):"",
+    uploaded_at:fileMeta?.uploaded_at||new Date().toISOString(),
+    record_count:data.length,
+    total_qty:total,
+    warehouse_count:whCount
+  };
+}
+function saveS(data,cm,date,meta){
   try{
+    const ageMeta=meta||buildAgeMeta(data,null);
     // Legacy two-slot (kept for backward compat with guest/cloud)
     const ex=JSON.parse(localStorage.getItem("inv_c")||"null");
     if(ex&&ex.r&&ex.r.length)localStorage.setItem("inv_p",JSON.stringify(ex));
-    localStorage.setItem("inv_c",JSON.stringify({r:data,d:date,cm}));
+    localStorage.setItem("inv_c",JSON.stringify({r:data,d:date,cm,meta:ageMeta}));
     if(cm)localStorage.setItem("inv_cm",JSON.stringify(cm));
     // History: append this snapshot
-    saveToHistory(data,date);
+    saveToHistory(data,date,ageMeta);
+    persistAgeData(data,cm,date,ageMeta);
   }catch(e){}
 }
-function saveToHistory(rows,date){
+function saveToHistory(rows,date,meta){
   try{
     let hist=loadHistory();
     // De-duplicate by date string
     hist=hist.filter(s=>s.date!==date);
     // Slim rows: only store fields we need for movement comparison
-    const slim=rows.map(r=>({s:r.sku_code,n:r.sku_name,w:r.warehouse,q:r.qty,a:r.age}));
-    hist.push({date,rows:slim});
+    const slim=rows.map(r=>({s:r.sku_code,n:r.sku_name,w:r.warehouse,r:r.warehouse_region,wr:r.warehouse_raw,q:r.qty,a:r.age}));
+    hist.push({date,rows:slim,meta:meta||null});
     // Sort ascending by date string
     hist.sort((a,b)=>a.date<b.date?-1:1);
     // Trim to HIST_MAX
@@ -1006,7 +1023,8 @@ function histRowsToFull(slim){
   // Expand slim format back to full row objects
   return slim.map(r=>({
     sku_code:r.s||r.sku_code||"",sku_name:r.n||r.sku_name||"",
-    warehouse:r.w||r.warehouse||"",qty:r.q!=null?r.q:r.qty||0,
+    warehouse:r.w||r.warehouse||"",warehouse_region:r.r||r.warehouse_region||"",
+    warehouse_raw:r.wr||r.warehouse_raw||r.w||r.warehouse||"",qty:r.q!=null?r.q:r.qty||0,
     age:r.a!=null?r.a:r.age||0,bucket:bkt(r.a!=null?r.a:r.age||0).k
   }));
 }
@@ -1018,6 +1036,27 @@ function loadS(){try{const c=JSON.parse(localStorage.getItem("inv_c")||"null");
 function loadCM(){try{return JSON.parse(localStorage.getItem("inv_cm")||"null");}catch(e){return null;}}
 function getSyncCfg(){try{return JSON.parse(localStorage.getItem("inv_sync")||"null");}catch(e){return null;}}
 function saveSyncCfg(cfg){localStorage.setItem("inv_sync",JSON.stringify(cfg));}
+function persistAgeData(data,cm,date,meta){
+  const payload={
+    current:{rows:data,date,column_map:cm,meta},
+    previous:loadS().p?{rows:loadS().p.r||[],date:loadS().p.d||"",column_map:loadS().p.cm||null,meta:loadS().p.meta||null}:null,
+    history:loadHistory()
+  };
+  fetch("/api/age-data",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(r=>r.json()).then(j=>{if(j&&j.success)setSyncDot("ok","已保存");})
+    .catch(()=>setSyncDot("err","保存失败"));
+}
+async function loadServerAgeData(){
+  try{
+    const res=await fetch("/api/age-data");
+    const data=await res.json();
+    if(!data||!data.current||!data.current.rows||!data.current.rows.length)return false;
+    localStorage.setItem("inv_c",JSON.stringify({r:data.current.rows,d:data.current.date,cm:data.current.column_map,meta:data.current.meta}));
+    if(data.previous&&data.previous.rows)localStorage.setItem("inv_p",JSON.stringify({r:data.previous.rows,d:data.previous.date,cm:data.previous.column_map,meta:data.previous.meta}));
+    if(Array.isArray(data.history))localStorage.setItem("inv_history",JSON.stringify(data.history));
+    return true;
+  }catch(e){return false;}
+}
 
 /* ═══ THEME ════════════════════════════════════════════════════ */
 function toggleTheme(){
@@ -1168,13 +1207,17 @@ function setSyncDot(state,label){
 function onUpload(e){
   if(isGuest){toast("访客模式下无法上传","err");return;}
   const f=e.target.files[0];if(!f)return;e.target.value="";
+  pendFileMeta={name:f.name,size:f.size,uploaded_at:new Date().toISOString()};
   const r=new FileReader();
   r.onload=ev=>{try{
     const wb=XLSX.read(new Uint8Array(ev.target.result),{type:"array"});
     const sh=wb.Sheets[wb.SheetNames[0]];
     const rows=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
     if(rows.length<2){toast("文件为空","err");return;}
-    pendH=rows[0].map(h=>String(h).trim()).filter(h=>h);pendR=rows;openMo();
+    pendH=rows[0].map(h=>String(h).trim()).filter(h=>h);pendR=rows;
+    const cm=autoColumnMap(pendH);
+    if(cm)importMappedRows(cm,true);
+    else openMo();
   }catch(err){toast("解析失败: "+err.message,"err");}};
   r.readAsArrayBuffer(f);
 }
@@ -1194,6 +1237,15 @@ const AMAP={
 function gcol(k,hs){const al=AMAP[k]||[];for(let h of hs){for(let a of al){if(h.toLowerCase().replace(/[\s_()（）]/g,"").includes(a.toLowerCase().replace(/[\s_()（）]/g,"")))return h;}}return "";}
 const FI=["fk_sku_code","fk_sku_name","fk_warehouse","fk_age","fk_qty"];
 const FK=["sku_code","sku_name","warehouse","age","qty"];
+function autoColumnMap(headers){
+  const cm={};
+  for(let k of FK){
+    const col=gcol(k,headers);
+    if(!col)return null;
+    cm[k]=col;
+  }
+  return cm;
+}
 
 function openMo(){
   document.getElementById("dcols").textContent=pendH.join(" · ");
@@ -1214,11 +1266,39 @@ function doMap(){
     cm[FK[i]]=v;
   }
   document.getElementById("mo").classList.remove("on");
+  importMappedRows(cm,false);
+}
+function importMappedRows(cm,autoMapped){
   const parsed=parseR(pendR,cm);
   const date=new Date().toLocaleString("zh-CN",{hour12:false});
-  saveS(parsed,cm,date);
+  const meta=buildAgeMeta(parsed,pendFileMeta);
+  saveS(parsed,cm,date,meta);
   const s=loadS();CD=s.c?.r||[];PD=s.p?.r||[];
-  toast(`成功导入 ${CD.length} 条记录`,"ok");initDB();autoSync();
+  toast(`${autoMapped?"已自动识别列，":""}成功导入 ${CD.length} 条记录`,"ok");initDB();autoSync();
+}
+function parseNumberCell(value){
+  if(value==null||value==="")return 0;
+  if(typeof value==="number")return Number.isFinite(value)?value:0;
+  const cleaned=String(value).trim().replace(/,/g,"").replace(/[，\s]/g,"");
+  const n=parseFloat(cleaned);
+  return Number.isFinite(n)?n:0;
+}
+function normalizeWarehouse(raw){
+  const value=String(raw||"").trim();
+  const upper=value.toUpperCase();
+  if(/USKY|US|美国/.test(upper))return{warehouse:"美国-USKY3",warehouse_region:"美国",warehouse_raw:value};
+  if(/HYD|DE|德国|法兰克福/.test(upper)){
+    if(/2/.test(value)&&/法兰克福/.test(value))return{warehouse:"德国-法兰克福2仓",warehouse_region:"德国",warehouse_raw:value};
+    if(/法兰克福/.test(value))return{warehouse:"德国-法兰克福1仓",warehouse_region:"德国",warehouse_raw:value};
+    return{warehouse:"德国-HYD",warehouse_region:"德国",warehouse_raw:value};
+  }
+  if(/UK|英国|路腾|莱切斯特/.test(upper)){
+    if(/莱切斯特/.test(value))return{warehouse:"英国-莱切斯特1仓",warehouse_region:"英国",warehouse_raw:value};
+    return{warehouse:"英国-路腾1仓",warehouse_region:"英国",warehouse_raw:value};
+  }
+  if(/AU|澳洲|悉尼/.test(upper))return{warehouse:"澳洲-悉尼仓",warehouse_region:"澳洲",warehouse_raw:value};
+  if(/CATO|CA|加拿大/.test(upper))return{warehouse:"加拿大-CATO",warehouse_region:"加拿大",warehouse_raw:value};
+  return{warehouse:value||"未命名仓库",warehouse_region:"其他",warehouse_raw:value};
 }
 function parseR(rows,cm){
   const hs=rows[0].map(h=>String(h).trim());
@@ -1226,9 +1306,10 @@ function parseR(rows,cm){
   const out=[];
   for(let i=1;i<rows.length;i++){
     const r=rows[i];const sc=String(r[ix.sku_code]||"").trim();if(!sc)continue;
-    const qty=parseFloat(r[ix.qty])||0,age=parseFloat(r[ix.age])||0;
+    const qty=Math.max(0,parseNumberCell(r[ix.qty])),age=Math.max(0,parseNumberCell(r[ix.age]));
+    const wh=normalizeWarehouse(r[ix.warehouse]);
     out.push({sku_code:sc,sku_name:String(r[ix.sku_name]||"").trim(),
-      warehouse:String(r[ix.warehouse]||"").trim(),age,qty,bucket:bkt(age).k});
+      warehouse:wh.warehouse,warehouse_raw:wh.warehouse_raw,warehouse_region:wh.warehouse_region,age,qty,bucket:bkt(age).k});
   }
   return out;
 }
@@ -1261,6 +1342,8 @@ function initDB(){
   document.getElementById("luDate").textContent=s.c?.d||"—";
   document.getElementById("luRows").textContent=CD.length.toLocaleString();
   document.getElementById("luWh").textContent=[...new Set(CD.map(d=>d.warehouse))].length;
+  const mf=s.c?.meta?.file_name||s.c?.meta?.data_label||"—";
+  const luFile=document.getElementById("luFile");if(luFile)luFile.textContent=mf.length>24?mf.slice(0,24)+"…":mf;
   const alTot=calcAl().total;
   const ab=document.getElementById("abadge");ab.textContent=alTot;ab.classList.toggle("on",alTot>0);
   // Load history into state (migrate legacy data if needed)
@@ -2101,6 +2184,14 @@ function toast(msg,type="ok"){
   // Load local data
   const s=loadS();
   if(s.c&&s.c.r&&s.c.r.length){CD=s.c.r;PD=s.p?.r||[];initDB();}
+  else{
+    loadServerAgeData().then(ok=>{
+      if(ok){
+        const ss=loadS();CD=ss.c?.r||[];PD=ss.p?.r||[];
+        if(CD.length){initDB();toast("已从服务器加载库龄数据","ok");}
+      }
+    });
+  }
 
   // Restore sync status
   const cfg=getSyncCfg();

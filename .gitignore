@@ -6,6 +6,7 @@ data/data.json
 data/meta.json
 data/shopify_inventory_cache.json
 data/sku_mappings.json
+data/inventory_age.json
 shopify_token.env
 
 # 系统文件
