@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>库龄结构管理系统</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{
+  --bg:#0d1117;--surf:#161b22;--surf2:#1c2330;--bd:#30363d;--bd2:#3d444d;
+  --tx:#e6edf3;--tx2:#8b949e;--tx3:#6e7681;
+  --good:#3fb950;--good-d:rgba(63,185,80,.15);
+  --warn:#d29922;--warn-d:rgba(210,153,34,.15);
+  --dang:#f85149;--dang-d:rgba(248,81,73,.15);
+  --stal:#a371f7;--stal-d:rgba(163,113,247,.15);
+  --dead:#ff7b72;--dead-d:rgba(255,123,114,.15);
+  --acc:#58a6ff;--acc-d:rgba(88,166,255,.12);
+  --tbg:rgba(13,17,23,.93);--row-hover:rgba(255,255,255,.025);
+  --r:8px;--font:"Outfit",sans-serif;--mono:"JetBrains Mono",monospace;
+}
+html[data-theme="light"]{
+  --bg:#f6f8fa;--surf:#ffffff;--surf2:#f0f2f5;--bd:#d0d7de;--bd2:#c9d1d9;
+  --tx:#1f2328;--tx2:#57606a;--tx3:#8c959f;
+  --good:#1a7f37;--good-d:rgba(26,127,55,.12);
+  --warn:#9a6700;--warn-d:rgba(154,103,0,.12);
+  --dang:#cf222e;--dang-d:rgba(207,34,46,.10);
+  --stal:#6e40c9;--stal-d:rgba(110,64,201,.12);
+  --dead:#bc4c00;--dead-d:rgba(188,76,0,.12);
+  --acc:#0969da;--acc-d:rgba(9,105,218,.10);
+  --tbg:rgba(246,248,250,.95);--row-hover:rgba(0,0,0,.025);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;transition:background .2s,color .2s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surf)}
+::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+
+/* TOPBAR */
+.tb{position:sticky;top:0;z-index:200;height:54px;background:var(--tbg);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;padding:0 16px;gap:0}
+.brand{display:flex;align-items:center;gap:9px;margin-right:20px;flex-shrink:0}
+.brand-ico{width:28px;height:28px;background:var(--acc);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.brand-ico svg{width:14px;height:14px;stroke:#fff;stroke-width:2.5;fill:none}
+.brand-name{font-size:13px;font-weight:700;letter-spacing:-.01em}
+.brand-sub{font-size:9px;color:var(--tx3);font-family:var(--mono);letter-spacing:.07em}
+.nav{display:flex;height:54px;flex:1;overflow-x:auto}
+.nb{height:54px;padding:0 12px;font-family:var(--font);font-size:12.5px;font-weight:500;
+  color:var(--tx2);background:none;border:none;border-bottom:2px solid transparent;
+  cursor:pointer;white-space:nowrap;transition:all .15s;display:flex;align-items:center;gap:4px}
+.nb:hover{color:var(--tx)}
+.nb.on{color:var(--acc);border-bottom-color:var(--acc)}
+.nbadge{background:var(--dang);color:#fff;font-size:9px;font-weight:700;
+  border-radius:10px;padding:1px 5px;font-family:var(--mono);display:none}
+.nbadge.on{display:inline-block}
+.tb-r{display:flex;align-items:center;gap:7px;margin-left:auto;padding-left:8px;flex-shrink:0}
+
+/* Theme toggle */
+.theme-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--bd);
+  background:transparent;cursor:pointer;font-size:15px;display:flex;align-items:center;
+  justify-content:center;transition:.15s;flex-shrink:0}
+.theme-btn:hover{border-color:var(--acc);background:var(--acc-d)}
+
+/* Sync indicator */
+.sync-ind{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:6px;
+  font-size:11px;font-family:var(--mono);cursor:pointer;border:1px solid var(--bd);
+  color:var(--tx2);transition:.15s;background:transparent;white-space:nowrap}
+.sync-ind:hover{border-color:var(--acc);color:var(--acc)}
+.project-link{text-decoration:none}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:.3s}
+.sdot.ok{background:var(--good);box-shadow:0 0 5px var(--good)}
+.sdot.spin{background:var(--warn);animation:sdpulse .8s infinite}
+.sdot.err{background:var(--dang)}
+.sdot.off{background:var(--tx3)}
+.sdot.guest{background:var(--acc);box-shadow:0 0 5px var(--acc)}
+@keyframes sdpulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.lu{font-size:10px;color:var(--tx3);font-family:var(--mono);text-align:right;line-height:1.6;display:none}
+.lu span{color:var(--acc)}
+.upbtn{background:var(--acc);color:#fff;border:none;padding:6px 13px;border-radius:6px;
+  font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;transition:opacity .15s;white-space:nowrap}
+.upbtn svg{width:12px;height:12px;stroke-width:2.5;fill:none;stroke:currentColor}
+.upbtn:hover{opacity:.82}
+.upbtn:disabled{opacity:.4;cursor:not-allowed}
+
+/* GUEST BANNER */
+.gbanner{display:none;align-items:center;gap:12px;padding:9px 16px;
+  background:var(--acc-d);border-bottom:1px solid rgba(88,166,255,.25);font-size:13px}
+.gbanner.on{display:flex}
+.gbadge{background:var(--acc);color:#fff;font-weight:700;font-size:10px;
+  padding:2px 8px;border-radius:3px;font-family:var(--mono);white-space:nowrap}
+.gbanner-txt{color:var(--tx2);flex:1}
+.gbanner-txt span{color:var(--acc);font-family:var(--mono);font-weight:600}
+.gbtn{background:transparent;border:1px solid var(--acc);color:var(--acc);
+  padding:4px 11px;border-radius:5px;font-family:var(--font);font-size:12px;cursor:pointer;transition:.15s}
+.gbtn:hover{background:var(--acc);color:#fff}
+.gbtn-exit{background:transparent;border:1px solid var(--bd2);color:var(--tx3);
+  padding:4px 10px;border-radius:5px;font-family:var(--font);font-size:11px;cursor:pointer;transition:.15s}
+.gbtn-exit:hover{border-color:var(--dang);color:var(--dang)}
+
+/* PAGES */
+.pg{display:none;padding:20px 20px 60px;animation:fu .22s ease}
+.pg.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* LANDING */
+.lnd{max-width:540px;margin:60px auto;text-align:center;padding:0 20px}
+.lnd-ico{font-size:48px;margin-bottom:16px;opacity:.65}
+.lnd h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.lnd p{color:var(--tx2);font-size:13px;line-height:1.75;margin-bottom:24px}
+.uz{border:1.5px dashed var(--bd2);border-radius:var(--r);padding:32px 24px;
+  cursor:pointer;transition:all .2s;background:var(--surf);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;gap:9px}
+.uz::before{content:"";position:absolute;inset:0;background:var(--acc-d);opacity:0;transition:.2s}
+.uz:hover,.uz.over{border-color:var(--acc)}
+.uz:hover::before,.uz.over::before{opacity:1}
+.uz svg{width:30px;height:30px;stroke:var(--acc);stroke-width:1.5;fill:none}
+.uz h3{font-size:14px;font-weight:600}
+.uz p{font-size:11px;color:var(--tx2);font-family:var(--mono)}
+.uz .hint{font-size:10px;color:var(--tx3)}
+#fi{display:none}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:500;
+  align-items:center;justify-content:center;padding:20px}
+.mo.on{display:flex}
+.mbox{background:var(--surf);border:1px solid var(--bd2);border-radius:12px;
+  padding:26px;width:490px;max-width:100%;max-height:90vh;overflow-y:auto}
+.mbox h2{font-size:16px;font-weight:700;margin-bottom:4px}
+.mbox .ms{font-size:12px;color:var(--tx2);margin-bottom:18px;line-height:1.65}
+.mf{display:grid;grid-template-columns:145px 1fr;align-items:center;gap:10px;margin-bottom:11px}
+.ml{font-size:12px;font-family:var(--mono);color:var(--tx2)}
+.ml .r{color:var(--dang)}
+.mbox select{width:100%;background:var(--surf2);border:1px solid var(--bd2);border-radius:6px;
+  color:var(--tx);padding:7px 10px;font-family:var(--font);font-size:13px;outline:none;transition:.15s}
+.mbox select:focus{border-color:var(--acc)}
+.mhint{background:var(--surf2);border-radius:6px;padding:10px 12px;
+  font-size:11px;color:var(--tx2);font-family:var(--mono);line-height:1.7;
+  margin-bottom:16px;border-left:2px solid var(--acc)}
+.ma{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.bcn{background:transparent;border:1px solid var(--bd2);color:var(--tx2);
+  padding:7px 15px;border-radius:6px;font-family:var(--font);font-size:13px;cursor:pointer;transition:.15s}
+.bcn:hover{border-color:var(--tx2);color:var(--tx)}
+.bpr{background:var(--acc);border:none;color:#fff;padding:7px 17px;
+  border-radius:6px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.bpr:hover{opacity:.85}
+.bpr:disabled{opacity:.4;cursor:not-allowed}
+
+/* SHARE MODAL */
+.sm-tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:20px}
+.sm-tab{padding:7px 16px;font-size:13px;font-weight:500;color:var(--tx2);background:none;
+  border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.15s;margin-bottom:-1px}
+.sm-tab:hover{color:var(--tx)}
+.sm-tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.sm-panel{display:none}
+.sm-panel.on{display:block}
+.step{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+.step-n{width:21px;height:21px;border-radius:50%;background:var(--acc);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:var(--mono);margin-top:2px}
+.step-t{font-size:13px;line-height:1.65;color:var(--tx2)}
+.step-t strong{color:var(--tx)}
+.step-t a{color:var(--acc);text-decoration:none}
+.step-t a:hover{text-decoration:underline}
+.step input{width:100%;background:var(--surf2);border:1px solid var(--bd2);border-radius:6px;
+  color:var(--tx);padding:7px 10px;font-family:var(--mono);font-size:13px;outline:none;transition:.15s;margin-top:6px}
+.step input:focus{border-color:var(--acc)}
+.step input::placeholder{color:var(--tx3)}
+.scode{background:var(--surf2);border:1px solid var(--bd2);border-radius:8px;padding:13px 15px;margin-top:12px}
+.scode-row{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.scode-label{font-size:10px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.scode-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc);flex:1;word-break:break-all}
+.cpbtn{background:transparent;border:1px solid var(--bd2);color:var(--tx2);
+  padding:3px 9px;border-radius:5px;font-size:11px;font-family:var(--font);cursor:pointer;flex-shrink:0;transition:.15s}
+.cpbtn:hover{border-color:var(--acc);color:var(--acc)}
+.cpbtn.copied{border-color:var(--good);color:var(--good)}
+.sinfo{font-size:11px;font-family:var(--mono);margin-top:9px;line-height:1.65;padding:9px 11px;
+  border-radius:6px;background:var(--surf2)}
+.sinfo.ok{border-left:2px solid var(--good);color:var(--good)}
+.sinfo.err{border-left:2px solid var(--dang);color:var(--dang)}
+.sinfo.info{border-left:2px solid var(--acc);color:var(--tx2)}
+.sinfo.warn{border-left:2px solid var(--warn);color:var(--warn)}
+.guest-entry{margin-top:6px;display:flex;gap:8px}
+.guest-entry input{flex:1;background:var(--surf2);border:1px solid var(--bd2);border-radius:6px;
+  color:var(--tx);padding:7px 11px;font-family:var(--mono);font-size:13px;outline:none;transition:.15s}
+.guest-entry input:focus{border-color:var(--acc)}
+.guest-entry input::placeholder{color:var(--tx3);font-size:12px}
+
+/* LAYOUT */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.sh-t{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.sh-m{font-size:12px;font-family:var(--mono);color:var(--tx2)}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+
+/* SMART SUMMARY */
+.summ-card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:16px 20px;margin-bottom:16px;border-left:3px solid var(--acc)}.summ-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.summ-ico{font-size:15px}
+.summ-title{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--acc);font-weight:600}
+.summ-body{font-size:13px;color:var(--tx2);line-height:1.8}
+.summ-body strong{color:var(--tx)}
+.summ-body .s-dang{color:var(--dang);font-weight:600}
+.summ-body .s-stal{color:var(--stal);font-weight:600}
+.summ-body .s-dead{color:var(--dead);font-weight:600}
+.summ-body .s-warn{color:var(--warn);font-weight:600}
+.summ-body .s-good{color:var(--good);font-weight:600}
+.summ-body .s-acc{color:var(--acc);font-weight:600}
+.summ-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.stag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;
+  font-size:11px;font-family:var(--mono);font-weight:500}
+.stag.stal{background:var(--stal-d);color:var(--stal)}
+.stag.dead{background:var(--dead-d);color:var(--dead)}
+.stag.warn{background:var(--warn-d);color:var(--warn)}
+
+/* CARD */
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.cp{padding:16px}
+.ch{padding:11px 15px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.ch-t{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.ch-m{font-size:11px;font-family:var(--mono);color:var(--tx2)}
+
+/* KPI */
+.kpi{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:13px 15px;position:relative;overflow:hidden}
+.kpi::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px}
+.kpi.good::after{background:var(--good)}.kpi.warn::after{background:var(--warn)}
+.kpi.dang::after{background:var(--dang)}.kpi.stal::after{background:var(--stal)}
+.kpi.dead::after{background:var(--dead)}
+.ktag{display:inline-flex;align-items:center;font-size:10px;font-family:var(--mono);
+  letter-spacing:.04em;padding:2px 7px;border-radius:3px;margin-bottom:7px;font-weight:600}
+.kpi.good .ktag{background:var(--good-d);color:var(--good)}
+.kpi.warn .ktag{background:var(--warn-d);color:var(--warn)}
+.kpi.dang .ktag{background:var(--dang-d);color:var(--dang)}
+.kpi.stal .ktag{background:var(--stal-d);color:var(--stal)}
+.kpi.dead .ktag{background:var(--dead-d);color:var(--dead)}
+.kval{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1;margin-bottom:4px}
+.kpi.good .kval{color:var(--good)}.kpi.warn .kval{color:var(--warn)}
+.kpi.dang .kval{color:var(--dang)}.kpi.stal .kval{color:var(--stal)}.kpi.dead .kval{color:var(--dead)}
+.krng{font-size:10px;color:var(--tx3);font-family:var(--mono);margin-bottom:2px}
+.kpct{font-size:11px;color:var(--tx2)}
+
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:11px;font-family:var(--mono);font-weight:600}
+.bdg.good{background:var(--good-d);color:var(--good)}
+.bdg.warn{background:var(--warn-d);color:var(--warn)}
+.bdg.dang{background:var(--dang-d);color:var(--dang)}
+.bdg.stal{background:var(--stal-d);color:var(--stal)}
+.bdg.dead{background:var(--dead-d);color:var(--dead)}
+.bdg.up{background:rgba(63,185,80,.15);color:var(--good)}
+.bdg.dn{background:rgba(248,81,73,.15);color:var(--dang)}
+.bdg.fl{background:rgba(139,148,158,.1);color:var(--tx2)}
+html[data-theme="light"] .bdg.up{background:rgba(26,127,55,.12);color:var(--good)}
+html[data-theme="light"] .bdg.dn{background:rgba(207,34,46,.10);color:var(--dang)}
+
+/* TABLE */
+.tw{overflow-x:auto;overflow-y:auto;scrollbar-gutter:stable}
+table{width:100%;border-collapse:collapse;table-layout:auto}
+thead{position:sticky;top:0;z-index:5}
+th{background:var(--surf2);padding:8px 12px;text-align:left;
+  font-size:10px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tx3);border-bottom:1px solid var(--bd);cursor:pointer;white-space:nowrap;user-select:none;transition:.15s}
+th:hover{color:var(--acc)}
+th.sa::after{content:" ↑";color:var(--acc)}
+th.sd::after{content:" ↓";color:var(--acc)}
+td{padding:7px 12px;font-size:13px;border-bottom:1px solid var(--bd);white-space:nowrap;color:var(--tx2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--row-hover);color:var(--tx)}
+.tm{font-family:var(--mono);font-size:12px}
+.tr{text-align:right}
+.tb2{font-weight:600;color:var(--tx)}
+
+/* BAR / WH */
+.bst{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:1px;min-width:60px}
+.bst span{height:100%}
+.wbr{display:flex;align-items:center;gap:11px;padding:9px 15px;border-bottom:1px solid var(--bd)}
+.wbr:last-child{border-bottom:none}
+.wbr-nm{width:120px;flex-shrink:0;font-size:12px;font-weight:500;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wbr-st{flex:1;display:flex;height:14px;border-radius:4px;overflow:hidden;gap:1px}
+.wbr-st span{height:100%;position:relative}
+.wbr-st span:hover::after{content:attr(data-t);position:absolute;bottom:calc(100% + 4px);left:50%;
+  transform:translateX(-50%);background:var(--surf2);border:1px solid var(--bd2);
+  border-radius:4px;padding:3px 7px;font-size:10px;font-family:var(--mono);
+  white-space:nowrap;color:var(--tx);pointer-events:none;z-index:10}
+.wbr-tot{font-family:var(--mono);font-size:12px;color:var(--tx2);width:65px;text-align:right;flex-shrink:0}
+.lgd{display:flex;flex-wrap:wrap;gap:11px;margin-top:9px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;font-family:var(--mono);color:var(--tx2)}
+.ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+
+/* FILTER BAR */
+.fb{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:13px}
+.fb select,.fb input{background:var(--surf2);border:1px solid var(--bd);border-radius:6px;
+  color:var(--tx);padding:5px 8px;font-family:var(--font);font-size:12px;outline:none;transition:.15s}
+.fb select:focus,.fb input:focus{border-color:var(--acc)}
+.fb input{min-width:160px}
+.fs{width:1px;height:16px;background:var(--bd);flex-shrink:0}
+.brst{background:transparent;border:1px solid var(--bd);color:var(--tx3);
+  padding:5px 10px;border-radius:6px;font-family:var(--font);font-size:12px;cursor:pointer;transition:.15s}
+.brst:hover{border-color:var(--acc);color:var(--acc)}
+
+/* PAGINATION */
+.pagi{padding:10px 14px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
+.pi{font-size:10px;font-family:var(--mono);color:var(--tx3)}
+.pg-btns{display:flex;align-items:center;gap:4px}
+.pb{background:transparent;border:1px solid var(--bd);color:var(--tx2);
+  width:26px;height:26px;border-radius:5px;font-family:var(--mono);font-size:11px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.pb:hover{border-color:var(--acc);color:var(--acc)}
+.pb.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+.pb:disabled{opacity:.3;cursor:not-allowed}
+
+/* CHARTS */
+.cbx{position:relative;height:240px}
+.cbx-lg{position:relative;height:280px}
+.cbx-sm{position:relative;height:190px}
+
+/* ALERT */
+.ait{display:grid;grid-template-columns:1fr auto;gap:11px;
+  padding:10px 14px;border-bottom:1px solid var(--bd);align-items:center;transition:.15s}
+.ait:last-child{border-bottom:none}
+.ait:hover{background:var(--row-hover)}
+.a-sku{font-weight:700;font-size:13px;color:var(--tx);margin-bottom:2px}
+.a-nm{font-size:11px;color:var(--tx3);font-family:var(--mono);margin-bottom:4px}
+.a-mt{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.a-wh{font-size:10px;background:var(--surf2);color:var(--tx2);padding:2px 6px;border-radius:3px;font-family:var(--mono)}
+.acd{text-align:right;flex-shrink:0}
+.acd-n{font-size:20px;font-weight:700;font-family:var(--mono);line-height:1}
+.acd-l{font-size:10px;color:var(--tx3);font-family:var(--mono)}
+
+/* MOVEMENT HISTORY */
+.mv-timeline{overflow-x:auto;padding:4px 0 10px;margin-bottom:16px;scrollbar-gutter:stable}
+.mv-tl-inner{display:flex;align-items:center;gap:0;min-width:max-content;padding:0 4px}
+.mv-tl-node{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
+  padding:4px 10px;border-radius:8px;transition:.15s;position:relative;min-width:90px}
+.mv-tl-node:hover{background:var(--acc-d)}
+.mv-tl-node.sel-from{background:rgba(63,185,80,.12);outline:1.5px solid var(--good)}
+.mv-tl-node.sel-to{background:var(--acc-d);outline:1.5px solid var(--acc)}
+.mv-tl-node.in-range{background:rgba(88,166,255,.06)}
+.mv-tl-dot{width:10px;height:10px;border-radius:50%;background:var(--bd2);
+  border:2px solid var(--surf);box-shadow:0 0 0 1.5px var(--bd2);transition:.2s;flex-shrink:0}
+.mv-tl-node.sel-from .mv-tl-dot{background:var(--good);box-shadow:0 0 0 2px var(--good)}
+.mv-tl-node.sel-to .mv-tl-dot{background:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.mv-tl-node.in-range .mv-tl-dot{background:var(--acc-d);border-color:var(--acc)}
+.mv-tl-date{font-size:9px;font-family:var(--mono);color:var(--tx3);text-align:center;line-height:1.3;white-space:nowrap}
+.mv-tl-node.sel-from .mv-tl-date{color:var(--good);font-weight:700}
+.mv-tl-node.sel-to .mv-tl-date{color:var(--acc);font-weight:700}
+.mv-tl-line{width:28px;height:1.5px;background:var(--bd);flex-shrink:0;margin-top:-12px}
+.mv-tl-line.in-range{background:var(--acc);opacity:.4}
+.mv-snap-count{font-size:11px;font-family:var(--mono);color:var(--tx3)}
+.mv-snap-count strong{color:var(--acc)}
+.mv-cmp-bar{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mv-cmp-label{font-size:11px;font-family:var(--mono);color:var(--tx3);white-space:nowrap;letter-spacing:.04em}
+.mv-cmp-sel{background:var(--surf2);border:1px solid var(--bd2);border-radius:6px;
+  color:var(--tx);padding:6px 10px;font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;transition:.15s;max-width:280px}
+.mv-cmp-sel:focus{border-color:var(--acc)}
+.mv-cmp-arrow{font-size:16px;color:var(--tx3);flex-shrink:0}
+.mv-cmp-apply{background:var(--acc);border:none;color:#fff;padding:6px 16px;border-radius:6px;
+  font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap}
+.mv-cmp-apply:hover{opacity:.85}
+.mv-storage{display:flex;align-items:center;gap:10px;font-size:11px;font-family:var(--mono);color:var(--tx3);margin-left:auto}
+.mv-storage-bar{width:80px;height:5px;background:var(--bd);border-radius:3px;overflow:hidden}
+.mv-storage-fill{height:100%;background:var(--acc);border-radius:3px;transition:.3s}
+.mv-del-btn{background:transparent;border:1px solid var(--bd2);color:var(--tx3);padding:3px 9px;
+  border-radius:5px;font-family:var(--font);font-size:11px;cursor:pointer;transition:.15s;white-space:nowrap}
+.mv-del-btn:hover{border-color:var(--dang);color:var(--dang)}
+.mv-trend-cbx{position:relative;height:200px}
+
+
+  display:grid;grid-template-columns:1fr auto;gap:11px;align-items:center;transition:.15s}
+.mit:last-child{border-bottom:none}
+.mit:hover{background:var(--row-hover)}
+.m-sku{font-weight:700;font-size:13px;color:var(--tx)}
+.m-nm{font-size:11px;color:var(--tx3);font-family:var(--mono);margin-bottom:1px}
+.m-mt{font-size:11px;color:var(--tx2);font-family:var(--mono)}
+.mst{text-align:right}
+.mdelta{font-size:18px;font-weight:700;font-family:var(--mono);line-height:1.2}
+.mrate{font-size:10px;color:var(--tx3);font-family:var(--mono)}
+
+/* WH TABS */
+.wt{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
+.wtb{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;
+  border:1px solid var(--bd);background:var(--surf);color:var(--tx2);cursor:pointer;transition:.15s}
+.wtb:hover{border-color:var(--acc);color:var(--acc)}
+.wtb.on{background:var(--acc);color:#fff;border-color:var(--acc);font-weight:700}
+
+/* TOAST */
+.tst{position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--surf2);border:1px solid var(--bd2);border-radius:8px;
+  padding:10px 15px;display:flex;align-items:center;gap:8px;
+  transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:340px;
+  box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.tst.on{transform:none;opacity:1}
+.tst.ok{border-color:var(--good)}
+.tst.err{border-color:var(--dang)}
+.tst.warn{border-color:var(--warn)}
+.tst-ico{font-size:14px}
+
+.emp td{text-align:center;color:var(--tx3);padding:36px!important;font-size:13px}
+.sec-title{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tx3);margin-bottom:10px;margin-top:20px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+
+/* SMART SUMMARY */
+.sum-card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:16px 18px;margin-bottom:16px;position:relative;overflow:hidden}
+.sum-card::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--acc)}
+.sum-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sum-icon{font-size:16px}
+.sum-title{font-size:11px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.sum-body{font-size:13px;color:var(--tx2);line-height:1.9}
+.sum-body strong{color:var(--tx);font-weight:600}
+.sum-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sum-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:4px;
+  font-size:11px;font-family:var(--mono);font-weight:600;border:1px solid transparent}
+.sum-chip.stal{background:var(--stal-d);color:var(--stal);border-color:rgba(163,113,247,.25)}
+.sum-chip.dead{background:var(--dead-d);color:var(--dead);border-color:rgba(255,123,114,.25)}
+.sum-chip.warn-at{background:var(--warn-d);color:var(--warn);border-color:rgba(210,153,34,.25)}
+.sum-chip.good{background:var(--good-d);color:var(--good);border-color:rgba(63,185,80,.2)}
+.sum-divider{width:1px;height:28px;background:var(--bd);margin:0 4px}
+
+@media(max-width:1100px){.g5{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.g5,.g2,.g3{grid-template-columns:1fr}.pg{padding:13px 11px 50px}.nb{padding:0 9px;font-size:12px}}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="tb">
+  <div class="brand">
+    <div class="brand-ico">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9M15 14h-3M15 17h-3"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">库龄结构管理系统</div>
+      <div class="brand-sub">INVENTORY AGE ANALYTICS</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nb on" onclick="sp('ov')">📊 总览</button>
+    <button class="nb" onclick="sp('wh')">🏭 仓库分析</button>
+    <button class="nb" onclick="sp('al')">🔔 预警 <span class="nbadge" id="abadge">0</span></button>
+    <button class="nb" onclick="sp('mv')">📈 动销分析</button>
+    <button class="nb" onclick="sp('dt')">📋 明细数据</button>
+    <button class="nb" onclick="sp('el')">💻 电子产品</button>
+    <button class="nb" onclick="sp('np')">🆕 新品销售</button>
+  </nav>
+  <div class="tb-r">
+    <a class="sync-ind project-link" href="/" title="返回 SUNLU 英美欧库存数据看板">主看板</a>
+    <a class="sync-ind project-link" href="/shopify.html" title="查看 Shopify 库存统计">Shopify</a>
+    <a class="sync-ind project-link" href="/quality.html" title="查看数据质量诊断">诊断</a>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换日/夜间模式">🌙</button>
+    <button class="sync-ind" id="syncInd" onclick="openSM()" title="分享与云同步">
+      <span class="sdot off" id="sdot"></span>
+      <span id="sindLabel">云同步</span>
+    </button>
+    <div class="lu" id="luInfo">
+      <div>更新 <span id="luDate">—</span></div>
+      <div><span id="luRows">0</span>条·<span id="luWh">0</span>仓</div>
+    </div>
+    <button class="upbtn" id="upbtn" onclick="document.getElementById('fi').click()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      上传数据
+    </button>
+  </div>
+</div>
+<input type="file" id="fi" accept=".xlsx,.xls,.csv" onchange="onUpload(event)">
+
+<!-- GUEST BANNER -->
+<div class="gbanner" id="gbanner">
+  <span class="gbadge">访客模式</span>
+  <div class="gbanner-txt">正在查看 <span id="gbShareCode">—</span> 的实时库存数据</div>
+  <button class="gbtn" onclick="refreshGuest()">🔄 刷新数据</button>
+  <button class="gbtn-exit" onclick="exitGuest()">退出</button>
+</div>
+
+<!-- COLUMN MAP MODAL -->
+<div class="mo" id="mo">
+  <div class="mbox">
+    <h2>字段映射配置</h2>
+    <p class="ms">请将您表格的列与系统字段对应，系统会记住配置。</p>
+    <div class="mhint">检测到列：<span id="dcols" style="color:var(--acc)"></span></div>
+    <div class="mf"><div class="ml">SKU编码 <span class="r">*</span></div><select id="fk_sku_code"></select></div>
+    <div class="mf"><div class="ml">SKU名称 <span class="r">*</span></div><select id="fk_sku_name"></select></div>
+    <div class="mf"><div class="ml">仓库名称 <span class="r">*</span></div><select id="fk_warehouse"></select></div>
+    <div class="mf"><div class="ml">库龄(天) <span class="r">*</span></div><select id="fk_age"></select></div>
+    <div class="mf"><div class="ml">在库库存 <span class="r">*</span></div><select id="fk_qty"></select></div>
+    <div class="ma">
+      <button class="bcn" onclick="document.getElementById('mo').classList.remove('on')">取消</button>
+      <button class="bpr" onclick="doMap()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="mo" id="sm">
+  <div class="mbox" style="width:520px">
+    <h2>🔗 分享与云同步</h2>
+    <p class="ms">开启云同步后，每次上传数据自动推送云端。接收者打开此文件输入分享码即可查看最新数据。</p>
+    <div class="sm-tabs">
+      <button class="sm-tab on" onclick="smt(0)">⚙️ 管理员设置</button>
+      <button class="sm-tab" onclick="smt(1)">👀 访客模式</button>
+    </div>
+    <div class="sm-panel on" id="smpA">
+      <div class="step"><div class="step-n">1</div>
+        <div class="step-t">前往 <a href="https://github.com" target="_blank">github.com</a> 免费注册（已有账号跳过）</div></div>
+      <div class="step"><div class="step-n">2</div>
+        <div class="step-t">头像 → <strong>Settings</strong> → <strong>Developer settings</strong> → <strong>Personal access tokens → Tokens (classic)</strong> → <strong>Generate new token</strong>，勾选 <strong>gist</strong> 权限，生成并复制 Token</div></div>
+      <div class="step"><div class="step-n">3</div>
+        <div class="step-t"><strong>将 GitHub Token 粘贴到此处：</strong>
+          <input type="password" id="apiKeyInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx..." autocomplete="off"></div></div>
+      <div id="smAdminStatus"></div>
+      <div id="smCodeBox" style="display:none">
+        <div class="scode">
+          <div class="scode-row"><span class="scode-label">分享码 (Share Code)</span></div>
+          <div class="scode-row">
+            <span class="scode-val" id="smBinId">—</span>
+            <button class="cpbtn" id="cpCode" onclick="cpCode()">复制</button>
+          </div>
+        </div>
+        <div class="sinfo info" style="margin-top:9px">将<strong>分享码</strong>和<strong>HTML文件</strong>发给接收者，访客模式输入分享码即可查看实时数据。</div>
+        <div class="sinfo ok" id="smLastSync" style="display:none"></div>
+      </div>
+      <div class="ma">
+        <button class="bcn" onclick="closeSM()">关闭</button>
+        <button class="bpr" id="smConnBtn" onclick="connectCloud()">连接并生成分享码</button>
+      </div>
+    </div>
+    <div class="sm-panel" id="smpG">
+      <p style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:16px">
+        输入管理员提供的<strong style="color:var(--tx)">分享码</strong>，即可查看最新库存数据（只读模式）。</p>
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-family:var(--mono);color:var(--tx3);margin-bottom:7px">分享码 SHARE CODE</div>
+        <div class="guest-entry">
+          <input type="text" id="guestCodeInput" placeholder="输入分享码..." autocomplete="off">
+          <button class="bpr" onclick="loadGuest()">加载数据</button>
+        </div>
+      </div>
+      <div id="smGuestStatus"></div>
+      <div class="sinfo info" style="margin-top:4px">💡 加载成功后顶部会显示「访客模式」横幅，点击「刷新数据」随时获取最新数据。</div>
+      <div class="ma" style="margin-top:14px"><button class="bcn" onclick="closeSM()">关闭</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="tst" id="tst"><span class="tst-ico" id="tsti"></span><span id="tstm"></span></div>
+
+<!-- LANDING -->
+<div class="pg on" id="pg-lnd">
+  <div class="lnd">
+    <div class="lnd-ico">📦</div>
+    <h2>欢迎使用库龄结构管理系统</h2>
+    <p>每天上传最新库存文件，系统自动分析库龄结构、发出阶梯预警、追踪动销变化。<br>支持 <strong>.xlsx / .xls / .csv</strong> 格式。</p>
+    <div class="uz" id="lz" onclick="document.getElementById('fi').click()">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <h3>点击或拖拽文件到此处</h3>
+      <p>支持格式：.xlsx / .xls / .csv</p>
+      <p class="hint">自动识别列：SKU编码 · SKU名称 · 仓库名称 · 库龄(天) · 在库库存</p>
+    </div>
+    <p style="margin-top:18px;font-size:12px;color:var(--tx3)">
+      访客？点击右上角 <strong style="color:var(--acc)">云同步</strong> → 访客模式 → 输入分享码
+    </p>
+  </div>
+</div>
+
+<!-- PAGE: OVERVIEW -->
+<div class="pg" id="pg-ov">
+  <div class="sh"><span class="sh-t">库龄结构总览</span><span class="sh-m" id="ov-meta"></span></div>
+  <div class="g5" id="kpi-strip"></div>
+  <div id="ov-summary"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><span class="ch-t">各仓库库龄分布</span></div>
+      <div class="cp"><div class="cbx-lg"><canvas id="barChart"></canvas></div>
+        <div class="lgd">
+          <div class="li"><div class="ld" style="background:var(--good)"></div>0-90天 良好</div>
+          <div class="li"><div class="ld" style="background:var(--warn)"></div>90-180天 警戒</div>
+          <div class="li"><div class="ld" style="background:var(--dang)"></div>180-270天 危险</div>
+          <div class="li"><div class="ld" style="background:var(--stal)"></div>270-360天 呆滞</div>
+          <div class="li"><div class="ld" style="background:var(--dead)"></div>360天+ 超龄</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ch-t">整体库龄占比</span></div>
+      <div class="cp" style="display:flex;flex-direction:column;align-items:center">
+        <div style="position:relative;height:210px;width:100%;max-width:240px">
+          <canvas id="donutChart"></canvas>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+            <div style="font-size:22px;font-weight:700;font-family:var(--mono)" id="dc-tot">—</div>
+            <div style="font-size:10px;color:var(--tx3);font-family:var(--mono)">在库总量</div>
+          </div>
+        </div>
+        <div class="lgd" style="justify-content:center">
+          <div class="li"><div class="ld" style="background:var(--good)"></div>良好</div>
+          <div class="li"><div class="ld" style="background:var(--warn)"></div>警戒</div>
+          <div class="li"><div class="ld" style="background:var(--dang)"></div>危险</div>
+          <div class="li"><div class="ld" style="background:var(--stal)"></div>呆滞</div>
+          <div class="li"><div class="ld" style="background:var(--dead)"></div>超龄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="ch"><span class="ch-t">仓库库龄结构一览</span><span class="ch-m">按总库存排序</span></div>
+    <div id="wh-bars"></div>
+  </div>
+  <div class="card">
+    <div class="ch"><span class="ch-t">仓库汇总表</span></div>
+    <div class="tw"><table><thead><tr>
+      <th>仓库名称</th><th class="tr">总库存</th>
+      <th class="tr" style="color:var(--good)">良好 0-90</th>
+      <th class="tr" style="color:var(--warn)">警戒 90-180</th>
+      <th class="tr" style="color:var(--dang)">危险 180-270</th>
+      <th class="tr" style="color:var(--stal)">呆滞 270-360</th>
+      <th class="tr" style="color:var(--dead)">超龄 360+</th>
+      <th>结构</th>
+    </tr></thead><tbody id="wh-sum-tb"></tbody></table></div>
+  </div>
+</div>
+
+<!-- PAGE: WAREHOUSE -->
+<div class="pg" id="pg-wh">
+  <div class="sh"><span class="sh-t">仓库库龄深度分析</span></div>
+  <div class="wt" id="wh-tabs"></div>
+  <div id="wh-det"></div>
+</div>
+
+<!-- PAGE: ALERT -->
+<div class="pg" id="pg-al">
+  <div class="sh"><span class="sh-t">30天预警中心</span><span class="sh-m">即将在30天内进入更高风险档位的库存</span></div>
+  <div class="g3" id="al-kpis"></div>
+  <div class="g3">
+    <div class="card">
+      <div class="ch"><span class="ch-t" style="color:var(--dang)">⚠️ 即将进入危险库存</span><span class="ch-m" id="ac-dang">0件</span></div>
+      <div id="al-dang" style="max-height:400px;overflow-y:auto"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ch-t" style="color:var(--stal)">🟣 即将进入呆滞库存</span><span class="ch-m" id="ac-stal">0件</span></div>
+      <div id="al-stal" style="max-height:400px;overflow-y:auto"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ch-t" style="color:var(--dead)">🔴 即将进入严重超龄</span><span class="ch-m" id="ac-dead">0件</span></div>
+      <div id="al-dead" style="max-height:400px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: MOVEMENT -->
+<div class="pg" id="pg-mv">
+  <!-- Empty state -->
+  <div id="mv-no" style="text-align:center;padding:60px;color:var(--tx3);display:none">
+    <div style="font-size:40px;margin-bottom:14px">📈</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--tx2)">需要至少两次上传数据</div>
+    <div style="font-size:13px;line-height:1.8;color:var(--tx3)">每次上传都会自动保存为快照，<br>积累多次数据后可纵观长期动销趋势。</div>
+  </div>
+  <!-- Content -->
+  <div id="mv-ct" style="display:none">
+    <div class="sh">
+      <span class="sh-t">📦 库存动销历史追踪</span>
+      <span class="mv-snap-count">已保存 <strong id="mv-snap-n">0</strong> 个快照</span>
+    </div>
+
+    <!-- Snapshot timeline -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="ch">
+        <span class="ch-t">📅 上传快照时间轴</span>
+        <div class="mv-storage">
+          <span id="mv-store-lbl">储存用量</span>
+          <div class="mv-storage-bar"><div class="mv-storage-fill" id="mv-store-bar" style="width:0%"></div></div>
+          <button class="mv-del-btn" onclick="mvDeleteOld()">清理最早快照</button>
+        </div>
+      </div>
+      <div class="mv-timeline cp" style="padding:12px 16px">
+        <div class="mv-tl-inner" id="mv-tl-inner"><!-- rendered by JS --></div>
+      </div>
+    </div>
+
+    <!-- Comparison selector -->
+    <div class="mv-cmp-bar">
+      <span class="mv-cmp-label">基准期 FROM</span>
+      <select class="mv-cmp-sel" id="mv-sel-from" onchange="mvApply()"></select>
+      <span class="mv-cmp-arrow">→</span>
+      <span class="mv-cmp-label">对比期 TO</span>
+      <select class="mv-cmp-sel" id="mv-sel-to" onchange="mvApply()"></select>
+    </div>
+
+    <!-- Trend chart -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="ch"><span class="ch-t">📊 库存健康趋势（全部快照）</span><span class="ch-m" id="mv-trend-meta"></span></div>
+      <div class="cp"><div class="mv-trend-cbx"><canvas id="mvTrendChart"></canvas></div>
+        <div class="lgd" style="margin-top:6px">
+          <div class="li"><div class="ld" style="background:var(--acc)"></div>总库存</div>
+          <div class="li"><div class="ld" style="background:var(--stal)"></div>呆滞库存</div>
+          <div class="li"><div class="ld" style="background:var(--dead)"></div>超龄库存</div>
+          <div class="li"><div class="ld" style="background:var(--good)"></div>良好库存</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Period comparison header -->
+    <div class="sh" style="margin-top:4px">
+      <span class="sh-t">🔍 区间对比详情</span>
+      <span class="sh-m" id="mv-period"></span>
+    </div>
+    <div class="g3" id="mv-kpis"></div>
+
+    <!-- Warehouse filter (affects TOP20 + table) -->
+    <div class="fb" style="margin-bottom:14px">
+      <span style="font-size:11px;font-family:var(--mono);color:var(--tx3);white-space:nowrap">🏭 筛选仓库（影响TOP20及全明细）：</span>
+      <select id="mv-fw" onchange="rmv()"><option value="">所有仓库</option></select>
+    </div>
+
+    <!-- TOP20 -->
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="ch-t" style="color:var(--good)">🚀 快速动销 TOP 20</span><span class="ch-m">库存降幅最大</span></div>
+        <div id="mv-fast" style="max-height:440px;overflow-y:auto"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="ch-t" style="color:var(--stal)">🐢 滞销预警 TOP 20</span><span class="ch-m">库存无变化或增加</span></div>
+        <div id="mv-slow" style="max-height:440px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- Full table -->
+    <div class="card">
+      <div class="ch"><span class="ch-t">全部 SKU × 仓库 动销明细</span><span class="ch-m" id="mv-cnt"></span></div>
+      <div class="fb" style="border:none;border-bottom:1px solid var(--bd);border-radius:0;margin-bottom:0">
+        <select id="mv-ft" onchange="rmv()">
+          <option value="">全部状态</option><option value="fast">动销</option>
+          <option value="slow">滞销</option><option value="restock">补货/新增</option>
+        </select>
+        <input type="text" id="mv-fs" placeholder="搜索SKU..." oninput="rmv()">
+      </div>
+      <div class="tw"><table><thead><tr>
+        <th onclick="smv('sku_code')" id="mh-sku_code">SKU编码</th>
+        <th onclick="smv('sku_name')" id="mh-sku_name">SKU名称</th>
+        <th onclick="smv('warehouse')" id="mh-warehouse">仓库</th>
+        <th class="tr" onclick="smv('prev_qty')" id="mh-prev_qty">基准库存</th>
+        <th class="tr" onclick="smv('curr_qty')" id="mh-curr_qty">对比库存</th>
+        <th class="tr" onclick="smv('delta')" id="mh-delta">变化量</th>
+        <th class="tr" onclick="smv('rate')" id="mh-rate">变化率</th>
+        <th>状态</th>
+      </tr></thead><tbody id="mv-tb"></tbody></table></div>
+      <div class="pagi" id="mv-pg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: DETAIL -->
+<div class="pg" id="pg-dt">
+  <div class="sh"><span class="sh-t">库存明细数据</span><span class="sh-m" id="dt-meta"></span></div>
+  <div class="fb">
+    <select id="df-wh" onchange="adt()"><option value="">所有仓库</option></select>
+    <select id="df-bk" onchange="adt()">
+      <option value="">所有库龄档</option>
+      <option value="good">良好 0-90天</option>
+      <option value="warn">警戒 90-180天</option>
+      <option value="dang">危险 180-270天</option>
+      <option value="stal">呆滞 270-360天</option>
+      <option value="dead">严重超龄 360天+</option>
+    </select>
+    <div class="fs"></div>
+    <input type="text" id="df-q" placeholder="搜索 SKU编码/名称..." oninput="adt()">
+    <div class="fs"></div>
+    <select id="df-ps" onchange="dtPS=parseInt(this.value);dtPg=1;rdtTb()" title="每页行数">
+      <option value="20">20行/页</option>
+      <option value="50" selected>50行/页</option>
+      <option value="100">100行/页</option>
+      <option value="500">500行/页</option>
+    </select>
+    <button class="brst" onclick="rdt()">重置</button>
+  </div>
+  <div class="card">
+    <div class="tw" id="dt-tw"><table><thead><tr>
+      <th onclick="sdt('sku_code')" id="dh-sku_code">SKU编码</th>
+      <th onclick="sdt('sku_name')" id="dh-sku_name">SKU名称</th>
+      <th onclick="sdt('warehouse')" id="dh-warehouse">仓库</th>
+      <th class="tr" onclick="sdt('age')" id="dh-age">库龄(天)</th>
+      <th class="tr" onclick="sdt('qty')" id="dh-qty">在库库存</th>
+      <th>库龄档位</th><th>30天预警</th>
+    </tr></thead><tbody id="dt-tb"></tbody></table></div>
+    <div class="pagi" id="dt-pg"></div>
+  </div>
+</div>
+
+<!-- PAGE: ELECTRONICS -->
+<div class="pg" id="pg-el">
+  <div class="sh"><span class="sh-t">💻 电子产品库存盘点与风险预警</span><span class="sh-m" id="el-meta"></span></div>
+  <div id="el-no" style="text-align:center;padding:50px;color:var(--tx3);display:none">
+    <div style="font-size:36px;margin-bottom:12px">💻</div>
+    <div style="font-weight:700;margin-bottom:6px">当前数据中未检测到电子产品</div>
+    <div style="font-size:12px;color:var(--tx2)">识别关键词：S1PLUS, S2, S4, SP2, E2, AMS, FC01, UC01, RC01PLUS, RC02</div>
+  </div>
+  <div id="el-ct">
+    <div class="g5" id="el-kpis"></div>
+    <div class="g2">
+      <div class="card"><div class="ch"><span class="ch-t">仓库库龄分布</span></div>
+        <div class="cp"><div class="cbx-lg"><canvas id="elBarChart"></canvas></div></div></div>
+      <div class="card"><div class="ch"><span class="ch-t">库龄结构占比</span></div>
+        <div class="cp" style="display:flex;justify-content:center">
+          <div style="position:relative;height:210px;width:210px">
+            <canvas id="elDonut"></canvas>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+              <div style="font-size:20px;font-weight:700;font-family:var(--mono)" id="el-dtot">—</div>
+              <div style="font-size:10px;color:var(--tx3);font-family:var(--mono)">总库存</div>
+            </div>
+          </div>
+        </div></div>
+    </div>
+    <div id="el-mv-sec"></div>
+    <div class="card" style="margin-top:16px">
+      <div class="ch"><span class="ch-t">电子产品明细</span><span class="ch-m" id="el-det-meta"></span></div>
+      <div class="fb" style="border:none;border-bottom:1px solid var(--bd);border-radius:0;margin-bottom:0">
+        <select id="el-fw" onchange="relDet()"><option value="">所有仓库</option></select>
+        <select id="el-fbk" onchange="relDet()">
+          <option value="">所有库龄档</option>
+          <option value="good">良好 0-90天</option>
+          <option value="warn">警戒 90-180天</option>
+          <option value="dang">危险 180-270天</option>
+          <option value="stal">呆滞 270-360天</option>
+          <option value="dead">严重超龄 360天+</option>
+        </select>
+        <input type="text" id="el-fq" placeholder="搜索SKU..." oninput="relDet()">
+        <div class="fs"></div>
+        <select id="el-ps" onchange="elState.ps=parseInt(this.value);elState.pg=1;relDet()" title="每页行数">
+          <option value="20">20行/页</option><option value="50" selected>50行/页</option>
+          <option value="100">100行/页</option><option value="500">500行/页</option>
+        </select>
+      </div>
+      <div class="tw" id="el-tw"><table><thead><tr>
+        <th>SKU编码</th><th>SKU名称</th><th>仓库</th>
+        <th class="tr">库龄(天)</th><th class="tr">在库库存</th><th>档位</th><th>30天预警</th>
+      </tr></thead><tbody id="el-tb"></tbody></table></div>
+      <div class="pagi" id="el-pg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: NEW PRODUCTS -->
+<div class="pg" id="pg-np">
+  <div class="sh"><span class="sh-t">🆕 2026新品库存盘点与动销</span><span class="sh-m" id="np-meta"></span></div>
+  <div id="np-no" style="text-align:center;padding:50px;color:var(--tx3);display:none">
+    <div style="font-size:36px;margin-bottom:12px">🆕</div>
+    <div style="font-weight:700;margin-bottom:6px">当前数据中未检测到新品</div>
+    <div style="font-size:12px;color:var(--tx2)">识别关键词：PA12CF, PC/ABS, ABSFR, TPU-90A, PLAYG_DC, PA6GF, PP-BS, PLA+SKFC, PC-BS, PLAGL, ABSGF, PEEK, E2, SP2, AMS, S4PRO</div>
+  </div>
+  <div id="np-ct">
+    <div class="g5" id="np-kpis"></div>
+    <div class="g2">
+      <div class="card"><div class="ch"><span class="ch-t">仓库库龄分布</span></div>
+        <div class="cp"><div class="cbx-lg"><canvas id="npBarChart"></canvas></div></div></div>
+      <div class="card"><div class="ch"><span class="ch-t">库龄结构占比</span></div>
+        <div class="cp" style="display:flex;justify-content:center">
+          <div style="position:relative;height:210px;width:210px">
+            <canvas id="npDonut"></canvas>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+              <div style="font-size:20px;font-weight:700;font-family:var(--mono)" id="np-dtot">—</div>
+              <div style="font-size:10px;color:var(--tx3);font-family:var(--mono)">总库存</div>
+            </div>
+          </div>
+        </div></div>
+    </div>
+    <div id="np-mv-sec"></div>
+    <div class="card" style="margin-top:16px">
+      <div class="ch"><span class="ch-t">新品明细</span><span class="ch-m" id="np-det-meta"></span></div>
+      <div class="fb" style="border:none;border-bottom:1px solid var(--bd);border-radius:0;margin-bottom:0">
+        <select id="np-fw" onchange="rnpDet()"><option value="">所有仓库</option></select>
+        <select id="np-fbk" onchange="rnpDet()">
+          <option value="">所有库龄档</option>
+          <option value="good">良好 0-90天</option>
+          <option value="warn">警戒 90-180天</option>
+          <option value="dang">危险 180-270天</option>
+          <option value="stal">呆滞 270-360天</option>
+          <option value="dead">严重超龄 360天+</option>
+        </select>
+        <input type="text" id="np-fq" placeholder="搜索SKU..." oninput="rnpDet()">
+        <div class="fs"></div>
+        <select id="np-ps" onchange="npState.ps=parseInt(this.value);npState.pg=1;rnpDet()" title="每页行数">
+          <option value="20">20行/页</option><option value="50" selected>50行/页</option>
+          <option value="100">100行/页</option><option value="500">500行/页</option>
+        </select>
+      </div>
+      <div class="tw" id="np-tw"><table><thead><tr>
+        <th>SKU编码</th><th>SKU名称</th><th>仓库</th>
+        <th class="tr">库龄(天)</th><th class="tr">在库库存</th><th>档位</th><th>30天预警</th>
+      </tr></thead><tbody id="np-tb"></tbody></table></div>
+      <div class="pagi" id="np-pg"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ CHART PLUGIN: stacked bar % labels ══════════════════════ */
+Chart.register({
+  id:"stackPct",
+  afterDatasetsDraw(chart){
+    if(!chart.options._showPct)return;
+    const{ctx,data}=chart;
+    data.datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden)return;
+      meta.data.forEach((bar,bi)=>{
+        const val=Number(ds.data[bi])||0;
+        if(val<=0)return;
+        const tot=data.datasets.reduce((s,d)=>s+Number(d.data[bi]||0),0);
+        if(!tot)return;
+        const pct=val/tot*100;
+        if(pct<7)return; // too small to label
+        const props=bar.getProps(["x","y","width","height"],true);
+        const cy=props.y+(props.height/2);
+        ctx.save();
+        ctx.font="bold 9px 'JetBrains Mono',monospace";
+        ctx.textAlign="center";ctx.textBaseline="middle";
+        ctx.fillStyle="rgba(255,255,255,0.92)";
+        ctx.fillText(pct.toFixed(0)+"%",props.x,cy);
+        ctx.restore();
+      });
+    });
+  }
+});
+
+/* ═══ CONSTANTS ═══════════════════════════════════════════════ */
+const BK=[
+  {k:"good",l:"良好",  min:0,  max:89,  c:"#3fb950",v:"good"},
+  {k:"warn",l:"警戒",  min:90, max:179, c:"#d29922",v:"warn"},
+  {k:"dang",l:"危险",  min:180,max:269, c:"#f85149",v:"dang"},
+  {k:"stal",l:"呆滞",  min:270,max:359, c:"#a371f7",v:"stal"},
+  {k:"dead",l:"严重超龄",min:360,max:99999,c:"#ff7b72",v:"dead"},
+];
+const AT=[
+  {nextK:"dang",l:"危险库存",min:150,max:179,c:"#f85149",v:"dang"},
+  {nextK:"stal",l:"呆滞库存",min:240,max:269,c:"#a371f7",v:"stal"},
+  {nextK:"dead",l:"严重超龄",min:330,max:359,c:"#ff7b72",v:"dead"},
+];
+const ELEC_KW=["S1PLUS","S2","S4","SP2","E2","AMS","FC01","UC01","RC01PLUS","RC02"];
+const NEW_KW=["PA12CF","PC/ABS","ABSFR","TPU-90A","PLAYG_DC","PA6GF","PP-BS","PLA+SKFC","PC-BS","PLAGL","ABSGF","PEEK","E2","SP2","AMS","S4PRO"];
+const GHAPI="https://api.github.com";
+
+function bkt(age){return BK.find(b=>age>=b.min&&age<=b.max)||BK[4];}
+function getAl(d){for(let t of AT){if(d.age>=t.min&&d.age<=t.max)return{...t,daysLeft:t.max-d.age+1};}return null;}
+function matchKW(sku,kws){const u=sku.toUpperCase();return kws.some(k=>u.includes(k.toUpperCase()));}
+function isDark(){return document.documentElement.dataset.theme!=="light";}
+function gCol(){return isDark()?"#30363d":"#d0d7de";}
+function tCol(){return isDark()?"#6e7681":"#8c959f";}
+function bkColors(){return BK.map(b=>getComputedStyle(document.documentElement).getPropertyValue('--'+b.v).trim()||b.c);}
+
+/* ═══ STATE ═══════════════════════════════════════════════════ */
+let CD=[],PD=[],pendH=[],pendR=null;
+let dtSK="age",dtSD="desc",dtPg=1,dtPS=50,dtFl=[];
+let mvSK="delta",mvSD="asc",mvPg=1,mvFl=[]; const MSZ=50;
+let _mvData=[],barCI=null,dnutCI=null,mvTrendCI=null;
+let activeWH=null,curPg="ov";
+let isGuest=false,guestBinId="";
+// History movement state
+let mvHistory=[],mvFromIdx=0,mvToIdx=1; // indices into mvHistory
+
+/* ═══ LOCAL STORAGE ════════════════════════════════════════════ */
+const HIST_MAX=30;
+
+function saveS(data,cm,date){
+  try{
+    // Legacy two-slot (kept for backward compat with guest/cloud)
+    const ex=JSON.parse(localStorage.getItem("inv_c")||"null");
+    if(ex&&ex.r&&ex.r.length)localStorage.setItem("inv_p",JSON.stringify(ex));
+    localStorage.setItem("inv_c",JSON.stringify({r:data,d:date,cm}));
+    if(cm)localStorage.setItem("inv_cm",JSON.stringify(cm));
+    // History: append this snapshot
+    saveToHistory(data,date);
+  }catch(e){}
+}
+function saveToHistory(rows,date){
+  try{
+    let hist=loadHistory();
+    // De-duplicate by date string
+    hist=hist.filter(s=>s.date!==date);
+    // Slim rows: only store fields we need for movement comparison
+    const slim=rows.map(r=>({s:r.sku_code,n:r.sku_name,w:r.warehouse,q:r.qty,a:r.age}));
+    hist.push({date,rows:slim});
+    // Sort ascending by date string
+    hist.sort((a,b)=>a.date<b.date?-1:1);
+    // Trim to HIST_MAX
+    if(hist.length>HIST_MAX)hist=hist.slice(hist.length-HIST_MAX);
+    localStorage.setItem("inv_history",JSON.stringify(hist));
+  }catch(e){
+    // localStorage full — trim 5 oldest and retry
+    try{
+      let hist=loadHistory();
+      if(hist.length>5){hist=hist.slice(5);localStorage.setItem("inv_history",JSON.stringify(hist));}
+    }catch(e2){}
+  }
+}
+function loadHistory(){
+  try{return JSON.parse(localStorage.getItem("inv_history")||"[]");}
+  catch(e){return[];}
+}
+function histRowsToFull(slim){
+  // Expand slim format back to full row objects
+  return slim.map(r=>({
+    sku_code:r.s||r.sku_code||"",sku_name:r.n||r.sku_name||"",
+    warehouse:r.w||r.warehouse||"",qty:r.q!=null?r.q:r.qty||0,
+    age:r.a!=null?r.a:r.age||0,bucket:bkt(r.a!=null?r.a:r.age||0).k
+  }));
+}
+function mvStorageSize(){
+  try{return(localStorage.getItem("inv_history")||"").length;}catch(e){return 0;}
+}
+function loadS(){try{const c=JSON.parse(localStorage.getItem("inv_c")||"null");
+  const p=JSON.parse(localStorage.getItem("inv_p")||"null");return{c,p};}catch(e){return{c:null,p:null};}}
+function loadCM(){try{return JSON.parse(localStorage.getItem("inv_cm")||"null");}catch(e){return null;}}
+function getSyncCfg(){try{return JSON.parse(localStorage.getItem("inv_sync")||"null");}catch(e){return null;}}
+function saveSyncCfg(cfg){localStorage.setItem("inv_sync",JSON.stringify(cfg));}
+
+/* ═══ THEME ════════════════════════════════════════════════════ */
+function toggleTheme(){
+  const toLight=isDark();
+  document.documentElement.dataset.theme=toLight?"light":"dark";
+  document.getElementById("themeBtn").textContent=toLight?"☀️":"🌙";
+  localStorage.setItem("inv_theme",toLight?"light":"dark");
+  refreshChartsForTheme();
+}
+function refreshChartsForTheme(){
+  if(!CD.length)return;
+  if(curPg==="ov"){rBarChart();rDonutChart(CD.reduce((s,d)=>s+d.qty,0));}
+  else if(curPg==="wh")rwhDet();
+  else if(curPg==="el")relPg();
+  else if(curPg==="np")rnpPg();
+}
+
+/* ═══ CLOUD SYNC ═══════════════════════════════════════════════ */
+async function cloudCreate(token,payload){
+  const r=await fetch(`${GHAPI}/gists`,{method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"},
+    body:JSON.stringify({description:"inventory-age-system",public:true,files:{"inv_data.json":{content:JSON.stringify(payload)}}})
+  });
+  if(!r.ok){const t=await r.text();throw new Error(r.status===401?"Token无效，请检查gist权限":r.status+": "+t);}
+  return (await r.json()).id;
+}
+async function cloudUpdate(token,gistId,payload){
+  const r=await fetch(`${GHAPI}/gists/${gistId}`,{method:"PATCH",
+    headers:{"Content-Type":"application/json","Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"},
+    body:JSON.stringify({files:{"inv_data.json":{content:JSON.stringify(payload)}}})
+  });
+  if(!r.ok){const t=await r.text();throw new Error(r.status===401?"Token无效或已过期":r.status+": "+t);}
+}
+async function cloudRead(gistId){
+  const r=await fetch(`${GHAPI}/gists/${gistId}`,{headers:{"Accept":"application/vnd.github.v3+json"}});
+  if(!r.ok)throw new Error(r.status===404?"分享码不存在，请确认":"读取失败("+r.status+")");
+  const j=await r.json();
+  const content=j.files?.["inv_data.json"]?.content;
+  if(!content)throw new Error("Gist数据文件不存在");
+  return JSON.parse(content);
+}
+function buildPayload(){
+  const s=loadS();
+  const hist=loadHistory();
+  return{v:3,date:s.c?.d||"",rows:CD,prevRows:PD,prevDate:s.p?.d||"",history:hist};
+}async function autoSync(){
+  const cfg=getSyncCfg();if(!cfg||!cfg.apiKey||isGuest)return;
+  setSyncDot("spin","同步中…");
+  try{
+    const payload=buildPayload();
+    if(!cfg.binId){cfg.binId=await cloudCreate(cfg.apiKey,payload);saveSyncCfg(cfg);}
+    else await cloudUpdate(cfg.apiKey,cfg.binId,payload);
+    cfg.lastSync=new Date().toLocaleString("zh-CN",{hour12:false});saveSyncCfg(cfg);
+    setSyncDot("ok","已同步 ✓");
+    const ls=document.getElementById("smLastSync");
+    if(ls){ls.style.display="";ls.textContent="✓ 上次同步："+cfg.lastSync;}
+  }catch(e){setSyncDot("err","同步失败");toast("云同步失败: "+e.message,"err");}
+}
+
+/* ═══ SHARE MODAL ══════════════════════════════════════════════ */
+function openSM(){
+  const cfg=getSyncCfg();
+  if(cfg&&cfg.apiKey)document.getElementById("apiKeyInput").value=cfg.apiKey;
+  if(cfg&&cfg.binId){
+    document.getElementById("smBinId").textContent=cfg.binId;
+    document.getElementById("smCodeBox").style.display="";
+    document.getElementById("smConnBtn").textContent="重新同步";
+    if(cfg.lastSync){const ls=document.getElementById("smLastSync");ls.style.display="";ls.textContent="✓ 上次同步："+cfg.lastSync;}
+  }
+  document.getElementById("sm").classList.add("on");
+}
+function closeSM(){document.getElementById("sm").classList.remove("on");}
+function smt(i){
+  document.querySelectorAll(".sm-tab").forEach((t,j)=>t.classList.toggle("on",i===j));
+  document.querySelectorAll(".sm-panel").forEach((p,j)=>p.classList.toggle("on",i===j));
+}
+async function connectCloud(){
+  const k=document.getElementById("apiKeyInput").value.trim();
+  if(!k){toast("请输入Token","err");return;}
+  const btn=document.getElementById("smConnBtn");btn.disabled=true;btn.textContent="连接中…";
+  setSyncDot("spin","连接中…");
+  try{
+    const cfg=getSyncCfg()||{};cfg.apiKey=k;
+    const payload=buildPayload();
+    if(!cfg.binId)cfg.binId=await cloudCreate(k,payload);
+    else await cloudUpdate(k,cfg.binId,payload);
+    cfg.lastSync=new Date().toLocaleString("zh-CN",{hour12:false});saveSyncCfg(cfg);
+    document.getElementById("smBinId").textContent=cfg.binId;
+    document.getElementById("smCodeBox").style.display="";
+    const ls=document.getElementById("smLastSync");ls.style.display="";ls.textContent="✓ 连接成功，数据已同步！";
+    setSyncDot("ok","已同步 ✓");toast("云同步配置成功！","ok");btn.textContent="重新同步";
+  }catch(e){setSyncDot("err","连接失败");toast("连接失败: "+e.message,"err");btn.textContent="连接并生成分享码";}
+  btn.disabled=false;
+}
+async function loadGuest(){
+  const code=document.getElementById("guestCodeInput").value.trim();
+  if(!code){toast("请输入分享码","err");return;}
+  const se=document.getElementById("smGuestStatus");se.innerHTML='<div class="sinfo info">⏳ 正在加载…</div>';
+  try{
+    const rec=await cloudRead(code);
+    if(!rec||!rec.rows||!rec.rows.length)throw new Error("数据为空或分享码无效");
+    CD=rec.rows.map(r=>({...r,bucket:bkt(r.age).k}));PD=rec.prevRows||[];
+    // Restore cloud history if present
+    if(rec.history&&rec.history.length){
+      try{localStorage.setItem("inv_history",JSON.stringify(rec.history));}catch(e){}
+    }
+    isGuest=true;guestBinId=code;
+    document.getElementById("gbanner").classList.add("on");
+    document.getElementById("gbShareCode").textContent=code.length>14?code.slice(0,14)+"…":code;
+    document.getElementById("upbtn").disabled=true;
+    setSyncDot("guest","访客模式");
+    se.innerHTML=`<div class="sinfo ok">✓ 成功加载 ${CD.length} 条，更新：${rec.date||"—"}</div>`;
+    closeSM();initDB();toast(`已加载 ${CD.length} 条记录`,"ok");
+  }catch(e){se.innerHTML=`<div class="sinfo err">✕ ${e.message}</div>`;toast(e.message,"err");}
+}
+async function refreshGuest(){
+  if(!guestBinId)return;toast("正在刷新…","warn");
+  try{const rec=await cloudRead(guestBinId);
+    if(!rec||!rec.rows||!rec.rows.length)throw new Error("暂无数据");
+    CD=rec.rows.map(r=>({...r,bucket:bkt(r.age).k}));PD=rec.prevRows||[];
+    initDB();toast(`数据已刷新，${CD.length}条`,"ok");
+  }catch(e){toast("刷新失败: "+e.message,"err");}
+}
+function exitGuest(){
+  isGuest=false;guestBinId="";
+  document.getElementById("gbanner").classList.remove("on");
+  document.getElementById("upbtn").disabled=false;document.getElementById("upbtn").title="";
+  CD=[];PD=[];
+  const sc=getSyncCfg();
+  setSyncDot(sc&&sc.binId?"ok":"off",sc&&sc.binId?"已同步 ✓":"云同步");
+  const s=loadS();
+  if(s.c&&s.c.r&&s.c.r.length){CD=s.c.r;PD=s.p?.r||[];initDB();}
+  else{document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));document.getElementById("pg-lnd").classList.add("on");}
+  toast("已退出访客模式","ok");
+}
+function cpCode(){
+  navigator.clipboard.writeText(document.getElementById("smBinId").textContent).then(()=>{
+    const btn=document.getElementById("cpCode");btn.textContent="已复制 ✓";btn.classList.add("copied");
+    setTimeout(()=>{btn.textContent="复制";btn.classList.remove("copied");},2000);
+  }).catch(()=>toast("复制失败，请手动复制","err"));
+}
+function setSyncDot(state,label){
+  document.getElementById("sdot").className="sdot "+state;
+  if(label)document.getElementById("sindLabel").textContent=label;
+}
+
+/* ═══ UPLOAD & PARSE ════════════════════════════════════════════ */
+function onUpload(e){
+  if(isGuest){toast("访客模式下无法上传","err");return;}
+  const f=e.target.files[0];if(!f)return;e.target.value="";
+  const r=new FileReader();
+  r.onload=ev=>{try{
+    const wb=XLSX.read(new Uint8Array(ev.target.result),{type:"array"});
+    const sh=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(sh,{header:1,defval:""});
+    if(rows.length<2){toast("文件为空","err");return;}
+    pendH=rows[0].map(h=>String(h).trim()).filter(h=>h);pendR=rows;openMo();
+  }catch(err){toast("解析失败: "+err.message,"err");}};
+  r.readAsArrayBuffer(f);
+}
+const lz=document.getElementById("lz");
+lz.addEventListener("dragover",e=>{e.preventDefault();lz.classList.add("over");});
+lz.addEventListener("dragleave",()=>lz.classList.remove("over"));
+lz.addEventListener("drop",e=>{e.preventDefault();lz.classList.remove("over");
+  const f=e.dataTransfer.files[0];if(f)onUpload({target:{files:[f],value:""}});});
+
+const AMAP={
+  sku_code:["sku编码","sku_code","skuid","产品编码","商品编码","编码","product id","asin"],
+  sku_name:["sku名称","sku_name","产品名称","商品名称","名称","product name","title"],
+  warehouse:["仓库名称","仓库","warehouse","国家","country","location","站点","site"],
+  age:["库龄","库龄(天)","age","days","天数","库存天数","aging"],
+  qty:["在库库存","在库","库存","数量","qty","quantity","stock","inventory"],
+};
+function gcol(k,hs){const al=AMAP[k]||[];for(let h of hs){for(let a of al){if(h.toLowerCase().replace(/[\s_()（）]/g,"").includes(a.toLowerCase().replace(/[\s_()（）]/g,"")))return h;}}return "";}
+const FI=["fk_sku_code","fk_sku_name","fk_warehouse","fk_age","fk_qty"];
+const FK=["sku_code","sku_name","warehouse","age","qty"];
+
+function openMo(){
+  document.getElementById("dcols").textContent=pendH.join(" · ");
+  const sv=loadCM();
+  FI.forEach((id,i)=>{
+    const s=document.getElementById(id);
+    s.innerHTML="<option value=\"\">— 选择列 —</option>"+pendH.map(h=>`<option value=\"${h}\">${h}</option>`).join("");
+    const g=sv&&sv[FK[i]]&&pendH.includes(sv[FK[i]])?sv[FK[i]]:gcol(FK[i],pendH);
+    if(g)s.value=g;
+  });
+  document.getElementById("mo").classList.add("on");
+}
+function doMap(){
+  const cm={};
+  for(let i=0;i<FI.length;i++){
+    const v=document.getElementById(FI[i]).value;
+    if(!v){toast(`请选择「${["SKU编码","SKU名称","仓库名称","库龄","在库库存"][i]}」列`,"err");return;}
+    cm[FK[i]]=v;
+  }
+  document.getElementById("mo").classList.remove("on");
+  const parsed=parseR(pendR,cm);
+  const date=new Date().toLocaleString("zh-CN",{hour12:false});
+  saveS(parsed,cm,date);
+  const s=loadS();CD=s.c?.r||[];PD=s.p?.r||[];
+  toast(`成功导入 ${CD.length} 条记录`,"ok");initDB();autoSync();
+}
+function parseR(rows,cm){
+  const hs=rows[0].map(h=>String(h).trim());
+  const ix={};FK.forEach(k=>{ix[k]=hs.indexOf(cm[k]);});
+  const out=[];
+  for(let i=1;i<rows.length;i++){
+    const r=rows[i];const sc=String(r[ix.sku_code]||"").trim();if(!sc)continue;
+    const qty=parseFloat(r[ix.qty])||0,age=parseFloat(r[ix.age])||0;
+    out.push({sku_code:sc,sku_name:String(r[ix.sku_name]||"").trim(),
+      warehouse:String(r[ix.warehouse]||"").trim(),age,qty,bucket:bkt(age).k});
+  }
+  return out;
+}
+
+/* ═══ PAGE NAV ══════════════════════════════════════════════════ */
+const PM={ov:"pg-ov",wh:"pg-wh",al:"pg-al",mv:"pg-mv",dt:"pg-dt",el:"pg-el",np:"pg-np"};
+function sp(id){
+  curPg=id;
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.querySelectorAll(".nb").forEach(b=>b.classList.remove("on"));
+  document.getElementById(PM[id]).classList.add("on");
+  document.querySelectorAll(".nb").forEach(b=>{if(b.getAttribute("onclick")===`sp('${id}')`)b.classList.add("on");});
+  if(id==="wh")rwhPg();else if(id==="al")ralPg();
+  else if(id==="mv"){
+    // Default: compare first snapshot → latest
+    const hist=loadHistory();
+    if(hist.length>=2){mvFromIdx=0;mvToIdx=hist.length-1;}
+    rmvPg();
+  }
+  else if(id==="dt")rdtPg();
+  else if(id==="el")relPg();else if(id==="np")rnpPg();
+}
+
+/* ═══ INIT ══════════════════════════════════════════════════════ */
+function initDB(){
+  document.getElementById("pg-lnd").classList.remove("on");
+  sp("ov");
+  document.getElementById("luInfo").style.display="block";
+  const s=loadS();
+  document.getElementById("luDate").textContent=s.c?.d||"—";
+  document.getElementById("luRows").textContent=CD.length.toLocaleString();
+  document.getElementById("luWh").textContent=[...new Set(CD.map(d=>d.warehouse))].length;
+  const alTot=calcAl().total;
+  const ab=document.getElementById("abadge");ab.textContent=alTot;ab.classList.toggle("on",alTot>0);
+  // Load history into state (migrate legacy data if needed)
+  mvHistory=loadHistory();
+  migrateLegacyToHistory();
+  rovPg();populateDtF();
+}
+
+/* ═══ OVERVIEW ══════════════════════════════════════════════════ */
+function genSummary(){
+  const tot=CD.reduce((s,d)=>s+d.qty,0);
+  if(!tot){document.getElementById("ov-summary").innerHTML="";return;}
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+
+  // Per-warehouse risk summary
+  const whRisk=whs.map(w=>{
+    const its=CD.filter(d=>d.warehouse===w);
+    const wTot=its.reduce((s,d)=>s+d.qty,0);
+    const stalQ=its.filter(d=>d.bucket==="stal"||d.bucket==="dead").reduce((s,d)=>s+d.qty,0);
+    const stalPct=wTot?((stalQ/wTot)*100).toFixed(0):0;
+    return{w,wTot,stalQ,stalPct:+stalPct};
+  }).sort((a,b)=>b.stalPct-a.stalPct);
+
+  // Top risky warehouses (stale+overaged > 20%)
+  const riskyWh=whRisk.filter(x=>x.stalPct>=20);
+  const goodWh=whRisk.filter(x=>x.stalPct<10&&x.wTot>0);
+
+  // Key SKUs needing attention
+  const stalSKUs=CD.filter(d=>d.bucket==="stal"||d.bucket==="dead")
+    .sort((a,b)=>b.qty-a.qty).slice(0,8);
+  // Alert SKUs (about to become stale/overaged)
+  const alSKUs=CD.filter(d=>getAl(d)!==null)
+    .sort((a,b)=>getAl(a).daysLeft-getAl(b).daysLeft).slice(0,6);
+
+  // Overall health
+  const stalTotQ=CD.filter(d=>d.bucket==="stal"||d.bucket==="dead").reduce((s,d)=>s+d.qty,0);
+  const stalTotPct=tot?((stalTotQ/tot)*100).toFixed(1):0;
+  const goodQ=CD.filter(d=>d.bucket==="good").reduce((s,d)=>s+d.qty,0);
+  const goodPct=tot?((goodQ/tot)*100).toFixed(1):0;
+
+  let bodyLines=[];
+  bodyLines.push(`当前共有 <strong>${whs.length}</strong> 个仓库在库，总库存 <strong>${tot.toLocaleString()}</strong> 件，其中良好库存占 <strong>${goodPct}%</strong>，呆滞与超龄库存合计占 <strong style="color:var(--${stalTotPct>30?'dead':stalTotPct>15?'stal':'good'})">${stalTotPct}%</strong>（${stalTotQ.toLocaleString()} 件）。`);
+
+  if(riskyWh.length){
+    const names=riskyWh.map(x=>`<strong>${es(x.w)}</strong>（呆滞/超龄 ${x.stalPct}%）`).join("、");
+    bodyLines.push(`⚠️ 以下仓库呆滞与超龄比例偏高，建议重点处置：${names}。`);
+  }
+  if(goodWh.length&&whs.length>1){
+    const names=goodWh.map(x=>`<strong>${es(x.w)}</strong>`).join("、");
+    bodyLines.push(`✅ ${names} 库存结构相对健康，呆滞/超龄占比低于 10%。`);
+  }
+  if(alSKUs.length){
+    bodyLines.push(`🔔 有 <strong>${alSKUs.length}</strong> 个SKU将在 30 天内升入更高风险档位，需优先关注。`);
+  }
+
+  // Build stale/overaged chip list
+  let chips="";
+  if(stalSKUs.length){
+    chips+=`<div class="sum-chips">`;
+    stalSKUs.forEach(d=>{
+      const cls=d.bucket==="dead"?"dead":"stal";
+      chips+=`<span class="sum-chip ${cls}" title="${es(d.sku_name)||es(d.sku_code)} · ${es(d.warehouse)} · ${d.qty.toLocaleString()}件">${es(d.sku_code)} <span style="opacity:.7;font-weight:400">${d.qty.toLocaleString()}件</span></span>`;
+    });
+    chips+=`</div><div style="font-size:11px;color:var(--tx3);font-family:var(--mono);margin-top:5px">↑ 呆滞/超龄SKU（按库存量排序，仅显示前8）</div>`;
+  }
+
+  // Alert chips
+  let alChips="";
+  if(alSKUs.length){
+    alChips=`<div class="sum-chips" style="margin-top:8px">`;
+    alSKUs.forEach(d=>{
+      const al=getAl(d);
+      alChips+=`<span class="sum-chip warn-at" title="${es(d.sku_name)||es(d.sku_code)} · ${es(d.warehouse)} · ${al.daysLeft}天后→${al.l}">${es(d.sku_code)} <span style="opacity:.7;font-weight:400">${al.daysLeft}天→${al.l}</span></span>`;
+    });
+    alChips+=`</div><div style="font-size:11px;color:var(--tx3);font-family:var(--mono);margin-top:5px">↑ 即将越档SKU（按剩余天数排序）</div>`;
+  }
+
+  document.getElementById("ov-summary").innerHTML=`
+    <div class="sum-card">
+      <div class="sum-head"><span class="sum-icon">🤖</span><span class="sum-title">智能库存总结</span></div>
+      <div class="sum-body">${bodyLines.join("<br>")}</div>
+      ${chips}${alChips}
+    </div>`;
+}
+function rovPg(){
+  const tot=CD.reduce((s,d)=>s+d.qty,0);
+  document.getElementById("ov-meta").textContent=`总在库 ${tot.toLocaleString()} 件 · ${CD.length.toLocaleString()} 条`;
+  document.getElementById("kpi-strip").innerHTML=BK.map(b=>{
+    const its=CD.filter(d=>d.bucket===b.k);const q=its.reduce((s,d)=>s+d.qty,0);
+    const p=tot?((q/tot)*100).toFixed(1):"0.0";
+    return`<div class="kpi ${b.v}"><div class="ktag">${b.l}</div><div class="kval">${q.toLocaleString()}</div>
+      <div class="krng">${b.min===0?"0":b.min}–${b.max===99999?"360+":b.max}天</div>
+      <div class="kpct">${p}% · ${[...new Set(its.map(d=>d.sku_code))].length} SKU</div></div>`;
+  }).join("");
+  genSummary();rBarChart();rDonutChart(tot);rWhBars();rWhSumTb();
+}
+function makeStackedBarOpts(whTots,totalFallback){
+  return{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>{
+        const wTot=whTots?whTots[ctx.dataIndex]:totalFallback;
+        const pct=wTot?((ctx.parsed.y/wTot)*100).toFixed(1):0;
+        return ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} 件 (${pct}%)`;
+      }}},
+      datalabels:{
+        display:ctx=>{
+          const v=ctx.dataset.data[ctx.dataIndex]||0;
+          const tot=whTots?whTots[ctx.dataIndex]:totalFallback;
+          return tot>0&&(v/tot)>=0.06; // only show if ≥6% of bar
+        },
+        formatter:(v,ctx)=>{
+          const tot=whTots?whTots[ctx.dataIndex]:totalFallback;
+          return tot>0?((v/tot)*100).toFixed(0)+"%":"";
+        },
+        color:"#fff",font:{family:"JetBrains Mono",size:9,weight:"bold"},
+        textShadowColor:"rgba(0,0,0,.4)",textShadowBlur:3,
+        anchor:"center",align:"center",clamp:true,
+      }
+    },
+    scales:{
+      x:{stacked:true,grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:10}}},
+      y:{stacked:true,grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:10}}}
+    }
+  };
+}
+function rBarChart(){
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+  const clrs=BK.map(b=>bkColor(b.k));
+  const whTots=whs.map(w=>CD.filter(d=>d.warehouse===w).reduce((s,d)=>s+d.qty,0));
+  const totalFallback=CD.reduce((s,d)=>s+d.qty,0);
+  const ds=BK.map((b,bi)=>({label:b.l,
+    data:whs.length?whs.map(w=>CD.filter(d=>d.warehouse===w&&d.bucket===b.k).reduce((s,d)=>s+d.qty,0)):[CD.filter(d=>d.bucket===b.k).reduce((s,d)=>s+d.qty,0)],
+    backgroundColor:clrs[bi],borderRadius:3,borderSkipped:false}));
+  if(barCI)barCI.destroy();
+  barCI=new Chart(document.getElementById("barChart"),{type:"bar",
+    data:{labels:whs.length?whs:["全部"],datasets:ds},
+    options:makeStackedBarOpts(whs.length?whTots:null,totalFallback)});
+}
+function makeDoughnutOpts(tot,showLegend){
+  return{
+    responsive:true,maintainAspectRatio:false,cutout:"70%",
+    plugins:{
+      legend:{display:showLegend!==false,position:"bottom",
+        labels:{color:tCol(),font:{family:"JetBrains Mono",size:10},boxWidth:9,padding:7}},
+      tooltip:{callbacks:{label:ctx=>` ${ctx.label.split(" ")[0]}: ${ctx.parsed.toLocaleString()} 件 (${tot?(ctx.parsed/tot*100).toFixed(1):0}%)`}},
+      datalabels:{
+        display:ctx=>{const v=ctx.dataset.data[ctx.dataIndex]||0;return tot>0&&(v/tot)>=0.05;},
+        formatter:(v)=>tot>0?((v/tot)*100).toFixed(0)+"%":"",
+        color:"#fff",font:{family:"JetBrains Mono",size:10,weight:"bold"},
+        textShadowColor:"rgba(0,0,0,.4)",textShadowBlur:3,
+      }
+    }
+  };
+}
+function rDonutChart(tot){
+  const data=BK.map(b=>CD.filter(d=>d.bucket===b.k).reduce((s,d)=>s+d.qty,0));
+  if(dnutCI)dnutCI.destroy();
+  dnutCI=new Chart(document.getElementById("donutChart"),{type:"doughnut",
+    data:{labels:BK.map((b,i)=>{const pct=tot?((data[i]/tot)*100).toFixed(1):0;return`${b.l} ${pct}%`;}),
+      datasets:[{data,backgroundColor:BK.map(b=>bkColor(b.k)),borderWidth:0,hoverOffset:6}]},
+    options:makeDoughnutOpts(tot,true)});
+  document.getElementById("dc-tot").textContent=tot.toLocaleString();
+}
+function rWhBars(){
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+  const wt=whs.map(w=>({w,tot:CD.filter(d=>d.warehouse===w).reduce((s,d)=>s+d.qty,0)})).sort((a,b)=>b.tot-a.tot);
+  const mx=Math.max(...wt.map(x=>x.tot),1);
+  document.getElementById("wh-bars").innerHTML=wt.map(({w,tot})=>{
+    const bqs=BK.map(b=>CD.filter(d=>d.warehouse===w&&d.bucket===b.k).reduce((s,d)=>s+d.qty,0));
+    const parts=BK.map((b,i)=>{const p=tot>0?(bqs[i]/tot*100).toFixed(1):0;
+      return p>0?`<span style="width:${p}%;background:${bkColor(b.k)}" data-t="${b.l}: ${bqs[i].toLocaleString()}件(${p}%)"></span>`:""}).join("");
+    return`<div class="wbr"><div class="wbr-nm" title="${es(w)}">${es(w)||"—"}</div>
+      <div class="wbr-st" style="max-width:${(tot/mx*100).toFixed(1)}%">${parts}</div>
+      <div class="wbr-tot">${tot.toLocaleString()}</div></div>`;
+  }).join("");
+}
+function rWhSumTb(){
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+  const rows=whs.map(w=>{const its=CD.filter(d=>d.warehouse===w);const tot=its.reduce((s,d)=>s+d.qty,0);
+    return{w,tot,bqs:BK.map(b=>its.filter(d=>d.bucket===b.k).reduce((s,d)=>s+d.qty,0))};
+  }).sort((a,b)=>b.tot-a.tot);
+  document.getElementById("wh-sum-tb").innerHTML=rows.map(r=>{
+    const sp=BK.map((b,i)=>{const p=r.tot>0?(r.bqs[i]/r.tot*100).toFixed(1):0;
+      return p>0?`<span style="width:${p}%;background:${bkColor(b.k)}"></span>`:""}).join("");
+    return`<tr><td class="tb2">${es(r.w)||"—"}</td><td class="tm tr">${r.tot.toLocaleString()}</td>
+      ${BK.map((b,i)=>`<td class="tm tr">${r.bqs[i]>0?`<span class="bdg ${b.v}">${r.bqs[i].toLocaleString()}</span>`:"<span style=\"color:var(--tx3)\">—</span>"}</td>`).join("")}
+      <td><div class="bst">${sp}</div></td></tr>`;
+  }).join("");
+}
+
+/* ═══ WAREHOUSE PAGE ══════════════════════════════════════════ */
+function rwhPg(){
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+  if(!activeWH||!whs.includes(activeWH))activeWH=whs[0]||null;
+  document.getElementById("wh-tabs").innerHTML=whs.map(w=>
+    `<div class="wtb ${w===activeWH?"on":""}" onclick="selWH('${es(w)}')">${es(w)}</div>`).join("");
+  rwhDet();
+}
+function selWH(w){activeWH=w;rwhPg();}
+let _whDetChartTimer=null;
+function rwhDet(){
+  if(!activeWH){document.getElementById("wh-det").innerHTML='<div style="padding:40px;text-align:center;color:var(--tx3)">暂无数据</div>';return;}
+  const its=CD.filter(d=>d.warehouse===activeWH);
+  const tot=its.reduce((s,d)=>s+d.qty,0);
+  const bd=BK.map(b=>{const bi=its.filter(d=>d.bucket===b.k);return{...b,q:bi.reduce((s,d)=>s+d.qty,0),cnt:[...new Set(bi.map(d=>d.sku_code))].length};});
+  document.getElementById("wh-det").innerHTML=`
+    <div class="g5" style="margin-bottom:13px">
+      ${bd.map(b=>`<div class="kpi ${b.v}"><div class="ktag">${b.l}</div><div class="kval">${b.q.toLocaleString()}</div>
+        <div class="krng">${b.min}–${b.max===99999?"360+":b.max}天</div>
+        <div class="kpct">${tot?(b.q/tot*100).toFixed(1):0}% · ${b.cnt} SKU</div></div>`).join("")}
+    </div>
+    <div class="g2" style="margin-bottom:13px">
+      <div class="card"><div class="ch"><span class="ch-t">库龄分布（库存量）</span></div>
+        <div class="cp"><div class="cbx-sm"><canvas id="whBC"></canvas></div></div></div>
+      <div class="card"><div class="ch"><span class="ch-t">库龄档位占比</span></div>
+        <div class="cp" style="display:flex;justify-content:center">
+          <div style="position:relative;height:190px;width:190px">
+            <canvas id="whDC"></canvas>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+              <div style="font-size:18px;font-weight:700;font-family:var(--mono)">${tot.toLocaleString()}</div>
+              <div style="font-size:10px;color:var(--tx3);font-family:var(--mono)">总库存</div>
+            </div>
+          </div>
+        </div></div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="ch-t">${es(activeWH)} — SKU明细</span><span class="ch-m" id="wh-sku-meta"></span></div>
+      <div class="fb" style="border:none;border-bottom:1px solid var(--bd);border-radius:0;margin-bottom:0">
+        <select id="wh-fbk" onchange="rwhSkuTb()">
+          <option value="">所有库龄档</option>
+          <option value="good">良好 0-90天</option><option value="warn">警戒 90-180天</option>
+          <option value="dang">危险 180-270天</option><option value="stal">呆滞 270-360天</option>
+          <option value="dead">严重超龄 360天+</option>
+        </select>
+        <input type="text" id="wh-fq" placeholder="搜索SKU编码/名称..." oninput="rwhSkuTb()" style="min-width:180px">
+        <button class="brst" onclick="document.getElementById('wh-fbk').value='';document.getElementById('wh-fq').value='';rwhSkuTb()">重置</button>
+      </div>
+      <div class="tw"><table><thead><tr>
+        <th>SKU编码</th><th>SKU名称</th><th class="tr">在库库存</th><th class="tr">库龄(天)</th><th>档位</th><th>30天预警</th>
+      </tr></thead><tbody id="wh-skuTb"></tbody></table></div>
+    </div>`;
+  clearTimeout(_whDetChartTimer);
+  _whDetChartTimer=setTimeout(()=>{
+    new Chart(document.getElementById("whBC"),{type:"bar",
+      data:{labels:BK.map(b=>`${b.min}-${b.max===99999?"360+":b.max}`),datasets:[{data:bd.map(b=>b.q),backgroundColor:BK.map(b=>bkColor(b.k)),borderRadius:4}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+        datalabels:{
+          display:ctx=>{const v=ctx.dataset.data[ctx.dataIndex]||0;const tot2=bd.reduce((s,b)=>s+b.q,0);return tot2>0&&(v/tot2)>=0.06;},
+          formatter:(v)=>{const tot2=bd.reduce((s,b)=>s+b.q,0);return tot2>0?((v/tot2)*100).toFixed(0)+"%":"";},
+          color:"#fff",font:{family:"JetBrains Mono",size:9,weight:"bold"},textShadowColor:"rgba(0,0,0,.4)",textShadowBlur:3,anchor:"center",align:"center"
+        }},
+        scales:{x:{grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:10}}},
+                y:{grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:10}}}}}});
+    new Chart(document.getElementById("whDC"),{type:"doughnut",
+      data:{labels:BK.map((b,i)=>{const pct=tot?((bd[i].q/tot)*100).toFixed(1):0;return`${b.l} ${pct}%`;}),
+        datasets:[{data:bd.map(b=>b.q),backgroundColor:BK.map(b=>bkColor(b.k)),borderWidth:0,hoverOffset:5}]},
+      options:{...makeDoughnutOpts(tot,false),cutout:"66%"}});
+    rwhSkuTb();
+  },40);
+}
+function rwhSkuTb(){
+  const its=CD.filter(d=>d.warehouse===activeWH);
+  const bk=document.getElementById("wh-fbk")?.value||"";
+  const q=(document.getElementById("wh-fq")?.value||"").toLowerCase();
+  let fl=its;
+  if(bk)fl=fl.filter(d=>d.bucket===bk);
+  if(q)fl=fl.filter(d=>d.sku_code.toLowerCase().includes(q)||d.sku_name.toLowerCase().includes(q));
+  fl.sort((a,b)=>b.age-a.age);
+  const meta=document.getElementById("wh-sku-meta");
+  if(meta)meta.textContent=`${fl.length}/${its.length} 条`;
+  const tb=document.getElementById("wh-skuTb");if(!tb)return;
+  tb.innerHTML=fl.length?fl.map(d=>{const bk2=bkt(d.age);const al=getAl(d);
+    return`<tr><td class="tm tb2">${es(d.sku_code)}</td><td>${es(d.sku_name)||"—"}</td>
+      <td class="tm tr">${d.qty.toLocaleString()}</td><td class="tm tr">${d.age}</td>
+      <td><span class="bdg ${bk2.v}">${bk2.l}</span></td>
+      <td>${al?`<span class="bdg ${al.v}">⚠️ ${al.daysLeft}天→${al.l}</span>`:"—"}</td></tr>`;
+  }).join(""):`<tr class="emp"><td colspan="6">无匹配数据</td></tr>`;
+}
+
+/* ═══ ALERT PAGE ══════════════════════════════════════════════ */
+function calcAl(){
+  const bt={};AT.forEach(t=>bt[t.nextK]=[]);
+  CD.forEach(d=>{const al=getAl(d);if(al)bt[al.nextK].push({...d,al});});
+  return{bt,total:Object.values(bt).reduce((s,a)=>s+a.length,0)};
+}
+function ralPg(){
+  const{bt}=calcAl();
+  document.getElementById("al-kpis").innerHTML=AT.map(t=>{
+    const its=bt[t.nextK]||[];const q=its.reduce((s,d)=>s+d.qty,0);
+    return`<div class="kpi ${t.v}"><div class="ktag">→ ${t.l}</div><div class="kval">${its.length}</div>
+      <div class="krng">SKU将越档</div><div class="kpct">${q.toLocaleString()} 件库存</div></div>`;
+  }).join("");
+  AT.forEach(t=>{
+    const its=(bt[t.nextK]||[]).sort((a,b)=>a.al.daysLeft-b.al.daysLeft);
+    document.getElementById(`ac-${t.nextK}`).textContent=`${its.length} 个SKU`;
+    document.getElementById(`al-${t.nextK}`).innerHTML=its.length===0
+      ?'<div style="padding:28px;text-align:center;color:var(--tx3);font-size:13px">暂无预警 ✓</div>'
+      :its.map(d=>{const urg=d.al.daysLeft<=7?"var(--dang)":d.al.daysLeft<=15?"var(--warn)":t.c;
+        return`<div class="ait"><div>
+          <div class="a-sku">${es(d.sku_code)}</div><div class="a-nm">${es(d.sku_name)||"—"}</div>
+          <div class="a-mt"><span class="a-wh">${es(d.warehouse)}</span>
+            <span class="bdg ${bkt(d.age).v}">${bkt(d.age).l}</span>
+            <span style="font-size:11px;font-family:var(--mono);color:var(--tx2)">${d.qty.toLocaleString()}件·当前${d.age}天</span>
+          </div></div>
+          <div class="acd"><div class="acd-n" style="color:${urg}">${d.al.daysLeft}</div><div class="acd-l">天后越档</div></div>
+        </div>`;
+      }).join("");
+  });
+}
+
+/* ═══ HISTORY MIGRATION ════════════════════════════════════════ */
+function migrateLegacyToHistory(){
+  // If history is empty but we have legacy inv_c / inv_p, seed history from them
+  if(mvHistory.length>0)return;
+  const s=loadS();
+  let seeded=false;
+  if(s.p&&s.p.r&&s.p.r.length){saveToHistory(s.p.r,s.p.d||"上次数据");seeded=true;}
+  if(s.c&&s.c.r&&s.c.r.length){saveToHistory(s.c.r,s.c.d||"本次数据");seeded=true;}
+  if(seeded)mvHistory=loadHistory();
+}
+
+/* ═══ MOVEMENT PAGE ════════════════════════════════════════════ */
+function buildMvBySkuWh(currData,prevData){
+  if(!prevData||!prevData.length)return null;
+  const cm={},pm={};
+  currData.forEach(d=>{
+    const k=d.sku_code+"|"+d.warehouse;
+    if(!cm[k])cm[k]={sku_code:d.sku_code,sku_name:d.sku_name,warehouse:d.warehouse,qty:0};
+    cm[k].qty+=d.qty;
+  });
+  prevData.forEach(d=>{
+    const k=d.sku_code+"|"+d.warehouse;
+    if(!pm[k])pm[k]={sku_code:d.sku_code,sku_name:d.sku_name,warehouse:d.warehouse,qty:0};
+    pm[k].qty+=d.qty;
+  });
+  const allK=new Set([...Object.keys(cm),...Object.keys(pm)]);
+  return[...allK].map(k=>{
+    const cur=cm[k],prv=pm[k];
+    const cq=cur?.qty||0,pq=prv?.qty||0,dl=cq-pq;
+    const rate=pq>0?((Math.abs(dl)/pq)*100).toFixed(1):null;
+    return{sku_code:cur?.sku_code||prv?.sku_code||"",sku_name:cur?.sku_name||prv?.sku_name||"",
+      warehouse:cur?.warehouse||prv?.warehouse||"",
+      prev_qty:pq,curr_qty:cq,delta:dl,rate:parseFloat(rate)||0,
+      type:dl<0?"fast":dl>0?"restock":"slow"};
+  });
+}
+
+function mvDeleteOld(){
+  const hist=loadHistory();
+  if(hist.length<=1){toast("只剩1个快照，无法删除","err");return;}
+  if(!confirm(`删除最早的快照「${hist[0].date}」？此操作不可撤销。`))return;
+  hist.shift();
+  localStorage.setItem("inv_history",JSON.stringify(hist));
+  mvHistory=hist;
+  toast("已删除最早快照","ok");
+  rmvPg();
+}
+
+function mvSnapshotRows(snap){return histRowsToFull(snap.rows);}
+
+function rmvPg(){
+  mvHistory=loadHistory();
+  const has=mvHistory.length>=2;
+  document.getElementById("mv-no").style.display=has?"none":"block";
+  document.getElementById("mv-ct").style.display=has?"block":"none";
+  if(!has){
+    // Show single-snapshot message
+    if(mvHistory.length===1){
+      document.getElementById("mv-no").innerHTML=`<div style="font-size:40px;margin-bottom:14px">📈</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--tx2)">已保存 1 个快照</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--tx3)">再上传一次数据，系统将自动计算动销变化。<br>快照时间：${mvHistory[0].date}</div>`;
+      document.getElementById("mv-no").style.display="block";
+    }
+    return;
+  }
+
+  // Snapshot count & storage
+  document.getElementById("mv-snap-n").textContent=mvHistory.length;
+  const storeBytes=mvStorageSize();
+  const storePct=Math.min(100,(storeBytes/500000)*100).toFixed(0); // 500KB as reference
+  document.getElementById("mv-store-lbl").textContent=`储存 ${(storeBytes/1024).toFixed(0)}KB`;
+  document.getElementById("mv-store-bar").style.width=storePct+"%";
+  document.getElementById("mv-store-bar").style.background=storePct>80?"var(--dang)":storePct>50?"var(--warn)":"var(--acc)";
+
+  // Render timeline
+  renderMvTimeline();
+
+  // Populate comparison selectors
+  const fromSel=document.getElementById("mv-sel-from");
+  const toSel=document.getElementById("mv-sel-to");
+  const fromVal=fromSel.value;const toVal=toSel.value;
+  fromSel.innerHTML=mvHistory.map((s,i)=>`<option value="${i}"${i==mvFromIdx?" selected":""}>${s.date}</option>`).join("");
+  toSel.innerHTML=mvHistory.map((s,i)=>`<option value="${i}"${i==mvToIdx?" selected":""}>${s.date}</option>`).join("");
+  // Restore or default: oldest→newest
+  if(!fromVal)fromSel.value=0;
+  if(!toVal)toSel.value=mvHistory.length-1;
+  mvFromIdx=parseInt(fromSel.value)||0;
+  mvToIdx=parseInt(toSel.value)||mvHistory.length-1;
+
+  // Render trend chart
+  renderMvTrend();
+
+  // Run comparison
+  mvApply();
+}
+
+function renderMvTimeline(){
+  const n=mvHistory.length;
+  let html="";
+  for(let i=0;i<n;i++){
+    const snap=mvHistory[i];
+    const isFrom=i===mvFromIdx,isTo=i===mvToIdx;
+    const inRange=i>mvFromIdx&&i<mvToIdx;
+    let cls="mv-tl-node"+(isFrom?" sel-from":isTo?" sel-to":inRange?" in-range":"");
+    // Format date: remove seconds if present
+    const dLabel=snap.date.replace(/:\d{2}$/,"").replace(/\//g,"-");
+    const tot=snap.rows.reduce((s,r)=>s+(r.q!=null?r.q:r.qty||0),0);
+    html+=`<div class="${cls}" onclick="mvSelectSnap(${i})" title="${snap.date}&#10;总库存: ${tot.toLocaleString()}">
+      <div class="mv-tl-dot"></div>
+      <div class="mv-tl-date">${dLabel.split(" ")[0]}<br><span style="color:var(--tx3);font-weight:400">${(dLabel.split(" ")[1]||"").slice(0,5)}</span></div>
+    </div>`;
+    if(i<n-1){
+      const lineRng=(i>=mvFromIdx&&i<mvToIdx)?" in-range":"";
+      html+=`<div class="mv-tl-line${lineRng}"></div>`;
+    }
+  }
+  document.getElementById("mv-tl-inner").innerHTML=html;
+}
+
+let _mvTlState=0; // 0=pick from, 1=pick to
+function mvSelectSnap(i){
+  // Toggle: first click sets FROM, second sets TO (if TO>FROM), else reset
+  if(mvFromIdx===i){mvTlState=1;return;}
+  if(mvToIdx===i){mvTlState=0;return;}
+  // Simple: shift-style: if clicking before current from, set as from; else set as to
+  const fromSel=document.getElementById("mv-sel-from");
+  const toSel=document.getElementById("mv-sel-to");
+  if(i<mvToIdx){mvFromIdx=i;fromSel.value=i;}
+  else{mvToIdx=i;toSel.value=i;}
+  renderMvTimeline();mvApply();
+}
+
+function mvApply(){
+  mvFromIdx=parseInt(document.getElementById("mv-sel-from").value)||0;
+  mvToIdx=parseInt(document.getElementById("mv-sel-to").value)||0;
+  // Swap if needed
+  if(mvFromIdx>mvToIdx){const t=mvFromIdx;mvFromIdx=mvToIdx;mvToIdx=t;
+    document.getElementById("mv-sel-from").value=mvFromIdx;
+    document.getElementById("mv-sel-to").value=mvToIdx;}
+  renderMvTimeline();
+
+  const fromSnap=mvHistory[mvFromIdx];
+  const toSnap=mvHistory[mvToIdx];
+  if(!fromSnap||!toSnap)return;
+
+  const fromRows=mvSnapshotRows(fromSnap);
+  const toRows=mvSnapshotRows(toSnap);
+  const mv=buildMvBySkuWh(toRows,fromRows);
+  if(!mv)return;
+
+  document.getElementById("mv-period").textContent=`${fromSnap.date} → ${toSnap.date}`;
+
+  // KPIs
+  const sold=mv.filter(d=>d.type==="fast"),slow=mv.filter(d=>d.type==="slow"),rst=mv.filter(d=>d.type==="restock");
+  const tsold=sold.reduce((s,d)=>s+Math.abs(d.delta),0);
+  document.getElementById("mv-kpis").innerHTML=`
+    <div class="kpi good"><div class="ktag">动销</div><div class="kval">${sold.length}</div><div class="krng">库存减少记录数</div><div class="kpct">共动销 ${tsold.toLocaleString()} 件</div></div>
+    <div class="kpi stal"><div class="ktag">滞销</div><div class="kval">${slow.length}</div><div class="krng">库存无变化记录数</div><div class="kpct">需关注动销</div></div>
+    <div class="kpi warn"><div class="ktag">补货</div><div class="kval">${rst.length}</div><div class="krng">库存增加记录数</div><div class="kpct">新入库或补货</div></div>`;
+
+  // Populate warehouse filter
+  const allWhs=[...new Set([...toRows,...fromRows].map(d=>d.warehouse))].sort();
+  const savedWh=document.getElementById("mv-fw")?.value||"";
+  document.getElementById("mv-fw").innerHTML="<option value=\"\">所有仓库</option>"+allWhs.map(w=>`<option${w===savedWh?" selected":""}>${w}</option>`).join("");
+
+  _mvData=mv;rmv();
+}
+
+function renderMvTrend(){
+  // Build series from all history snapshots
+  const labels=mvHistory.map(s=>{
+    const d=s.date.replace(/:\d{2}$/,"");
+    return d.split(" ")[0]+(d.split(" ")[1]?"\n"+d.split(" ")[1].slice(0,5):"");
+  });
+  const totals=mvHistory.map(s=>s.rows.reduce((a,r)=>a+(r.q!=null?r.q:r.qty||0),0));
+  const stals=mvHistory.map(s=>{
+    const rows=histRowsToFull(s.rows);
+    return rows.filter(r=>r.bucket==="stal").reduce((a,r)=>a+r.qty,0);
+  });
+  const deads=mvHistory.map(s=>{
+    const rows=histRowsToFull(s.rows);
+    return rows.filter(r=>r.bucket==="dead").reduce((a,r)=>a+r.qty,0);
+  });
+  const goods=mvHistory.map(s=>{
+    const rows=histRowsToFull(s.rows);
+    return rows.filter(r=>r.bucket==="good").reduce((a,r)=>a+r.qty,0);
+  });
+  document.getElementById("mv-trend-meta").textContent=`${mvHistory.length}个快照`;
+
+  if(mvTrendCI)mvTrendCI.destroy();
+  const el=document.getElementById("mvTrendChart");
+  if(!el)return;
+  mvTrendCI=new Chart(el,{type:"line",
+    data:{labels,datasets:[
+      {label:"总库存",data:totals,borderColor:isDark()?"#58a6ff":"#0969da",backgroundColor:"rgba(88,166,255,.08)",fill:true,tension:.35,pointRadius:4,pointHoverRadius:6,borderWidth:2},
+      {label:"良好",data:goods,borderColor:isDark()?"#3fb950":"#1a7f37",backgroundColor:"transparent",fill:false,tension:.35,pointRadius:3,borderWidth:1.5,borderDash:[4,3]},
+      {label:"呆滞",data:stals,borderColor:isDark()?"#a371f7":"#6e40c9",backgroundColor:"rgba(163,113,247,.08)",fill:true,tension:.35,pointRadius:3,borderWidth:1.5},
+      {label:"超龄",data:deads,borderColor:isDark()?"#ff7b72":"#bc4c00",backgroundColor:"rgba(255,123,114,.08)",fill:true,tension:.35,pointRadius:3,borderWidth:1.5},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`}}},
+      scales:{
+        x:{grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:9},maxRotation:0}},
+        y:{grid:{color:gCol()},ticks:{color:tCol(),font:{family:"JetBrains Mono",size:10},callback:v=>v.toLocaleString()}}
+      }}});
+}
+
+function rmv(){
+  const wh=document.getElementById("mv-fw").value;
+  const tp=document.getElementById("mv-ft").value;
+  const q=document.getElementById("mv-fs").value.toLowerCase();
+  // Filter by warehouse for TOP20
+  const whFiltered=wh?_mvData.filter(d=>d.warehouse===wh):_mvData;
+  // TOP20 lists
+  const t20f=[...whFiltered].filter(d=>d.type==="fast").sort((a,b)=>a.delta-b.delta).slice(0,20);
+  const t20s=[...whFiltered.filter(d=>d.type==="slow"),...whFiltered.filter(d=>d.type==="restock")].sort((a,b)=>(b.prev_qty||0)-(a.prev_qty||0)).slice(0,20);
+  document.getElementById("mv-fast").innerHTML=t20f.length?t20f.map(d=>`<div class="mit">
+    <div><div class="m-sku">${es(d.sku_code)}</div><div class="m-nm">${es(d.sku_name)||"—"}</div>
+    <div class="m-mt">${es(d.warehouse)} · ${d.prev_qty.toLocaleString()} → ${d.curr_qty.toLocaleString()}</div></div>
+    <div class="mst"><div class="mdelta" style="color:var(--good)">-${Math.abs(d.delta).toLocaleString()}</div>
+    <div class="mrate" style="color:var(--good)">${d.rate?"-"+d.rate+"%":"—"}</div></div></div>`).join("")
+    :`<div style="padding:28px;text-align:center;color:var(--tx3)">所选期间内暂无动销记录</div>`;
+  document.getElementById("mv-slow").innerHTML=t20s.length?t20s.map(d=>`<div class="mit">
+    <div><div class="m-sku">${es(d.sku_code)}</div><div class="m-nm">${es(d.sku_name)||"—"}</div>
+    <div class="m-mt">${es(d.warehouse)} · ${d.prev_qty.toLocaleString()} → ${d.curr_qty.toLocaleString()}</div></div>
+    <div class="mst"><div class="mdelta" style="color:${d.delta===0?"var(--tx3)":"var(--warn)"}">${d.delta===0?"±0":"+"+d.delta.toLocaleString()}</div>
+    <div class="mrate">${d.delta===0?"无变化":"补货"}</div></div></div>`).join("")
+    :`<div style="padding:28px;text-align:center;color:var(--tx3)">所选期间内暂无滞销记录</div>`;
+  // Full table (all filters)
+  mvFl=[..._mvData].filter(d=>{
+    if(wh&&d.warehouse!==wh)return false;
+    if(tp&&d.type!==tp)return false;
+    if(q&&!d.sku_code.toLowerCase().includes(q)&&!d.sku_name.toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>{
+    let av=a[mvSK],bv=b[mvSK];if(typeof av==="string"){av=av.toLowerCase();bv=bv.toLowerCase();}
+    return av<bv?(mvSD==="asc"?-1:1):av>bv?(mvSD==="asc"?1:-1):0;
+  });
+  document.getElementById("mv-cnt").textContent=`${mvFl.length} 条`;
+  const sl=mvFl.slice((mvPg-1)*MSZ,mvPg*MSZ);
+  document.getElementById("mv-tb").innerHTML=sl.length?sl.map(d=>{
+    const cls=d.type==="fast"?"up":d.type==="restock"?"dn":"fl";
+    const lbl=d.type==="fast"?`-${Math.abs(d.delta).toLocaleString()}`:d.type==="restock"?`+${d.delta.toLocaleString()}`:"±0";
+    return`<tr><td class="tm tb2">${es(d.sku_code)}</td><td>${es(d.sku_name)||"—"}</td>
+      <td>${es(d.warehouse)}</td>
+      <td class="tm tr">${d.prev_qty.toLocaleString()}</td><td class="tm tr">${d.curr_qty.toLocaleString()}</td>
+      <td class="tm tr"><span class="bdg ${cls}">${lbl}</span></td>
+      <td class="tm tr">${d.rate?d.rate+"%":"—"}</td>
+      <td><span class="bdg ${cls}">${d.type==="fast"?"动销":d.type==="restock"?"补货/新增":"滞销"}</span></td></tr>`;
+  }).join(""):`<tr class="emp"><td colspan="8">无匹配数据</td></tr>`;
+  rpg("mv-pg",mvFl.length,MSZ,mvPg,p=>{mvPg=p;rmv();});
+}
+function smv(k){
+  if(mvSK===k)mvSD=mvSD==="asc"?"desc":"asc";else{mvSK=k;mvSD="desc";}
+  document.querySelectorAll("[id^=\"mh-\"]").forEach(t=>t.classList.remove("sa","sd"));
+  const th=document.getElementById(`mh-${k}`);if(th)th.classList.add(mvSD==="asc"?"sa":"sd");
+  mvPg=1;rmv();
+}
+
+/* ═══ DETAIL PAGE ═════════════════════════════════════════════ */
+function populateDtF(){
+  const whs=[...new Set(CD.map(d=>d.warehouse))].sort();
+  document.getElementById("df-wh").innerHTML="<option value=\"\">所有仓库</option>"+whs.map(w=>`<option>${w}</option>`).join("");
+}
+function adt(){
+  const wh=document.getElementById("df-wh").value;
+  const bk=document.getElementById("df-bk").value;
+  const q=document.getElementById("df-q").value.toLowerCase();
+  dtFl=CD.filter(d=>{
+    if(wh&&d.warehouse!==wh)return false;
+    if(bk&&d.bucket!==bk)return false;
+    if(q&&!d.sku_code.toLowerCase().includes(q)&&!d.sku_name.toLowerCase().includes(q))return false;
+    return true;
+  });
+  dtPg=1;rdtTb();
+}
+function rdt(){["df-wh","df-bk","df-q"].forEach(id=>{document.getElementById(id).value="";});adt();}
+function rdtPg(){adt();}
+function rdtTb(){
+  document.getElementById("dt-meta").textContent=`筛选 ${dtFl.length.toLocaleString()} / 共 ${CD.length.toLocaleString()} 条`;
+  const sorted=[...dtFl].sort((a,b)=>{
+    let av=a[dtSK],bv=b[dtSK];if(typeof av==="string"){av=av.toLowerCase();bv=bv.toLowerCase();}
+    return av<bv?(dtSD==="asc"?-1:1):av>bv?(dtSD==="asc"?1:-1):0;
+  });
+  const sl=sorted.slice((dtPg-1)*dtPS,dtPg*dtPS);
+  document.getElementById("dt-tb").innerHTML=sl.length?sl.map(d=>{const bk2=bkt(d.age);const al=getAl(d);
+    return`<tr><td class="tm tb2">${es(d.sku_code)}</td><td>${es(d.sku_name)||"—"}</td>
+      <td>${es(d.warehouse)}</td><td class="tm tr">${d.age}</td><td class="tm tr">${d.qty.toLocaleString()}</td>
+      <td><span class="bdg ${bk2.v}">${bk2.l}</span></td>
+      <td>${al?`<span class="bdg ${al.v}">⚠️ ${al.daysLeft}天→${al.l}</span>`:"—"}</td></tr>`;
+  }).join(""):`<tr class="emp"><td colspan="7">无匹配数据</td></tr>`;
+  // Dynamic height: 37px per row + 43px header, no arbitrary cap
+  const rowH=37,hdrH=43;
+  const actualRows=Math.max(sl.length||1,1);
+  document.getElementById("dt-tw").style.maxHeight=(rowH*Math.min(actualRows,dtPS)+hdrH)+"px";
+  rpg("dt-pg",dtFl.length,dtPS,dtPg,p=>{dtPg=p;rdtTb();});
+}
+function sdt(k){
+  if(dtSK===k)dtSD=dtSD==="asc"?"desc":"asc";else{dtSK=k;dtSD=k==="age"||k==="qty"?"desc":"asc";}
+  document.querySelectorAll("[id^=\"dh-\"]").forEach(t=>t.classList.remove("sa","sd"));
+  const th=document.getElementById(`dh-${k}`);if(th)th.classList.add(dtSD==="asc"?"sa":"sd");
+  dtPg=1;rdtTb();
+}
+
+/* ═══ GENERIC CATEGORY PAGE RENDERER ═══════════════════════════ */
+function renderCatPage(opts){
+  const{data,prevData,kpiEl,noEl,ctEl,barId,donutId,dtotId,mvSecId,detMetaEl,fwEl,fbkEl,fqEl,tbEl,pgEl,twSel,pgState,chartRefs}=opts;
+  const tot=data.reduce((s,d)=>s+d.qty,0);
+  document.getElementById(noEl).style.display=data.length?"none":"block";
+  document.getElementById(ctEl).style.display=data.length?"block":"none";
+  if(!data.length)return;
+  // KPIs
+  document.getElementById(kpiEl).innerHTML=BK.map(b=>{
+    const its=data.filter(d=>d.bucket===b.k);const q=its.reduce((s,d)=>s+d.qty,0);
+    const p=tot?((q/tot)*100).toFixed(1):"0.0";
+    return`<div class="kpi ${b.v}"><div class="ktag">${b.l}</div><div class="kval">${q.toLocaleString()}</div>
+      <div class="krng">${b.min}–${b.max===99999?"360+":b.max}天</div>
+      <div class="kpct">${p}% · ${[...new Set(its.map(d=>d.sku_code))].length} SKU</div></div>`;
+  }).join("");
+  // Charts
+  const whs=[...new Set(data.map(d=>d.warehouse))].sort();
+  const whTots=whs.map(w=>data.filter(d=>d.warehouse===w).reduce((s,d)=>s+d.qty,0));
+  const bd=BK.map(b=>data.filter(d=>d.bucket===b.k).reduce((s,d)=>s+d.qty,0));
+  if(chartRefs.bar)chartRefs.bar.destroy();
+  if(chartRefs.dnut)chartRefs.dnut.destroy();
+  setTimeout(()=>{
+    const bEl=document.getElementById(barId);const dEl=document.getElementById(donutId);
+    if(!bEl||!dEl)return;
+    chartRefs.bar=new Chart(bEl,{type:"bar",
+      data:{labels:whs.length?whs:["全部"],datasets:BK.map((b,bi)=>({label:b.l,
+        data:whs.length?whs.map(w=>data.filter(d=>d.warehouse===w&&d.bucket===b.k).reduce((s,d)=>s+d.qty,0)):[bd[bi]],
+        backgroundColor:bkColor(b.k),borderRadius:3,borderSkipped:false}))},
+      options:makeStackedBarOpts(whs.length?whTots:null,tot)});
+    chartRefs.dnut=new Chart(dEl,{type:"doughnut",
+      data:{labels:BK.map((b,i)=>{const pct=tot?((bd[i]/tot)*100).toFixed(1):0;return`${b.l} ${pct}%`;}),
+        datasets:[{data:bd,backgroundColor:BK.map(b=>bkColor(b.k)),borderWidth:0,hoverOffset:5}]},
+      options:{...makeDoughnutOpts(tot,true),cutout:"68%"}});
+    document.getElementById(dtotId).textContent=tot.toLocaleString();
+  },40);
+  // Movement section - per SKU × warehouse
+  const mv=buildMvBySkuWh(data,prevData);
+  const mvSec=document.getElementById(mvSecId);
+  if(mv&&mv.length){
+    const s=loadS();
+    const sold=mv.filter(d=>d.type==="fast"),slowRst=[...mv.filter(d=>d.type==="slow"),...mv.filter(d=>d.type==="restock")];
+    const t10f=[...sold].sort((a,b)=>a.delta-b.delta).slice(0,10);
+    const t10s=[...slowRst].sort((a,b)=>(b.prev_qty||0)-(a.prev_qty||0)).slice(0,10);
+    const tsold=sold.reduce((ss,d)=>ss+Math.abs(d.delta),0);
+    const allMvWhs=[...new Set([...data,...prevData].map(d=>d.warehouse))].sort();
+    const whOptId=mvSecId+"_wh";
+    mvSec.innerHTML=`
+      <div class="sec-title">动销对比（仓库×SKU） · ${s.p?.d||"上次"} → ${s.c?.d||"本次"}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--tx3)">筛选仓库：</span>
+        <select id="${whOptId}" onchange="filterCatMv('${mvSecId}')" style="background:var(--surf2);border:1px solid var(--bd);border-radius:6px;color:var(--tx);padding:4px 8px;font-family:var(--font);font-size:12px;outline:none">
+          <option value="">所有仓库</option>${allMvWhs.map(w=>`<option>${w}</option>`).join("")}
+        </select>
+        <span style="font-size:11px;font-family:var(--mono);color:var(--tx2)">动销 <strong style="color:var(--good)">${sold.length}</strong> 条 · 滞销 <strong style="color:var(--stal)">${mv.filter(d=>d.type==="slow").length}</strong> 条 · 总动销 <strong style="color:var(--good)">${tsold.toLocaleString()}</strong> 件</span>
+      </div>
+      <div class="g2" id="${mvSecId}_lists">
+        <div class="card"><div class="ch"><span class="ch-t" style="color:var(--good)">🚀 快速动销 TOP10</span></div>
+          <div style="max-height:300px;overflow-y:auto" id="${mvSecId}_fast">${renderMvList(t10f,"fast")}</div></div>
+        <div class="card"><div class="ch"><span class="ch-t" style="color:var(--stal)">🐢 滞销预警 TOP10</span></div>
+          <div style="max-height:300px;overflow-y:auto" id="${mvSecId}_slow">${renderMvList(t10s,"slow")}</div></div>
+      </div>`;
+    // Store mv data on element for filtering
+    mvSec._mvData=mv;
+  }else{
+    mvSec.innerHTML=`<div class="sinfo info" style="margin:0 0 14px">上传第二次数据后显示动销对比分析。</div>`;
+  }
+  // Populate warehouse filter in detail
+  const allWhs=[...new Set(data.map(d=>d.warehouse))].sort();
+  document.getElementById(fwEl).innerHTML="<option value=\"\">所有仓库</option>"+allWhs.map(w=>`<option>${w}</option>`).join("");
+  pgState.data=data;
+  renderCatDet({fwEl,fbkEl,fqEl,tbEl,pgEl,twId:opts.twId,twSel:opts.twSel,pgState,detMetaEl});
+}
+
+function renderMvList(items,type){
+  if(!items.length)return`<div style="padding:22px;text-align:center;color:var(--tx3);font-size:13px">${type==="fast"?"暂无动销记录":"暂无滞销记录"}</div>`;
+  return items.map(d=>`<div class="mit">
+    <div><div class="m-sku">${es(d.sku_code)}</div><div class="m-nm">${es(d.sku_name)||"—"}</div>
+    <div class="m-mt">${es(d.warehouse)} · ${d.prev_qty.toLocaleString()} → ${d.curr_qty.toLocaleString()}</div></div>
+    <div class="mst"><div class="mdelta" style="color:${type==="fast"?"var(--good)":d.delta===0?"var(--tx3)":"var(--warn)"}">${type==="fast"?"-"+Math.abs(d.delta).toLocaleString():d.delta===0?"±0":"+"+d.delta.toLocaleString()}</div>
+    <div class="mrate" style="color:${type==="fast"?"var(--good)":"var(--tx3)"}">${type==="fast"&&d.rate?"-"+d.rate+"%":d.delta===0?"无变化":"补货"}</div></div></div>`).join("");
+}
+
+function filterCatMv(mvSecId){
+  const sec=document.getElementById(mvSecId);if(!sec||!sec._mvData)return;
+  const wh=document.getElementById(mvSecId+"_wh")?.value||"";
+  const mv=wh?sec._mvData.filter(d=>d.warehouse===wh):sec._mvData;
+  const sold=mv.filter(d=>d.type==="fast"),slowRst=[...mv.filter(d=>d.type==="slow"),...mv.filter(d=>d.type==="restock")];
+  const t10f=[...sold].sort((a,b)=>a.delta-b.delta).slice(0,10);
+  const t10s=[...slowRst].sort((a,b)=>(b.prev_qty||0)-(a.prev_qty||0)).slice(0,10);
+  const fEl=document.getElementById(mvSecId+"_fast");if(fEl)fEl.innerHTML=renderMvList(t10f,"fast");
+  const sEl=document.getElementById(mvSecId+"_slow");if(sEl)sEl.innerHTML=renderMvList(t10s,"slow");
+}
+
+function renderCatDet(opts){
+  const{fwEl,fbkEl,fqEl,tbEl,pgEl,twId,twSel,pgState,detMetaEl}=opts;
+  const ps=pgState.ps||20;
+  const wh=document.getElementById(fwEl)?.value||"";
+  const bk=document.getElementById(fbkEl)?.value||"";
+  const q=(document.getElementById(fqEl)?.value||"").toLowerCase();
+  const fl=(pgState.data||[]).filter(d=>{
+    if(wh&&d.warehouse!==wh)return false;
+    if(bk&&d.bucket!==bk)return false;
+    if(q&&!d.sku_code.toLowerCase().includes(q)&&!d.sku_name.toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>b.age-a.age);
+  const metaEl=detMetaEl?document.getElementById(detMetaEl):null;
+  if(metaEl)metaEl.textContent=`${fl.length}/${(pgState.data||[]).length} 条`;
+  const sl=fl.slice((pgState.pg-1)*ps,pgState.pg*ps);
+  document.getElementById(tbEl).innerHTML=sl.length?sl.map(d=>{const bk2=bkt(d.age);const al=getAl(d);
+    return`<tr><td class="tm tb2">${es(d.sku_code)}</td><td>${es(d.sku_name)||"—"}</td>
+      <td>${es(d.warehouse)}</td><td class="tm tr">${d.age}</td><td class="tm tr">${d.qty.toLocaleString()}</td>
+      <td><span class="bdg ${bk2.v}">${bk2.l}</span></td>
+      <td>${al?`<span class="bdg ${al.v}">⚠️ ${al.daysLeft}天→${al.l}</span>`:"—"}</td></tr>`;
+  }).join(""):`<tr class="emp"><td colspan="7">无匹配数据</td></tr>`;
+  // Dynamic height — grow with actual row count, no upper cap
+  const twEl=twId?document.getElementById(twId):(twSel?document.querySelector(twSel):null);
+  if(twEl){const rowH=37,hdrH=43;twEl.style.maxHeight=(rowH*Math.max(sl.length||1,1)+hdrH)+"px";}
+  rpg(pgEl,fl.length,ps,pgState.pg,p=>{pgState.pg=p;renderCatDet(opts);});
+}
+
+/* ═══ ELECTRONICS PAGE ════════════════════════════════════════ */
+const elCharts={bar:null,dnut:null},elState={pg:1,ps:50,data:[]};
+function relPg(){
+  const data=CD.filter(d=>matchKW(d.sku_code,ELEC_KW));
+  const prevData=PD.filter(d=>matchKW(d.sku_code,ELEC_KW));
+  document.getElementById("el-meta").textContent=data.length?`${data.length}条记录 · ${[...new Set(data.map(d=>d.sku_code))].length} SKU`:"";
+  elState.pg=1;
+  renderCatPage({data,prevData,kpiEl:"el-kpis",noEl:"el-no",ctEl:"el-ct",
+    barId:"elBarChart",donutId:"elDonut",dtotId:"el-dtot",mvSecId:"el-mv-sec",
+    detMetaEl:"el-det-meta",fwEl:"el-fw",fbkEl:"el-fbk",fqEl:"el-fq",tbEl:"el-tb",pgEl:"el-pg",twId:"el-tw",
+    pgState:elState,chartRefs:elCharts});
+}
+function relDet(){elState.pg=1;renderCatDet({fwEl:"el-fw",fbkEl:"el-fbk",fqEl:"el-fq",tbEl:"el-tb",pgEl:"el-pg",twId:"el-tw",pgState:elState,detMetaEl:"el-det-meta"});}
+
+/* ═══ NEW PRODUCTS PAGE ═══════════════════════════════════════ */
+const npCharts={bar:null,dnut:null},npState={pg:1,ps:50,data:[]};
+function rnpPg(){
+  const data=CD.filter(d=>matchKW(d.sku_code,NEW_KW));
+  const prevData=PD.filter(d=>matchKW(d.sku_code,NEW_KW));
+  document.getElementById("np-meta").textContent=data.length?`${data.length}条记录 · ${[...new Set(data.map(d=>d.sku_code))].length} SKU`:"";
+  npState.pg=1;
+  renderCatPage({data,prevData,kpiEl:"np-kpis",noEl:"np-no",ctEl:"np-ct",
+    barId:"npBarChart",donutId:"npDonut",dtotId:"np-dtot",mvSecId:"np-mv-sec",
+    detMetaEl:"np-det-meta",fwEl:"np-fw",fbkEl:"np-fbk",fqEl:"np-fq",tbEl:"np-tb",pgEl:"np-pg",twId:"np-tw",
+    pgState:npState,chartRefs:npCharts});
+}
+function rnpDet(){npState.pg=1;renderCatDet({fwEl:"np-fw",fbkEl:"np-fbk",fqEl:"np-fq",tbEl:"np-tb",pgEl:"np-pg",twId:"np-tw",pgState:npState,detMetaEl:"np-det-meta"});}
+
+/* ═══ DATALABELS PLUGIN REGISTRATION ════════════════════════ */
+// Register globally so all charts can opt in
+if(typeof ChartDataLabels!=="undefined")Chart.register(ChartDataLabels);
+
+/* ═══ COLOR HELPER ════════════════════════════════════════════ */
+function bkColor(k){
+  const clrs={
+    good: isDark()?"#3fb950":"#1a7f37",
+    warn: isDark()?"#d29922":"#9a6700",
+    dang: isDark()?"#f85149":"#cf222e",
+    stal: isDark()?"#a371f7":"#6e40c9",
+    dead: isDark()?"#ff7b72":"#bc4c00",
+  };
+  return clrs[k]||"#8b949e";
+}
+
+/* ═══ PAGINATION ═══════════════════════════════════════════════ */
+function rpg(id,total,sz,cur,cb){
+  const el=document.getElementById(id);if(!el)return;
+  const pages=Math.max(1,Math.ceil(total/sz));
+  const info=`<span class="pi">第${cur}/${pages}页 · 共${total}条</span>`;
+  if(pages<=1){el.innerHTML=info;return;}
+  let h=`<div class="pg-btns">`;
+  h+=`<button class="pb" onclick="(${cb.toString()})(1)" ${cur===1?"disabled":""}>«</button>`;
+  h+=`<button class="pb" onclick="(${cb.toString()})(${cur-1})" ${cur===1?"disabled":""}>‹</button>`;
+  let s=Math.max(1,cur-2),e=Math.min(pages,s+4);s=Math.max(1,e-4);
+  for(let i=s;i<=e;i++)h+=`<button class="pb ${i===cur?"on":""}" onclick="(${cb.toString()})(${i})">${i}</button>`;
+  h+=`<button class="pb" onclick="(${cb.toString()})(${cur+1})" ${cur===pages?"disabled":""}>›</button>`;
+  h+=`<button class="pb" onclick="(${cb.toString()})(${pages})" ${cur===pages?"disabled":""}>»</button></div>`;
+  el.innerHTML=info+h;
+}
+
+/* ═══ UTILS ═════════════════════════════════════════════════════ */
+function es(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+let _tt;
+function toast(msg,type="ok"){
+  const t=document.getElementById("tst");
+  document.getElementById("tstm").textContent=msg;
+  document.getElementById("tsti").textContent=type==="ok"?"✓":type==="warn"?"⟳":"✕";
+  t.className=`tst ${type} on`;
+  clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove("on"),3500);
+}
+
+/* ═══ INIT ═══════════════════════════════════════════════════════ */
+(function init(){
+  // Restore theme
+  const saved=localStorage.getItem("inv_theme")||"dark";
+  document.documentElement.dataset.theme=saved;
+  document.getElementById("themeBtn").textContent=saved==="light"?"☀️":"🌙";
+
+  // URL hash auto-guest
+  const hash=window.location.hash;
+  const scMatch=hash.match(/[#&]SC=([^&]+)/i);
+  if(scMatch){
+    const sc=decodeURIComponent(scMatch[1]);
+    setTimeout(async()=>{
+      toast("检测到分享码，正在加载…","warn");
+      try{const rec=await cloudRead(sc);
+        if(!rec||!rec.rows||!rec.rows.length)throw new Error("数据为空");
+        CD=rec.rows.map(r=>({...r,bucket:bkt(r.age).k}));PD=rec.prevRows||[];
+        if(rec.history&&rec.history.length){try{localStorage.setItem("inv_history",JSON.stringify(rec.history));}catch(e){}}
+        isGuest=true;guestBinId=sc;
+        document.getElementById("gbanner").classList.add("on");
+        document.getElementById("gbShareCode").textContent=sc.length>14?sc.slice(0,14)+"…":sc;
+        document.getElementById("upbtn").disabled=true;
+        setSyncDot("guest","访客模式");
+        initDB();toast(`已加载 ${CD.length} 条`,"ok");
+      }catch(e){toast("加载失败: "+e.message,"err");}
+    },400);
+    return;
+  }
+
+  // Load local data
+  const s=loadS();
+  if(s.c&&s.c.r&&s.c.r.length){CD=s.c.r;PD=s.p?.r||[];initDB();}
+
+  // Restore sync status
+  const cfg=getSyncCfg();
+  if(cfg&&cfg.binId&&cfg.apiKey){
+    setSyncDot("ok",cfg.lastSync?"已同步 ✓":"已配置");
+    document.getElementById("smBinId").textContent=cfg.binId;
+    if(cfg.lastSync){const ls=document.getElementById("smLastSync");if(ls){ls.style.display="";ls.textContent="✓ 上次同步："+cfg.lastSync;}}
+  }
+  const dh=document.getElementById("dh-age");if(dh)dh.classList.add("sd");
+})();
+</script>
+</body>
+</html>
