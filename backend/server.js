@@ -19,6 +19,13 @@ const SHOPIFY_STORE_DEFINITIONS = [
   { key: 'SHOPIFY_DE_STORE', label: 'EU', region: '欧洲' },
   { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', public_domain: 'store.sunlu.com' }
 ];
+const SHOPIFY_LINK_ANALYTICS_STORE_DEFINITIONS = [
+  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', public_domain: 'store.sunlu.com' },
+  { key: 'SHOPIFY_UK_STORE', label: 'UK', region: '英国', public_domain: 'uk.store.sunlu.com' },
+  { key: 'SHOPIFY_FR_STORE', label: 'FR', region: '法国', public_domain: 'fr.store.sunlu.com' },
+  { key: 'SHOPIFY_DE_STORE', label: 'DE', region: '德国', public_domain: 'de.store.sunlu.com' },
+  { key: 'SHOPIFY_IT_STORE', label: 'IT', region: '意大利', public_domain: 'it.store.sunlu.com' }
+];
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -140,6 +147,21 @@ function getShopifyConfig() {
   const clientId = env.SHOPIFY_CLIENT_ID || env.client_id;
   const clientSecret = env.SHOPIFY_CLIENT_SECRET || env.client_secret;
   const stores = SHOPIFY_STORE_DEFINITIONS
+    .map(definition => ({
+      ...definition,
+      shop: normalizeShopDomain(env[definition.key])
+    }))
+    .filter(store => store.shop);
+
+  return { clientId, clientSecret, stores };
+}
+
+function getShopifyLinkAnalyticsConfig() {
+  const fileEnv = readEnvFile(SHOPIFY_ENV_FILE);
+  const env = { ...fileEnv, ...process.env };
+  const clientId = env.SHOPIFY_CLIENT_ID || env.client_id;
+  const clientSecret = env.SHOPIFY_CLIENT_SECRET || env.client_secret;
+  const stores = SHOPIFY_LINK_ANALYTICS_STORE_DEFINITIONS
     .map(definition => ({
       ...definition,
       shop: normalizeShopDomain(env[definition.key])
@@ -424,10 +446,10 @@ function getProductHandleFromLandingPath(landingPath) {
   return index >= 0 && parts[index + 1] ? parts[index + 1] : '';
 }
 
-async function resolveShopifyLandingTitle(shop, landingPath, landingType) {
+async function resolveShopifyLandingTitle(store, landingPath, landingType) {
   const cleanPath = String(landingPath || '').split('?')[0] || '/';
   if (cleanPath === '/') {
-    return shop.includes('uk.') || shop.includes('sunluuk') ? 'SUNLU UK Store 首页' : 'SUNLU US Store 首页';
+    return `SUNLU ${store.label} Store 首页`;
   }
   if (cleanPath === '/cart') {
     return 'Cart 购物车';
@@ -436,7 +458,7 @@ async function resolveShopifyLandingTitle(shop, landingPath, landingType) {
   const productHandle = getProductHandleFromLandingPath(cleanPath);
   if (productHandle) {
     try {
-      const payload = await shopifyFetchJson(`https://${shop}/products/${productHandle}.js`, {
+      const payload = await shopifyFetchJson(`https://${store.shop}/products/${productHandle}.js`, {
         method: 'GET',
         headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' }
       });
@@ -472,6 +494,149 @@ async function runShopifyQl(shop, token, shopifyql) {
   return result?.tableData?.rows || [];
 }
 
+const LINK_ANALYTICS_RATE_FIELDS = [
+  'bounce_rate',
+  'added_to_cart_rate',
+  'reached_checkout_rate',
+  'completed_checkout_rate',
+  'checkout_conversion_rate',
+  'conversion_rate'
+];
+
+function numberValue(value) {
+  const numeric = Number(value || 0);
+  return Number.isFinite(numeric) ? numeric : 0;
+}
+
+function addWeightedMetric(target, row, field) {
+  const sessions = numberValue(row.sessions);
+  const value = numberValue(row[field]);
+  target[`${field}_weighted_sum`] += value * sessions;
+  target[`${field}_weight`] += sessions;
+}
+
+function finalizeWeightedMetric(target, field) {
+  const weight = target[`${field}_weight`];
+  target[field] = weight ? target[`${field}_weighted_sum`] / weight : 0;
+  delete target[`${field}_weighted_sum`];
+  delete target[`${field}_weight`];
+}
+
+function createLinkAnalyticsGroup(store, row) {
+  const landingPath = row.landing_page_path || '/';
+  const group = {
+    store_key: store.key,
+    store_label: store.label,
+    shop_name: row.shop_name || store.label,
+    url: `https://${store.public_domain || store.shop}${landingPath}`,
+    landing_page_type: row.landing_page_type || '',
+    landing_page_path: landingPath,
+    online_store_visitors: 0,
+    sessions: 0,
+    sessions_that_reached_checkout: 0,
+    sessions_that_reached_and_completed_checkout: 0,
+    sessions_that_completed_checkout: 0,
+    pageviews: 0,
+    average_session_duration_weighted_sum: 0,
+    average_session_duration_weight: 0,
+    referring_channels: new Set(),
+    traffic_types: new Set(),
+    days: new Set()
+  };
+  LINK_ANALYTICS_RATE_FIELDS.forEach(field => {
+    group[`${field}_weighted_sum`] = 0;
+    group[`${field}_weight`] = 0;
+  });
+  return group;
+}
+
+function addLinkAnalyticsRow(group, row) {
+  const sessions = numberValue(row.sessions);
+  group.online_store_visitors += numberValue(row.online_store_visitors);
+  group.sessions += sessions;
+  group.sessions_that_reached_checkout += numberValue(row.sessions_that_reached_checkout);
+  group.sessions_that_reached_and_completed_checkout += numberValue(row.sessions_that_reached_and_completed_checkout);
+  group.sessions_that_completed_checkout += numberValue(row.sessions_that_completed_checkout);
+  group.pageviews += numberValue(row.pageviews);
+  group.average_session_duration_weighted_sum += numberValue(row.average_session_duration) * sessions;
+  group.average_session_duration_weight += sessions;
+  if (row.referring_channel) group.referring_channels.add(row.referring_channel);
+  if (row.traffic_type) group.traffic_types.add(row.traffic_type);
+  if (row.day) group.days.add(row.day);
+  LINK_ANALYTICS_RATE_FIELDS.forEach(field => addWeightedMetric(group, row, field));
+}
+
+function finalizeLinkAnalyticsGroup(group) {
+  group.average_session_duration = group.average_session_duration_weight
+    ? group.average_session_duration_weighted_sum / group.average_session_duration_weight
+    : 0;
+  delete group.average_session_duration_weighted_sum;
+  delete group.average_session_duration_weight;
+  LINK_ANALYTICS_RATE_FIELDS.forEach(field => finalizeWeightedMetric(group, field));
+  group.referring_channel = [...group.referring_channels].filter(Boolean).join(' / ');
+  group.traffic_type = [...group.traffic_types].filter(Boolean).join(' / ');
+  group.day_count = group.days.size;
+  delete group.referring_channels;
+  delete group.traffic_types;
+  delete group.days;
+  return group;
+}
+
+function aggregateLinkAnalyticsRows(store, rows) {
+  const groups = new Map();
+  rows.forEach(row => {
+    const landingPath = row.landing_page_path || '/';
+    const key = [store.key, row.landing_page_type || '', landingPath].join('|');
+    if (!groups.has(key)) {
+      groups.set(key, createLinkAnalyticsGroup(store, row));
+    }
+    addLinkAnalyticsRow(groups.get(key), row);
+  });
+  return [...groups.values()].map(finalizeLinkAnalyticsGroup);
+}
+
+function summarizeLinkAnalyticsTotals(storeResults) {
+  const totals = {
+    online_store_visitors: 0,
+    sessions: 0,
+    sessions_that_reached_checkout: 0,
+    sessions_that_reached_and_completed_checkout: 0,
+    sessions_that_completed_checkout: 0,
+    pageviews: 0,
+    average_session_duration_weighted_sum: 0,
+    average_session_duration_weight: 0
+  };
+  LINK_ANALYTICS_RATE_FIELDS.forEach(field => {
+    totals[`${field}_weighted_sum`] = 0;
+    totals[`${field}_weight`] = 0;
+  });
+
+  storeResults.forEach(result => {
+    const row = result.raw_first_row || {};
+    const sessions = numberValue(row.sessions__totals);
+    totals.online_store_visitors += numberValue(row.online_store_visitors__totals);
+    totals.sessions += sessions;
+    totals.sessions_that_reached_checkout += numberValue(row.sessions_that_reached_checkout__totals);
+    totals.sessions_that_reached_and_completed_checkout += numberValue(row.sessions_that_reached_and_completed_checkout__totals);
+    totals.sessions_that_completed_checkout += numberValue(row.sessions_that_completed_checkout__totals);
+    totals.pageviews += numberValue(row.pageviews__totals);
+    totals.average_session_duration_weighted_sum += numberValue(row.average_session_duration__totals) * sessions;
+    totals.average_session_duration_weight += sessions;
+    LINK_ANALYTICS_RATE_FIELDS.forEach(field => {
+      totals[`${field}_weighted_sum`] += numberValue(row[`${field}__totals`]) * sessions;
+      totals[`${field}_weight`] += sessions;
+    });
+  });
+
+  totals.average_session_duration = totals.average_session_duration_weight
+    ? totals.average_session_duration_weighted_sum / totals.average_session_duration_weight
+    : 0;
+  delete totals.average_session_duration_weighted_sum;
+  delete totals.average_session_duration_weight;
+  LINK_ANALYTICS_RATE_FIELDS.forEach(field => finalizeWeightedMetric(totals, field));
+  return totals;
+}
+
 async function fetchShopifyLinkAnalytics(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
@@ -479,31 +644,25 @@ async function fetchShopifyLinkAnalytics(store, config, options) {
   const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
   const shopifyql = `
 FROM sessions
-  SHOW online_store_visitors, sessions, sessions_with_cart_additions,
-    sessions_that_reached_checkout
+  SHOW online_store_visitors, sessions, sessions_that_reached_checkout,
+    sessions_that_reached_and_completed_checkout, sessions_that_completed_checkout,
+    pageviews, bounce_rate, average_session_duration, added_to_cart_rate,
+    reached_checkout_rate, completed_checkout_rate, checkout_conversion_rate,
+    conversion_rate
   WHERE landing_page_path IS NOT NULL
     AND human_or_bot_session IN ('human', 'bot')
-  GROUP BY landing_page_type, landing_page_path WITH TOTALS
+  GROUP BY day, shop_name, landing_page_type, landing_page_path,
+    referring_channel, traffic_type WITH TOTALS
   SINCE ${since} UNTIL ${until}
-  ORDER BY sessions DESC
+  ORDER BY day ASC
   LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
-  const mapped = await Promise.all(rows.map(async row => {
-    const landingPath = row.landing_page_path || '/';
-    const title = await resolveShopifyLandingTitle(store.shop, landingPath, row.landing_page_type || '');
-    const toNumber = value => Number(value || 0);
-    return {
-      title,
-      url: `https://${store.public_domain || store.shop}${landingPath}`,
-      landing_page_type: row.landing_page_type || '',
-      landing_page_path: landingPath,
-      online_store_visitors: toNumber(row.online_store_visitors),
-      sessions: toNumber(row.sessions),
-      sessions_with_cart_additions: toNumber(row.sessions_with_cart_additions),
-      sessions_that_reached_checkout: toNumber(row.sessions_that_reached_checkout)
-    };
-  }));
+  const grouped = aggregateLinkAnalyticsRows(store, rows).sort((a, b) => b.sessions - a.sessions);
+  const mapped = await Promise.all(grouped.map(async row => ({
+    ...row,
+    title: await resolveShopifyLandingTitle(store, row.landing_page_path, row.landing_page_type || '')
+  })));
   const first = rows[0] || {};
   return {
     generated_at: new Date().toISOString(),
@@ -517,13 +676,45 @@ FROM sessions
     since,
     until,
     limit,
+    raw_rows: rows.length,
     totals: {
-      online_store_visitors: Number(first.online_store_visitors__totals || 0),
-      sessions: Number(first.sessions__totals || 0),
-      sessions_with_cart_additions: Number(first.sessions_with_cart_additions__totals || 0),
-      sessions_that_reached_checkout: Number(first.sessions_that_reached_checkout__totals || 0)
+      online_store_visitors: numberValue(first.online_store_visitors__totals),
+      sessions: numberValue(first.sessions__totals),
+      sessions_that_reached_checkout: numberValue(first.sessions_that_reached_checkout__totals),
+      sessions_that_reached_and_completed_checkout: numberValue(first.sessions_that_reached_and_completed_checkout__totals),
+      sessions_that_completed_checkout: numberValue(first.sessions_that_completed_checkout__totals),
+      pageviews: numberValue(first.pageviews__totals),
+      bounce_rate: numberValue(first.bounce_rate__totals),
+      average_session_duration: numberValue(first.average_session_duration__totals),
+      added_to_cart_rate: numberValue(first.added_to_cart_rate__totals),
+      reached_checkout_rate: numberValue(first.reached_checkout_rate__totals),
+      completed_checkout_rate: numberValue(first.completed_checkout_rate__totals),
+      checkout_conversion_rate: numberValue(first.checkout_conversion_rate__totals),
+      conversion_rate: numberValue(first.conversion_rate__totals)
     },
+    raw_first_row: first,
     rows: mapped
+  };
+}
+
+async function fetchShopifyLinkAnalyticsPayload(stores, config, options) {
+  const storeResults = [];
+  for (const store of stores) {
+    storeResults.push(await fetchShopifyLinkAnalytics(store, config, options));
+  }
+  const rows = storeResults.flatMap(result => result.rows);
+  return {
+    generated_at: new Date().toISOString(),
+    since: options.since,
+    until: options.until,
+    limit: Number(options.limit) || 1000,
+    stores: storeResults.map(result => ({
+      ...result.store,
+      raw_rows: result.raw_rows,
+      rows: result.rows.length
+    })),
+    totals: summarizeLinkAnalyticsTotals(storeResults),
+    rows: rows.sort((a, b) => b.sessions - a.sessions)
   };
 }
 
@@ -653,21 +844,18 @@ async function handleShopifyInventory(parsedUrl, res) {
 }
 
 async function handleShopifyLinkAnalytics(parsedUrl, res) {
-  const config = getShopifyConfig();
+  const config = getShopifyLinkAnalyticsConfig();
   if (!config.clientId || !config.clientSecret) {
     sendJson(res, 500, { error: 'Missing Shopify client_id/client_secret' });
     return;
   }
 
-  const storeParam = parsedUrl.query.store || 'SHOPIFY_US_STORE';
-  const store = config.stores.find(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
-  if (!store) {
+  const storeParam = parsedUrl.query.store || 'ALL';
+  const stores = storeParam === 'ALL'
+    ? config.stores
+    : config.stores.filter(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
+  if (!stores.length) {
     sendJson(res, 404, { error: 'No matching Shopify store configured' });
-    return;
-  }
-
-  if (store.key !== 'SHOPIFY_US_STORE') {
-    sendJson(res, 400, { error: 'Link analytics is currently enabled for SHOPIFY_US_STORE only' });
     return;
   }
 
@@ -683,7 +871,7 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
   }
 
   try {
-    const payload = await fetchShopifyLinkAnalytics(store, config, {
+    const payload = await fetchShopifyLinkAnalyticsPayload(stores, config, {
       since,
       until,
       limit: parsedUrl.query.limit

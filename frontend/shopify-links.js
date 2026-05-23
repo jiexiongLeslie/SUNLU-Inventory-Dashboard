@@ -26,6 +26,17 @@
     return Number(value || 0).toLocaleString('zh-CN');
   }
 
+  function formatRate(value) {
+    return (Number(value || 0) * 100).toFixed(2) + '%';
+  }
+
+  function formatDuration(value) {
+    var seconds = Math.round(Number(value || 0));
+    var minutes = Math.floor(seconds / 60);
+    var rest = seconds % 60;
+    return minutes ? minutes + '分' + String(rest).padStart(2, '0') + '秒' : rest + '秒';
+  }
+
   function escapeHtml(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch) {
       return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
@@ -76,7 +87,7 @@
       store: storeSelect.value,
       since: since,
       until: until,
-      limit: limitSelect.value
+      limit: '1000'
     });
     return fetch('/api/shopify/link-analytics?' + params.toString()).then(function(res) {
       return res.json().then(function(data) {
@@ -87,7 +98,7 @@
   }
 
   function rowKey(row) {
-    return row.landing_page_path || row.url;
+    return [row.store_key || row.store_label || '', row.landing_page_type || '', row.landing_page_path || row.url].join('|');
   }
 
   function deltaPct(current, previous) {
@@ -130,13 +141,23 @@
     var items = [
       ['总访客', cur.online_store_visitors, cmp.online_store_visitors],
       ['Sessions', cur.sessions, cmp.sessions],
-      ['加购 Sessions', cur.sessions_with_cart_additions, cmp.sessions_with_cart_additions],
-      ['到达结账 Sessions', cur.sessions_that_reached_checkout, cmp.sessions_that_reached_checkout]
+      ['到达结账', cur.sessions_that_reached_checkout, cmp.sessions_that_reached_checkout],
+      ['到达并完成结账', cur.sessions_that_reached_and_completed_checkout, cmp.sessions_that_reached_and_completed_checkout],
+      ['完成结账', cur.sessions_that_completed_checkout, cmp.sessions_that_completed_checkout],
+      ['Pageviews', cur.pageviews, cmp.pageviews],
+      ['跳出率', cur.bounce_rate, cmp.bounce_rate, 'rate'],
+      ['平均时长', cur.average_session_duration, cmp.average_session_duration, 'duration'],
+      ['加购率', cur.added_to_cart_rate, cmp.added_to_cart_rate, 'rate'],
+      ['到达结账率', cur.reached_checkout_rate, cmp.reached_checkout_rate, 'rate'],
+      ['完成结账率', cur.completed_checkout_rate, cmp.completed_checkout_rate, 'rate'],
+      ['结账转化率', cur.checkout_conversion_rate, cmp.checkout_conversion_rate, 'rate'],
+      ['转化率', cur.conversion_rate, cmp.conversion_rate, 'rate']
     ];
     kpiGrid.innerHTML = items.map(function(item) {
       var pct = deltaPct(item[1], item[2]);
+      var value = item[3] === 'rate' ? formatRate(item[1]) : item[3] === 'duration' ? formatDuration(item[1]) : formatNumber(item[1]);
       return '<div class="kpi"><div class="label">' + escapeHtml(item[0]) + '</div>' +
-        '<div class="value">' + formatNumber(item[1]) + '</div>' +
+        '<div class="value">' + value + '</div>' +
         '<div class="delta ' + deltaClass(pct) + '">环比 ' + deltaText(item[1], item[2]) + '</div></div>';
     }).join('');
   }
@@ -146,8 +167,11 @@
     return [
       row.title,
       row.url,
+      row.store_label,
       row.landing_page_type,
-      row.landing_page_path
+      row.landing_page_path,
+      row.referring_channel,
+      row.traffic_type
     ].join(' ').toLowerCase().indexOf(q) >= 0;
   }
 
@@ -156,21 +180,33 @@
     var rows = state.rows.filter(function(row) { return matchesSearch(row, q); });
     tableCount.textContent = formatNumber(rows.length) + ' 条';
     if (!rows.length) {
-      tableBody.innerHTML = '<tr><td colspan="9"><div class="empty">没有匹配的数据</div></td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="21"><div class="empty">没有匹配的数据</div></td></tr>';
       return;
     }
-    tableBody.innerHTML = rows.map(function(row, index) {
+    tableBody.innerHTML = rows.slice(0, Number(limitSelect.value) || 10).map(function(row, index) {
       var pctClass = deltaClass(row.sessions_delta_pct);
       return '<tr>' +
         '<td class="rank">' + (index + 1) + '</td>' +
+        '<td><span class="type">' + escapeHtml(row.store_label || '-') + '</span></td>' +
         '<td class="title">' + escapeHtml(row.title || '-') + '</td>' +
         '<td><a class="url" href="' + escapeHtml(row.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(row.url) + '</a></td>' +
         '<td><span class="type">' + escapeHtml(row.landing_page_type || '-') + '</span></td>' +
+        '<td>' + escapeHtml(row.referring_channel || '-') + '</td>' +
+        '<td>' + escapeHtml(row.traffic_type || '-') + '</td>' +
         '<td class="number">' + formatNumber(row.online_store_visitors) + '</td>' +
         '<td class="number">' + formatNumber(row.sessions) + '</td>' +
         '<td class="number"><span class="delta ' + pctClass + '">' + deltaText(row.sessions, row.compare_sessions) + '</span><div class="muted">对比 ' + formatNumber(row.compare_sessions) + '</div></td>' +
-        '<td class="number">' + formatNumber(row.sessions_with_cart_additions) + '</td>' +
         '<td class="number">' + formatNumber(row.sessions_that_reached_checkout) + '</td>' +
+        '<td class="number">' + formatNumber(row.sessions_that_reached_and_completed_checkout) + '</td>' +
+        '<td class="number">' + formatNumber(row.sessions_that_completed_checkout) + '</td>' +
+        '<td class="number">' + formatNumber(row.pageviews) + '</td>' +
+        '<td class="number">' + formatRate(row.bounce_rate) + '</td>' +
+        '<td class="number">' + formatDuration(row.average_session_duration) + '</td>' +
+        '<td class="number">' + formatRate(row.added_to_cart_rate) + '</td>' +
+        '<td class="number">' + formatRate(row.reached_checkout_rate) + '</td>' +
+        '<td class="number">' + formatRate(row.completed_checkout_rate) + '</td>' +
+        '<td class="number">' + formatRate(row.checkout_conversion_rate) + '</td>' +
+        '<td class="number">' + formatRate(row.conversion_rate) + '</td>' +
       '</tr>';
     }).join('');
   }
@@ -179,7 +215,8 @@
     renderKpis();
     renderTable();
     if (state.current) {
-      meta.textContent = state.current.store.label + ' 店铺 · 当前 ' + state.current.since + ' 至 ' + state.current.until +
+      var storeNames = (state.current.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
+      meta.textContent = storeNames + ' · 当前 ' + state.current.since + ' 至 ' + state.current.until +
         ' · 对比 ' + state.compare.since + ' 至 ' + state.compare.until;
     }
   }
@@ -213,6 +250,7 @@
   sinceInput.addEventListener('change', syncCompareDates);
   untilInput.addEventListener('change', syncCompareDates);
   searchInput.addEventListener('input', renderTable);
+  limitSelect.addEventListener('change', renderTable);
   loadBtn.addEventListener('click', loadData);
 
   setDefaultDates();
