@@ -136,12 +136,13 @@ Shopify 统计页位于 `frontend/shopify.html`，后端接口会读取项目根
 ```env
 SHOPIFY_UK_STORE=sunluuk.myshopify.com
 SHOPIFY_DE_STORE=sunlude.myshopify.com
+SHOPIFY_US_STORE=sunlu3d.myshopify.com
 
 client_id=your_client_id
 client_secret=your_client_secret
 ```
 
-后端会使用 `client_id + client_secret` 通过 Shopify client credentials flow 换取临时 access token，再通过 Admin GraphQL API 拉取产品变体库存。页面会展示产品数、变体数、SKU 数、总库存、零库存和低库存变体，并支持按店铺、库存状态和关键词筛选。
+后端会使用 `client_id + client_secret` 通过 Shopify client credentials flow 换取临时 access token，再通过 Admin GraphQL API 拉取产品变体库存。统计范围固定为 UK、EU（使用 `SHOPIFY_DE_STORE`）和 US；FR、IT 与 DE 同属欧洲库存，不参与 Shopify 库存统计，避免重复计算。页面会展示产品数、变体数、SKU 数、总库存、零库存和低库存变体，并支持按店铺、库存状态和关键词筛选。
 
 ### Shopify 缓存、SKU 映射和数据诊断
 

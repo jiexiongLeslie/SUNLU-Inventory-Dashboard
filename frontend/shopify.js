@@ -1,8 +1,9 @@
 (function() {
   'use strict';
 
-  var DEFAULT_REGION = '欧洲';
+  var ALL_REGION = '全站';
   var UNMATCHED_CATEGORY = '未匹配库存项';
+  var SHOPIFY_REFERENCE_REGIONS = ['英国', '欧洲', '美国'];
 
   var state = {
     shops: [],
@@ -75,7 +76,8 @@
     var store = storeSelect.value;
     if (store === 'SHOPIFY_UK_STORE') return '英国';
     if (store === 'SHOPIFY_DE_STORE') return '欧洲';
-    return DEFAULT_REGION;
+    if (store === 'SHOPIFY_US_STORE') return '美国';
+    return ALL_REGION;
   }
 
   function referenceScopeLabel() {
@@ -149,6 +151,9 @@
   function rebuildReferenceForSelectedStore() {
     state.referenceRegion = getReferenceRegion();
     state.referenceRows = state.allDataRows.filter(function(row) {
+      if (state.referenceRegion === ALL_REGION) {
+        return SHOPIFY_REFERENCE_REGIONS.indexOf(row.region) >= 0;
+      }
       return row.region === state.referenceRegion;
     });
     buildReferenceMaps(state.referenceRows);
@@ -608,7 +613,7 @@
         state.shops = data.stores || [];
         renderShopOptions(state.shops);
         var deShop = state.shops.find(function(shop) {
-          return shop.key === 'SHOPIFY_DE_STORE' || shop.label === 'DE';
+          return shop.key === 'SHOPIFY_DE_STORE' || shop.label === 'DE' || shop.label === 'EU';
         });
         if (deShop && !storeSelect.value) {
           storeSelect.value = deShop.key;

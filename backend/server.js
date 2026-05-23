@@ -14,6 +14,11 @@ const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
 const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-10';
+const SHOPIFY_STORE_DEFINITIONS = [
+  { key: 'SHOPIFY_UK_STORE', label: 'UK', region: '英国' },
+  { key: 'SHOPIFY_DE_STORE', label: 'EU', region: '欧洲' },
+  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国' }
+];
 
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -134,13 +139,10 @@ function getShopifyConfig() {
   const env = { ...fileEnv, ...process.env };
   const clientId = env.SHOPIFY_CLIENT_ID || env.client_id;
   const clientSecret = env.SHOPIFY_CLIENT_SECRET || env.client_secret;
-  const stores = Object.keys(env)
-    .filter(key => /^SHOPIFY_.*_STORE$/.test(key))
-    .sort()
-    .map(key => ({
-      key,
-      label: key.replace(/^SHOPIFY_/, '').replace(/_STORE$/, ''),
-      shop: normalizeShopDomain(env[key])
+  const stores = SHOPIFY_STORE_DEFINITIONS
+    .map(definition => ({
+      ...definition,
+      shop: normalizeShopDomain(env[definition.key])
     }))
     .filter(store => store.shop);
 
@@ -435,6 +437,7 @@ async function fetchShopifyInventoryPayload(selectedStores, config) {
     storeResults.push({
       store_key: result.store_key,
       store_label: result.store_label,
+      store_region: store.region,
       shop: result.shop,
       records: result.records.length,
       page_count: result.page_count
@@ -463,6 +466,7 @@ async function handleShopifyShops(req, res) {
     stores: config.stores.map(store => ({
       key: store.key,
       label: store.label,
+      region: store.region,
       shop: store.shop
     }))
   });
