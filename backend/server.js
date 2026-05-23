@@ -17,7 +17,7 @@ const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-10';
 const SHOPIFY_STORE_DEFINITIONS = [
   { key: 'SHOPIFY_UK_STORE', label: 'UK', region: '英国' },
   { key: 'SHOPIFY_DE_STORE', label: 'EU', region: '欧洲' },
-  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国' }
+  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', public_domain: 'store.sunlu.com' }
 ];
 
 const mimeTypes = {
@@ -403,6 +403,130 @@ function summarizeShopifyInventory(records) {
   };
 }
 
+function isValidDateString(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+}
+
+function toTitleCaseSlug(slug) {
+  return String(slug || '')
+    .replace(/[-_]+/g, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => (/^(3d|pla|petg|abs|sunlu|2025|moq|kg|ams|s4|fda|eu|uk|us|uv|pc|tpu)$/i.test(word)
+      ? word.toUpperCase()
+      : word.charAt(0).toUpperCase() + word.slice(1)))
+    .join(' ');
+}
+
+function getProductHandleFromLandingPath(landingPath) {
+  const parts = String(landingPath || '').split('/').filter(Boolean);
+  const index = parts.indexOf('products');
+  return index >= 0 && parts[index + 1] ? parts[index + 1] : '';
+}
+
+async function resolveShopifyLandingTitle(shop, landingPath, landingType) {
+  const cleanPath = String(landingPath || '').split('?')[0] || '/';
+  if (cleanPath === '/') {
+    return shop.includes('uk.') || shop.includes('sunluuk') ? 'SUNLU UK Store 首页' : 'SUNLU US Store 首页';
+  }
+  if (cleanPath === '/cart') {
+    return 'Cart 购物车';
+  }
+
+  const productHandle = getProductHandleFromLandingPath(cleanPath);
+  if (productHandle) {
+    try {
+      const payload = await shopifyFetchJson(`https://${shop}/products/${productHandle}.js`, {
+        method: 'GET',
+        headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' }
+      });
+      if (payload?.title) {
+        return String(payload.title);
+      }
+    } catch (e) {
+      // Public product JSON is best-effort only; fall back to a readable path title.
+    }
+    return toTitleCaseSlug(productHandle);
+  }
+
+  const parts = cleanPath.split('/').filter(Boolean);
+  const lastPart = parts[parts.length - 1] || landingType || cleanPath;
+  const suffix = landingType === 'Collection' ? ' Collection' : '';
+  return `${toTitleCaseSlug(lastPart)}${suffix}`;
+}
+
+async function runShopifyQl(shop, token, shopifyql) {
+  const query = `
+    query ShopifyQl($query: String!) {
+      shopifyqlQuery(query: $query) {
+        tableData { columns { name dataType displayName } rows }
+        parseErrors
+      }
+    }
+  `;
+  const payload = await shopifyGraphql(shop, token, query, { query: shopifyql });
+  const result = payload.shopifyqlQuery;
+  if (result?.parseErrors?.length) {
+    throw new Error(`ShopifyQL parse errors: ${result.parseErrors.join('; ')}`);
+  }
+  return result?.tableData?.rows || [];
+}
+
+async function fetchShopifyLinkAnalytics(store, config, options) {
+  const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
+  const since = options.since;
+  const until = options.until;
+  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const shopifyql = `
+FROM sessions
+  SHOW online_store_visitors, sessions, sessions_with_cart_additions,
+    sessions_that_reached_checkout
+  WHERE landing_page_path IS NOT NULL
+    AND human_or_bot_session IN ('human', 'bot')
+  GROUP BY landing_page_type, landing_page_path WITH TOTALS
+  SINCE ${since} UNTIL ${until}
+  ORDER BY sessions DESC
+  LIMIT ${limit}
+`;
+  const rows = await runShopifyQl(store.shop, token, shopifyql);
+  const mapped = await Promise.all(rows.map(async row => {
+    const landingPath = row.landing_page_path || '/';
+    const title = await resolveShopifyLandingTitle(store.shop, landingPath, row.landing_page_type || '');
+    const toNumber = value => Number(value || 0);
+    return {
+      title,
+      url: `https://${store.public_domain || store.shop}${landingPath}`,
+      landing_page_type: row.landing_page_type || '',
+      landing_page_path: landingPath,
+      online_store_visitors: toNumber(row.online_store_visitors),
+      sessions: toNumber(row.sessions),
+      sessions_with_cart_additions: toNumber(row.sessions_with_cart_additions),
+      sessions_that_reached_checkout: toNumber(row.sessions_that_reached_checkout)
+    };
+  }));
+  const first = rows[0] || {};
+  return {
+    generated_at: new Date().toISOString(),
+    store: {
+      key: store.key,
+      label: store.label,
+      region: store.region,
+      public_domain: store.public_domain || store.shop,
+      shop: store.shop
+    },
+    since,
+    until,
+    limit,
+    totals: {
+      online_store_visitors: Number(first.online_store_visitors__totals || 0),
+      sessions: Number(first.sessions__totals || 0),
+      sessions_with_cart_additions: Number(first.sessions_with_cart_additions__totals || 0),
+      sessions_that_reached_checkout: Number(first.sessions_that_reached_checkout__totals || 0)
+    },
+    rows: mapped
+  };
+}
+
 function getShopifyCacheKey(stores) {
   return stores.map(store => store.key).sort().join('+') || 'all';
 }
@@ -467,6 +591,7 @@ async function handleShopifyShops(req, res) {
       key: store.key,
       label: store.label,
       region: store.region,
+      public_domain: store.public_domain || store.shop,
       shop: store.shop
     }))
   });
@@ -524,6 +649,48 @@ async function handleShopifyInventory(parsedUrl, res) {
       return;
     }
     sendJson(res, 502, { error: e.message || 'Failed to fetch Shopify inventory' });
+  }
+}
+
+async function handleShopifyLinkAnalytics(parsedUrl, res) {
+  const config = getShopifyConfig();
+  if (!config.clientId || !config.clientSecret) {
+    sendJson(res, 500, { error: 'Missing Shopify client_id/client_secret' });
+    return;
+  }
+
+  const storeParam = parsedUrl.query.store || 'SHOPIFY_US_STORE';
+  const store = config.stores.find(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
+  if (!store) {
+    sendJson(res, 404, { error: 'No matching Shopify store configured' });
+    return;
+  }
+
+  if (store.key !== 'SHOPIFY_US_STORE') {
+    sendJson(res, 400, { error: 'Link analytics is currently enabled for SHOPIFY_US_STORE only' });
+    return;
+  }
+
+  const since = String(parsedUrl.query.since || '').trim();
+  const until = String(parsedUrl.query.until || '').trim();
+  if (!isValidDateString(since) || !isValidDateString(until)) {
+    sendJson(res, 400, { error: 'since/until must use YYYY-MM-DD format' });
+    return;
+  }
+  if (new Date(`${since}T00:00:00Z`) > new Date(`${until}T00:00:00Z`)) {
+    sendJson(res, 400, { error: 'since must be earlier than or equal to until' });
+    return;
+  }
+
+  try {
+    const payload = await fetchShopifyLinkAnalytics(store, config, {
+      since,
+      until,
+      limit: parsedUrl.query.limit
+    });
+    sendJson(res, 200, payload);
+  } catch (e) {
+    sendJson(res, 502, { error: e.message || 'Failed to fetch Shopify link analytics' });
   }
 }
 
@@ -875,6 +1042,11 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/shopify/inventory' && req.method === 'GET') {
     handleShopifyInventory(parsedUrl, res);
+    return;
+  }
+
+  if (pathname === '/api/shopify/link-analytics' && req.method === 'GET') {
+    handleShopifyLinkAnalytics(parsedUrl, res);
     return;
   }
 
