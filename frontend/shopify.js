@@ -34,6 +34,8 @@
   var detailPanel = document.getElementById('detailPanel');
   var summaryBody = document.getElementById('summaryBody');
   var summaryCount = document.getElementById('summaryCount');
+  var summarySearchInput = document.getElementById('summarySearchInput');
+  var summarySearchHint = document.getElementById('summarySearchHint');
 
   function setLoading(isLoading, text) {
     state.loading = isLoading;
@@ -485,6 +487,35 @@
     return haystack.indexOf(q) >= 0;
   }
 
+  function groupMatchesSummarySearch(group, q) {
+    if (!q) return true;
+    var groupText = [
+      group.product_title,
+      group.store_label,
+      group.reference_stock,
+      group.reference_sku_count,
+      group.reference_color_count
+    ].join(' ').toLowerCase();
+
+    if (groupText.indexOf(q) >= 0) return true;
+    return group.items.some(function(item) {
+      var itemText = [
+        item.mapped_category,
+        item.product_title,
+        item.variant_title,
+        item.mapped_color,
+        item.color,
+        item.sku,
+        item.vendor,
+        item.product_type,
+        item.store_label,
+        item.shop,
+        item.status
+      ].join(' ').toLowerCase();
+      return itemText.indexOf(q) >= 0;
+    });
+  }
+
   function applyFilters() {
     var q = searchInput.value.trim().toLowerCase();
     var risk = riskSelect.value;
@@ -531,13 +562,20 @@
   }
 
   function renderSummary(records) {
-    var groups = buildProductSummary(records);
+    var allGroups = buildProductSummary(records);
+    var summaryQ = summarySearchInput.value.trim().toLowerCase();
+    var groups = allGroups.filter(function(group) {
+      return groupMatchesSummarySearch(group, summaryQ);
+    });
     var referenceCount = state.categoryOrder.length;
     var extraCount = groups.filter(function(group) { return group.product_title === UNMATCHED_CATEGORY && group.items.length; }).length;
-    summaryCount.textContent = formatNumber(referenceCount) + ' 个' + state.referenceRegion + '单品' + (extraCount ? ' + 疑似未匹配单品' : '');
+    summaryCount.textContent = summaryQ
+      ? formatNumber(groups.length) + ' / ' + formatNumber(allGroups.length) + ' 个产品'
+      : formatNumber(referenceCount) + ' 个' + state.referenceRegion + '单品' + (extraCount ? ' + 疑似未匹配单品' : '');
+    summarySearchHint.textContent = summaryQ ? '已按产品汇总搜索过滤' : '按当前店铺口径过滤';
 
     if (!groups.length) {
-      summaryBody.innerHTML = '<tr><td colspan="8"><div class="empty">没有匹配的数据</div></td></tr>';
+      summaryBody.innerHTML = '<tr><td colspan="8"><div class="empty">' + (summaryQ ? '没有匹配的产品汇总' : '没有匹配的数据') + '</div></td></tr>';
       return;
     }
 
@@ -656,6 +694,7 @@
   storeSelect.addEventListener('change', function() { loadInventory(false); });
   riskSelect.addEventListener('change', applyFilters);
   searchInput.addEventListener('input', applyFilters);
+  summarySearchInput.addEventListener('input', function() { renderSummary(state.filtered); });
   document.querySelectorAll('.tab').forEach(function(tab) {
     tab.addEventListener('click', function() {
       switchView(this.dataset.view);
