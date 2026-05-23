@@ -12,7 +12,7 @@
     filtered: [],
     allDataRows: [],
     referenceRows: [],
-    referenceRegion: DEFAULT_REGION,
+    referenceRegion: ALL_REGION,
     categoryOrder: [],
     categoryMeta: {},
     skuReference: {},
