@@ -637,6 +637,89 @@ function summarizeLinkAnalyticsTotals(storeResults) {
   return totals;
 }
 
+function createBreakdownMetric(label) {
+  return {
+    label,
+    online_store_visitors: 0,
+    sessions: 0,
+    sessions_that_reached_checkout: 0,
+    sessions_that_completed_checkout: 0,
+    pageviews: 0
+  };
+}
+
+function addBreakdownMetric(group, row) {
+  group.online_store_visitors += numberValue(row.online_store_visitors);
+  group.sessions += numberValue(row.sessions);
+  group.sessions_that_reached_checkout += numberValue(row.sessions_that_reached_checkout);
+  group.sessions_that_completed_checkout += numberValue(row.sessions_that_completed_checkout);
+  group.pageviews += numberValue(row.pageviews);
+}
+
+function mapBreakdownValues(map) {
+  return [...map.values()].sort((a, b) => b.sessions - a.sessions);
+}
+
+function buildLinkAnalyticsBreakdowns(store, rows) {
+  const daily = new Map();
+  const byType = new Map();
+  const byChannel = new Map();
+  const byTraffic = new Map();
+
+  rows.forEach(row => {
+    const day = row.day || '';
+    const type = row.landing_page_type || 'Unknown';
+    const channel = row.referring_channel || 'Unknown';
+    const traffic = row.traffic_type || 'Unknown';
+
+    if (day) {
+      if (!daily.has(day)) daily.set(day, createBreakdownMetric(day));
+      addBreakdownMetric(daily.get(day), row);
+    }
+    if (!byType.has(type)) byType.set(type, createBreakdownMetric(type));
+    addBreakdownMetric(byType.get(type), row);
+    if (!byChannel.has(channel)) byChannel.set(channel, createBreakdownMetric(channel));
+    addBreakdownMetric(byChannel.get(channel), row);
+    if (!byTraffic.has(traffic)) byTraffic.set(traffic, createBreakdownMetric(traffic));
+    addBreakdownMetric(byTraffic.get(traffic), row);
+  });
+
+  const storeMetric = createBreakdownMetric(store.label);
+  rows.forEach(row => addBreakdownMetric(storeMetric, row));
+  storeMetric.store_key = store.key;
+
+  return {
+    daily: [...daily.values()].sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    by_type: mapBreakdownValues(byType),
+    by_channel: mapBreakdownValues(byChannel),
+    by_traffic: mapBreakdownValues(byTraffic),
+    by_store: [storeMetric]
+  };
+}
+
+function mergeBreakdownList(lists, sortByDay = false) {
+  const map = new Map();
+  lists.flat().forEach(item => {
+    const label = item.label || 'Unknown';
+    if (!map.has(label)) map.set(label, createBreakdownMetric(label));
+    addBreakdownMetric(map.get(label), item);
+  });
+  const values = [...map.values()];
+  return sortByDay
+    ? values.sort((a, b) => String(a.label).localeCompare(String(b.label)))
+    : values.sort((a, b) => b.sessions - a.sessions);
+}
+
+function mergeLinkAnalyticsBreakdowns(storeResults) {
+  return {
+    daily: mergeBreakdownList(storeResults.map(result => result.breakdowns?.daily || []), true),
+    by_store: mergeBreakdownList(storeResults.map(result => result.breakdowns?.by_store || [])),
+    by_type: mergeBreakdownList(storeResults.map(result => result.breakdowns?.by_type || [])),
+    by_channel: mergeBreakdownList(storeResults.map(result => result.breakdowns?.by_channel || [])),
+    by_traffic: mergeBreakdownList(storeResults.map(result => result.breakdowns?.by_traffic || []))
+  };
+}
+
 async function fetchShopifyLinkAnalytics(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
@@ -693,6 +776,7 @@ FROM sessions
       conversion_rate: numberValue(first.conversion_rate__totals)
     },
     raw_first_row: first,
+    breakdowns: buildLinkAnalyticsBreakdowns(store, rows),
     rows: mapped
   };
 }
@@ -714,6 +798,7 @@ async function fetchShopifyLinkAnalyticsPayload(stores, config, options) {
       rows: result.rows.length
     })),
     totals: summarizeLinkAnalyticsTotals(storeResults),
+    breakdowns: mergeLinkAnalyticsBreakdowns(storeResults),
     rows: rows.sort((a, b) => b.sessions - a.sessions)
   };
 }

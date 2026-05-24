@@ -21,6 +21,9 @@
   var kpiGrid = document.getElementById('kpiGrid');
   var tableCount = document.getElementById('tableCount');
   var tableBody = document.getElementById('tableBody');
+  var trendHint = document.getElementById('trendHint');
+  var chartRefs = {};
+  var chartColors = ['#2f80ed', '#218a54', '#b7791f', '#c53030', '#805ad5', '#0f766e', '#dd6b20', '#4a5568'];
 
   function formatNumber(value) {
     return Number(value || 0).toLocaleString('zh-CN');
@@ -121,6 +124,108 @@
     return sign + pct.toFixed(1) + '%';
   }
 
+  function shortLabel(value, max) {
+    value = String(value || '-');
+    return value.length > max ? value.slice(0, max - 1) + '…' : value;
+  }
+
+  function destroyChart(name) {
+    if (chartRefs[name]) {
+      chartRefs[name].destroy();
+      chartRefs[name] = null;
+    }
+  }
+
+  function chartBaseOptions(extra) {
+    return Object.assign({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color: '#4b5563', boxWidth: 10, font: { size: 11 } } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return ' ' + ctx.dataset.label + ': ' + formatNumber(ctx.parsed.y == null ? ctx.parsed : ctx.parsed.y);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#6b7280', maxRotation: 0 }, grid: { color: '#edf2f7' } },
+        y: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } }
+      }
+    }, extra || {});
+  }
+
+  function renderCharts() {
+    if (typeof Chart === 'undefined' || !state.current) return;
+    var breakdowns = state.current.breakdowns || {};
+    var totals = state.current.totals || {};
+
+    destroyChart('trend');
+    var channels = (breakdowns.by_channel || []).slice(0, 10);
+    trendHint.textContent = channels.length + ' 个主要渠道';
+    chartRefs.trend = new Chart(document.getElementById('trendChart'), {
+      type: 'bar',
+      data: {
+        labels: channels.map(function(item) { return shortLabel(item.label, 18); }),
+        datasets: [
+          { label: 'Sessions', data: channels.map(function(item) { return item.sessions; }), backgroundColor: '#2f80ed' },
+          { label: 'Pageviews', data: channels.map(function(item) { return item.pageviews; }), backgroundColor: 'rgba(33,138,84,.72)' }
+        ]
+      },
+      options: chartBaseOptions({
+        scales: {
+          x: { ticks: { color: '#6b7280', maxRotation: 25 }, grid: { display: false } },
+          y: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } }
+        }
+      })
+    });
+
+    destroyChart('store');
+    var stores = (breakdowns.by_store || []).slice(0, 8);
+    chartRefs.store = new Chart(document.getElementById('storeChart'), {
+      type: 'bar',
+      data: {
+        labels: stores.map(function(item) { return item.label; }),
+        datasets: [{ label: 'Sessions', data: stores.map(function(item) { return item.sessions; }), backgroundColor: chartColors }]
+      },
+      options: chartBaseOptions({ plugins: { legend: { display: false } } })
+    });
+
+    destroyChart('type');
+    var types = (breakdowns.by_type || []).slice(0, 7);
+    chartRefs.type = new Chart(document.getElementById('typeChart'), {
+      type: 'doughnut',
+      data: {
+        labels: types.map(function(item) { return shortLabel(item.label, 18); }),
+        datasets: [{ label: 'Sessions', data: types.map(function(item) { return item.sessions; }), backgroundColor: chartColors, borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: '#4b5563', boxWidth: 10, font: { size: 11 } } } } }
+    });
+
+    destroyChart('funnel');
+    chartRefs.funnel = new Chart(document.getElementById('funnelChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Sessions', '到达结账', '完成结账'],
+        datasets: [{
+          label: '数量',
+          data: [totals.sessions || 0, totals.sessions_that_reached_checkout || 0, totals.sessions_that_completed_checkout || 0],
+          backgroundColor: ['#2f80ed', '#b7791f', '#218a54']
+        }]
+      },
+      options: chartBaseOptions({
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } },
+          y: { ticks: { color: '#6b7280' }, grid: { display: false } }
+        }
+      })
+    });
+  }
+
   function combineRows(currentRows, compareRows) {
     var compareMap = {};
     compareRows.forEach(function(row) {
@@ -213,6 +318,7 @@
 
   function render() {
     renderKpis();
+    renderCharts();
     renderTable();
     if (state.current) {
       var storeNames = (state.current.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
@@ -243,6 +349,7 @@
       state.rows = [];
       renderTable();
       kpiGrid.innerHTML = '';
+      Object.keys(chartRefs).forEach(destroyChart);
       setLoading(false, '加载失败：' + err.message);
     });
   }
