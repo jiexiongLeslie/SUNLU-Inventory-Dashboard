@@ -5,6 +5,7 @@
     current: null,
     compare: null,
     rows: [],
+    page: 1,
     loading: false
   };
 
@@ -21,6 +22,8 @@
   var kpiGrid = document.getElementById('kpiGrid');
   var tableCount = document.getElementById('tableCount');
   var tableBody = document.getElementById('tableBody');
+  var pagerInfo = document.getElementById('pagerInfo');
+  var pagerButtons = document.getElementById('pagerButtons');
   var trendHint = document.getElementById('trendHint');
   var chartRefs = {};
   var chartColors = ['#2f80ed', '#218a54', '#b7791f', '#c53030', '#805ad5', '#0f766e', '#dd6b20', '#4a5568'];
@@ -280,18 +283,50 @@
     ].join(' ').toLowerCase().indexOf(q) >= 0;
   }
 
+  function renderPager(total, pageSize) {
+    var totalPages = Math.max(1, Math.ceil(total / pageSize));
+    if (state.page > totalPages) state.page = totalPages;
+    var start = total ? (state.page - 1) * pageSize + 1 : 0;
+    var end = Math.min(total, state.page * pageSize);
+    pagerInfo.textContent = formatNumber(start) + '-' + formatNumber(end) + ' / ' + formatNumber(total);
+
+    var buttons = [
+      '<button type="button" class="page-btn" data-page="' + (state.page - 1) + '"' + (state.page <= 1 ? ' disabled' : '') + '>上一页</button>'
+    ];
+    var from = Math.max(1, state.page - 2);
+    var to = Math.min(totalPages, state.page + 2);
+    if (from > 1) {
+      buttons.push('<button type="button" class="page-btn" data-page="1">1</button>');
+      if (from > 2) buttons.push('<button type="button" class="page-btn" disabled>...</button>');
+    }
+    for (var page = from; page <= to; page += 1) {
+      buttons.push('<button type="button" class="page-btn ' + (page === state.page ? 'active' : '') + '" data-page="' + page + '">' + page + '</button>');
+    }
+    if (to < totalPages) {
+      if (to < totalPages - 1) buttons.push('<button type="button" class="page-btn" disabled>...</button>');
+      buttons.push('<button type="button" class="page-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
+    }
+    buttons.push('<button type="button" class="page-btn" data-page="' + (state.page + 1) + '"' + (state.page >= totalPages ? ' disabled' : '') + '>下一页</button>');
+    pagerButtons.innerHTML = buttons.join('');
+  }
+
   function renderTable() {
     var q = searchInput.value.trim().toLowerCase();
     var rows = state.rows.filter(function(row) { return matchesSearch(row, q); });
+    var pageSize = Number(limitSelect.value) || 5;
+    var totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+    if (state.page > totalPages) state.page = totalPages;
+    var offset = (state.page - 1) * pageSize;
     tableCount.textContent = formatNumber(rows.length) + ' 条';
+    renderPager(rows.length, pageSize);
     if (!rows.length) {
       tableBody.innerHTML = '<tr><td colspan="21"><div class="empty">没有匹配的数据</div></td></tr>';
       return;
     }
-    tableBody.innerHTML = rows.slice(0, Number(limitSelect.value) || 10).map(function(row, index) {
+    tableBody.innerHTML = rows.slice(offset, offset + pageSize).map(function(row, index) {
       var pctClass = deltaClass(row.sessions_delta_pct);
       return '<tr>' +
-        '<td class="rank">' + (index + 1) + '</td>' +
+        '<td class="rank">' + (offset + index + 1) + '</td>' +
         '<td><span class="type">' + escapeHtml(row.store_label || '-') + '</span></td>' +
         '<td class="title">' + escapeHtml(row.title || '-') + '</td>' +
         '<td><a class="url" href="' + escapeHtml(row.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(row.url) + '</a></td>' +
@@ -341,6 +376,7 @@
       state.current = results[0];
       state.compare = results[1];
       state.rows = combineRows(state.current.rows || [], state.compare.rows || []);
+      state.page = 1;
       setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据');
       render();
     }).catch(function(err) {
@@ -356,8 +392,20 @@
 
   sinceInput.addEventListener('change', syncCompareDates);
   untilInput.addEventListener('change', syncCompareDates);
-  searchInput.addEventListener('input', renderTable);
-  limitSelect.addEventListener('change', renderTable);
+  searchInput.addEventListener('input', function() {
+    state.page = 1;
+    renderTable();
+  });
+  limitSelect.addEventListener('change', function() {
+    state.page = 1;
+    renderTable();
+  });
+  pagerButtons.addEventListener('click', function(e) {
+    var btn = e.target.closest('.page-btn');
+    if (!btn || btn.disabled || !btn.dataset.page) return;
+    state.page = Number(btn.dataset.page) || 1;
+    renderTable();
+  });
   loadBtn.addEventListener('click', loadData);
 
   setDefaultDates();

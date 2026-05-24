@@ -53,6 +53,12 @@ button:disabled { opacity: .55; cursor: wait; }
 .panel-head { padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); gap: 12px; }
 .panel-head h2 { font-size: 15px; }
 .count { font-size: 12px; color: var(--muted); background: #eef3f8; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.pager { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border); background: #fbfdff; flex-wrap: wrap; }
+.pager-info { color: var(--muted); font-size: 12px; }
+.pager-buttons { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.page-btn { min-width: 32px; height: 30px; border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 6px; padding: 0 10px; font-size: 12px; }
+.page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.page-btn:disabled { opacity: .45; cursor: not-allowed; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 2100px; }
 th, td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; font-size: 13px; text-align: left; vertical-align: top; }
@@ -118,6 +124,7 @@ tr:hover td { background: #f8fafc; }
     <div class="field">
       <label for="limitSelect">数量</label>
       <select id="limitSelect">
+        <option value="5">Top 5</option>
         <option value="10">Top 10</option>
         <option value="20">Top 20</option>
         <option value="50">Top 50</option>
@@ -184,6 +191,10 @@ tr:hover td { background: #f8fafc; }
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
+    </div>
+    <div class="pager">
+      <div class="pager-info" id="pagerInfo">0-0 / 0</div>
+      <div class="pager-buttons" id="pagerButtons"></div>
     </div>
   </section>
 </div>
