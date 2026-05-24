@@ -32,6 +32,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC
 select, input { height: 36px; border: 1px solid var(--border); border-radius: 6px; background: #fff; padding: 0 10px; font-size: 13px; color: var(--text); }
 input[type="search"] { min-width: 280px; flex: 1; }
 button { height: 36px; border: 0; border-radius: 6px; background: var(--primary); color: #fff; padding: 0 16px; font-weight: 700; cursor: pointer; }
+button.secondary { background: #eef3f8; color: var(--primary); border: 1px solid var(--border); }
 button:disabled { opacity: .55; cursor: wait; }
 .status { font-size: 13px; color: var(--muted); padding-bottom: 9px; }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -133,6 +134,7 @@ tr:hover td { background: #f8fafc; }
     </div>
     <input id="searchInput" type="search" placeholder="搜索标题、链接、类型">
     <button id="loadBtn">加载数据</button>
+    <button id="refreshBtn" class="secondary">刷新并更新缓存</button>
     <span class="status" id="statusText">准备就绪</span>
   </section>
 

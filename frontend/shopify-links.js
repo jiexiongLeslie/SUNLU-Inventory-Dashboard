@@ -17,6 +17,7 @@
   var limitSelect = document.getElementById('limitSelect');
   var searchInput = document.getElementById('searchInput');
   var loadBtn = document.getElementById('loadBtn');
+  var refreshBtn = document.getElementById('refreshBtn');
   var statusText = document.getElementById('statusText');
   var meta = document.getElementById('meta');
   var kpiGrid = document.getElementById('kpiGrid');
@@ -85,16 +86,18 @@
   function setLoading(isLoading, text) {
     state.loading = isLoading;
     loadBtn.disabled = isLoading;
+    refreshBtn.disabled = isLoading;
     statusText.textContent = text || (isLoading ? '正在加载...' : '准备就绪');
   }
 
-  function fetchRange(since, until) {
+  function fetchRange(since, until, refresh) {
     var params = new URLSearchParams({
       store: storeSelect.value,
       since: since,
       until: until,
       limit: '1000'
     });
+    if (refresh) params.set('refresh', '1');
     return fetch('/api/shopify/link-analytics?' + params.toString()).then(function(res) {
       return res.json().then(function(data) {
         if (!res.ok || data.error) throw new Error(data.error || '请求失败');
@@ -359,25 +362,34 @@
       var storeNames = (state.current.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
       meta.textContent = storeNames + ' · 当前 ' + state.current.since + ' 至 ' + state.current.until +
         ' · 对比 ' + state.compare.since + ' 至 ' + state.compare.until;
+      if (state.current.cached_at || state.compare.cached_at) {
+        meta.textContent += ' | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare);
+      }
     }
   }
 
-  function loadData() {
+  function cacheLabel(data) {
+    if (!data || !data.cached_at) return '';
+    var label = data.from_cache ? '缓存' : '已刷新';
+    return label + ' ' + new Date(data.cached_at).toLocaleString('zh-CN');
+  }
+
+  function loadData(refresh) {
     if (state.loading) return;
     if (!sinceInput.value || !untilInput.value || !compareSinceInput.value || !compareUntilInput.value) {
       setLoading(false, '请先选择完整日期');
       return;
     }
-    setLoading(true, '正在读取 Shopify 链接访问量...');
+    setLoading(true, refresh ? '正在刷新 Shopify 链接访问量...' : '正在读取链接访问量缓存...');
     Promise.all([
-      fetchRange(sinceInput.value, untilInput.value),
-      fetchRange(compareSinceInput.value, compareUntilInput.value)
+      fetchRange(sinceInput.value, untilInput.value, refresh),
+      fetchRange(compareSinceInput.value, compareUntilInput.value, refresh)
     ]).then(function(results) {
       state.current = results[0];
       state.compare = results[1];
       state.rows = combineRows(state.current.rows || [], state.compare.rows || []);
       state.page = 1;
-      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据');
+      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据 | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare));
       render();
     }).catch(function(err) {
       state.current = null;
@@ -406,9 +418,10 @@
     state.page = Number(btn.dataset.page) || 1;
     renderTable();
   });
-  loadBtn.addEventListener('click', loadData);
+  loadBtn.addEventListener('click', function() { loadData(false); });
+  refreshBtn.addEventListener('click', function() { loadData(true); });
 
   setDefaultDates();
   renderTable();
-  loadData();
+  loadData(false);
 })();

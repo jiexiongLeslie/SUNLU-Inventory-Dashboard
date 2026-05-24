@@ -10,6 +10,7 @@ const DATA_FILE = path.join(ROOT_DIR, 'data', 'data.json');
 const META_FILE = path.join(ROOT_DIR, 'data', 'meta.json');
 const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
 const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
+const SHOPIFY_LINK_ANALYTICS_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_link_analytics_cache.json');
 const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
@@ -829,6 +830,36 @@ function saveShopifyCacheEntry(cacheKey, payload) {
   writeJsonFile(SHOPIFY_CACHE_FILE, cache);
 }
 
+function getShopifyLinkAnalyticsCacheKey(stores, options) {
+  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
+  const since = options.since || 'unknown';
+  const until = options.until || 'unknown';
+  const limit = Number(options.limit) || 1000;
+  return [storePart, since, until, limit].join('|');
+}
+
+function readShopifyLinkAnalyticsCache() {
+  const cache = readJsonFile(SHOPIFY_LINK_ANALYTICS_CACHE_FILE, { version: 1, entries: {} });
+  if (!cache || typeof cache !== 'object' || !cache.entries) {
+    return { version: 1, entries: {} };
+  }
+  return cache;
+}
+
+function getShopifyLinkAnalyticsCacheEntry(cacheKey) {
+  return readShopifyLinkAnalyticsCache().entries[cacheKey] || null;
+}
+
+function saveShopifyLinkAnalyticsCacheEntry(cacheKey, payload) {
+  const cache = readShopifyLinkAnalyticsCache();
+  cache.version = 1;
+  cache.entries[cacheKey] = {
+    saved_at: new Date().toISOString(),
+    payload
+  };
+  writeJsonFile(SHOPIFY_LINK_ANALYTICS_CACHE_FILE, cache);
+}
+
 async function fetchShopifyInventoryPayload(selectedStores, config) {
   const storeResults = [];
   const rawRecords = [];
@@ -955,14 +986,45 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
     return;
   }
 
-  try {
-    const payload = await fetchShopifyLinkAnalyticsPayload(stores, config, {
-      since,
-      until,
-      limit: parsedUrl.query.limit
+  const options = {
+    since,
+    until,
+    limit: parsedUrl.query.limit
+  };
+  const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
+  const cacheKey = getShopifyLinkAnalyticsCacheKey(stores, options);
+  const cacheEntry = getShopifyLinkAnalyticsCacheEntry(cacheKey);
+
+  if (!shouldRefresh && cacheEntry?.payload) {
+    sendJson(res, 200, {
+      ...cacheEntry.payload,
+      from_cache: true,
+      cache_key: cacheKey,
+      cached_at: cacheEntry.saved_at
     });
-    sendJson(res, 200, payload);
+    return;
+  }
+
+  try {
+    const payload = await fetchShopifyLinkAnalyticsPayload(stores, config, options);
+    saveShopifyLinkAnalyticsCacheEntry(cacheKey, payload);
+    sendJson(res, 200, {
+      ...payload,
+      from_cache: false,
+      cache_key: cacheKey,
+      cached_at: new Date().toISOString()
+    });
   } catch (e) {
+    if (cacheEntry?.payload) {
+      sendJson(res, 200, {
+        ...cacheEntry.payload,
+        from_cache: true,
+        cache_key: cacheKey,
+        cached_at: cacheEntry.saved_at,
+        warning: e.message || 'Refresh failed, returned cached Shopify link analytics'
+      });
+      return;
+    }
     sendJson(res, 502, { error: e.message || 'Failed to fetch Shopify link analytics' });
   }
 }
@@ -1325,6 +1387,7 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/api/shopify/cache' && req.method === 'GET') {
     const cache = readShopifyCache();
+    const linkCache = readShopifyLinkAnalyticsCache();
     sendJson(res, 200, {
       entries: Object.keys(cache.entries).map(key => ({
         key,
@@ -1332,6 +1395,14 @@ const server = http.createServer((req, res) => {
         records: cache.entries[key].payload?.records?.length || 0,
         stores: cache.entries[key].payload?.stores || [],
         summary: cache.entries[key].payload?.summary || {}
+      })),
+      link_entries: Object.keys(linkCache.entries).map(key => ({
+        key,
+        saved_at: linkCache.entries[key].saved_at,
+        rows: linkCache.entries[key].payload?.rows?.length || 0,
+        stores: linkCache.entries[key].payload?.stores || [],
+        since: linkCache.entries[key].payload?.since || null,
+        until: linkCache.entries[key].payload?.until || null
       }))
     });
     return;
