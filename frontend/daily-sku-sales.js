@@ -19,9 +19,13 @@
     rows: [],
     filteredRows: [],
     skuRows: [],
+    compare: null,
+    compareRows: [],
+    compareSkuRows: [],
     store: 'ALL',
     page: 1,
     pageSize: 15,
+    compareEnabled: false,
     sortCol: 'qty',
     sortDir: 'desc',
     loading: false
@@ -30,6 +34,10 @@
 
   var sinceInput = document.getElementById('sinceInput');
   var untilInput = document.getElementById('untilInput');
+  var compareSinceInput = document.getElementById('compareSinceInput');
+  var compareUntilInput = document.getElementById('compareUntilInput');
+  var compareToggle = document.getElementById('compareToggle');
+  var compareBox = document.getElementById('compareBox');
   var storeTabs = document.getElementById('storeTabs');
   var searchInput = document.getElementById('searchInput');
   var loadBtn = document.getElementById('loadBtn');
@@ -73,10 +81,24 @@
     return next;
   }
 
+  function daysBetween(since, until) {
+    return Math.max(1, Math.round((new Date(until) - new Date(since)) / 86400000) + 1);
+  }
+
+  function setComparePreviousPeriod() {
+    if (!sinceInput.value || !untilInput.value) return;
+    var len = daysBetween(sinceInput.value, untilInput.value);
+    var compareUntil = dateAdd(new Date(sinceInput.value), -1);
+    var compareSince = dateAdd(compareUntil, -len + 1);
+    compareSinceInput.value = formatDate(compareSince);
+    compareUntilInput.value = formatDate(compareUntil);
+  }
+
   function setDefaultDates() {
     var now = new Date();
     sinceInput.value = formatDate(new Date(now.getFullYear(), 0, 1));
     untilInput.value = formatDate(now);
+    setComparePreviousPeriod();
   }
 
   function setPreset(type) {
@@ -89,6 +111,7 @@
       sinceInput.value = formatDate(dateAdd(now, -Number(type) + 1));
     }
     untilInput.value = formatDate(now);
+    setComparePreviousPeriod();
     loadData(false);
   }
 
@@ -99,11 +122,11 @@
     statusText.textContent = text || (isLoading ? '正在加载...' : '准备就绪');
   }
 
-  function fetchData(refresh) {
+  function fetchRange(since, until, refresh) {
     var params = new URLSearchParams({
       store: state.store,
-      since: sinceInput.value,
-      until: untilInput.value,
+      since: since,
+      until: until,
       limit: '1000'
     });
     if (refresh) params.set('refresh', '1');
@@ -154,14 +177,45 @@
     return new Set(rows.map(function(row) { return row[field]; }).filter(Boolean)).size;
   }
 
+  function deltaHtml(current, previous) {
+    previous = Number(previous || 0);
+    current = Number(current || 0);
+    if (!previous) return '<span class="delta flat">-</span>';
+    var diff = (current - previous) / previous;
+    var cls = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+    var sign = diff > 0 ? '+' : diff < 0 ? '-' : '';
+    return '<span class="delta ' + cls + '">' + sign + (Math.abs(diff) * 100).toFixed(1) + '%</span>';
+  }
+
+  function kpiCard(highlight, label, value, compareValue, formatter, foot) {
+    var cmp = state.compareEnabled && state.compare && compareValue != null
+      ? '<div class="kcmp">对比：' + formatter(compareValue) + ' ' + deltaHtml(value, compareValue) + '</div>'
+      : '';
+    return '<div class="kpi' + (highlight ? ' hi' : '') + '">' +
+      '<div class="kl">' + label + '</div>' +
+      '<div class="kv">' + formatter(value) + '</div>' +
+      cmp +
+      '<div class="kft">' + foot + '</div>' +
+    '</div>';
+  }
+
   function renderKpis() {
     var totals = state.data?.totals || {};
+    var cmp = state.compare?.totals || {};
     var rows = state.rows || [];
     var days = state.data?.breakdowns?.daily?.length || 1;
     var avgPrice = totals.net_items_sold ? totals.total_sales / totals.net_items_sold : 0;
+    var cmpAvgPrice = cmp.net_items_sold ? cmp.total_sales / cmp.net_items_sold : 0;
     var bestDay = (state.data?.breakdowns?.daily || []).reduce(function(best, row) {
       return row.net_items_sold > (best.net_items_sold || 0) ? row : best;
     }, {});
+    kpiGrid.innerHTML =
+      kpiCard(true, '销售额', totals.total_sales, cmp.total_sales, formatMoney, '日均 ' + formatMoney(totals.total_sales / days)) +
+      kpiCard(false, '总销量（件）', totals.net_items_sold, cmp.net_items_sold, formatNumber, '日均 ' + formatNumber(totals.net_items_sold / days) + ' 件/天') +
+      kpiCard(false, '最高单日', bestDay.net_items_sold || 0, null, formatNumber, escapeHtml(bestDay.label || '-')) +
+      kpiCard(false, 'SKU 数', getUniqueCount(rows, 'product_variant_sku'), getUniqueCount(state.compareRows || [], 'product_variant_sku'), formatNumber, '产品 ' + formatNumber(getUniqueCount(rows, 'product_title')) + ' 个') +
+      kpiCard(true, '件均销售额', avgPrice, cmpAvgPrice, formatMoney, formatNumber(getUniqueCount(rows, 'shipping_country')) + ' 个发货国家');
+    return;
     kpiGrid.innerHTML =
       '<div class="kpi hi"><div class="kl">销售额</div><div class="kv">' + formatMoney(totals.total_sales) + '</div><div class="kft">日均 ' + formatMoney(totals.total_sales / days) + '</div></div>' +
       '<div class="kpi"><div class="kl">总销量（件）</div><div class="kv">' + formatNumber(totals.net_items_sold) + '</div><div class="kft">日均 ' + formatNumber(totals.net_items_sold / days) + ' 件/天</div></div>' +
@@ -186,27 +240,58 @@
     return { days: days, labels: labels, series: series };
   }
 
+  function buildDailyStoreSeriesFrom(data, rows) {
+    var days = data?.breakdowns?.daily?.map(function(row) { return row.label; }) || [];
+    var labels = (data?.stores || []).map(function(store) { return store.label; });
+    var series = {};
+    labels.forEach(function(label) {
+      series[label] = days.map(function(day) {
+        return (rows || []).filter(function(row) {
+          return row.day === day && row.store_label === label;
+        }).reduce(function(total, row) {
+          return total + Number(row.net_items_sold || 0);
+        }, 0);
+      });
+    });
+    return { days: days, labels: labels, series: series };
+  }
+
   function renderDailyChart() {
     var data = buildDailyStoreSeries();
+    var compareData = buildDailyStoreSeriesFrom(state.compare, state.compareRows);
     dailyLegend.innerHTML = data.labels.map(function(label, index) {
       return '<span class="leg"><span class="ld" style="background:' + colorFor(label, index) + '"></span>' + escapeHtml(label) + '</span>';
-    }).join('');
+    }).join('') + (state.compareEnabled && state.compare ? '<span class="leg"><span class="ld" style="background:#facc15"></span>对比虚线</span>' : '');
+    var datasets = data.labels.map(function(label, index) {
+      return {
+        label: label,
+        data: data.series[label] || [],
+        borderColor: colorFor(label, index),
+        backgroundColor: colorFor(label, index) + '22',
+        borderWidth: 2,
+        pointRadius: 2,
+        tension: .35
+      };
+    });
+    if (state.compareEnabled && state.compare) {
+      data.labels.forEach(function(label, index) {
+        datasets.push({
+          label: label + ' 对比',
+          data: compareData.series[label] || [],
+          borderColor: colorFor(label, index) + '99',
+          borderDash: [5, 3],
+          borderWidth: 2,
+          pointRadius: 1,
+          tension: .35
+        });
+      });
+    }
     destroyChart('daily');
     charts.daily = new Chart(document.getElementById('dailyChart'), {
       type: 'line',
       data: {
         labels: data.days.map(function(day) { return day.slice(5); }),
-        datasets: data.labels.map(function(label, index) {
-          return {
-            label: label,
-            data: data.series[label] || [],
-            borderColor: colorFor(label, index),
-            backgroundColor: colorFor(label, index) + '22',
-            borderWidth: 2,
-            pointRadius: 2,
-            tension: .35
-          };
-        })
+        datasets: datasets
       },
       options: chartOptions(formatNumber)
     });
@@ -242,11 +327,53 @@
     });
   }
 
+  function attachSkuCompare(rows, compareRows) {
+    var map = new Map();
+    (compareRows || []).forEach(function(row) {
+      map.set(row.sku, row);
+    });
+    return (rows || []).map(function(row) {
+      var cmp = map.get(row.sku) || {};
+      return Object.assign({}, row, {
+        compare_qty: Number(cmp.qty || 0),
+        compare_sales: Number(cmp.sales || 0)
+      });
+    });
+  }
+
   function renderSkuChart() {
     var top15 = state.skuRows.slice().sort(function(a, b) {
       return b.qty - a.qty || b.sales - a.sales;
     }).slice(0, 15);
     skuChartLabel.textContent = top15.length + ' 个 SKU';
+    var datasets = [
+      { label: '销量', data: top15.map(function(row) { return row.qty; }), backgroundColor: '#3b6ef588', borderColor: '#3b6ef5', borderWidth: 1, borderRadius: 3, yAxisID: 'qty' },
+      { label: '销售额($)', data: top15.map(function(row) { return row.sales; }), type: 'line', borderColor: '#facc15', backgroundColor: 'rgba(250,204,21,.12)', borderWidth: 2, pointRadius: 3, yAxisID: 'sales', tension: .3 }
+    ];
+    if (state.compareEnabled && state.compare) {
+      datasets.splice(1, 0, { label: '销量 对比', data: top15.map(function(row) { return row.compare_qty || 0; }), backgroundColor: '#9ca3af55', borderColor: '#9ca3af', borderWidth: 1, borderRadius: 3, yAxisID: 'qty' });
+      datasets.push({ label: '销售额 对比($)', data: top15.map(function(row) { return row.compare_sales || 0; }), type: 'line', borderColor: '#f59e0b99', borderDash: [5, 3], borderWidth: 2, pointRadius: 2, yAxisID: 'sales', tension: .3 });
+    }
+    destroyChart('sku');
+    charts.sku = new Chart(document.getElementById('skuChart'), {
+      type: 'bar',
+      data: {
+        labels: top15.map(function(row) { return row.sku; }),
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } },
+        scales: {
+          x: { ticks: { color: chartTextColor(), font: { size: 9 }, maxRotation: 45, minRotation: 30 }, grid: { display: false } },
+          qty: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: formatNumber }, grid: { color: chartGridColor() } },
+          sales: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: chartTextColor(), font: { size: 9 }, callback: function(value) { return '$' + Math.round(value / 1000) + 'k'; } } }
+        }
+      }
+    });
+    return;
     destroyChart('sku');
     charts.sku = new Chart(document.getElementById('skuChart'), {
       type: 'bar',
@@ -312,7 +439,9 @@
   function applyFilter() {
     var q = searchInput.value.trim().toLowerCase();
     state.filteredRows = state.rows.filter(function(row) { return matchesSearch(row, q); });
-    state.skuRows = groupSkuRows(state.filteredRows);
+    state.compareFilteredRows = (state.compareRows || []).filter(function(row) { return matchesSearch(row, q); });
+    state.compareSkuRows = groupSkuRows(state.compareFilteredRows);
+    state.skuRows = attachSkuCompare(groupSkuRows(state.filteredRows), state.compareSkuRows);
     state.page = 1;
     renderSkuChart();
     renderTable();
@@ -368,8 +497,8 @@
           '<td style="color:var(--t3)">' + (start + index + 1) + '</td>' +
           '<td><span class="sku">' + escapeHtml(row.sku) + '</span></td>' +
           '<td>' + escapeHtml(row.title || '-') + '</td>' +
-          '<td class="r"><strong>' + formatNumber(row.qty) + '</strong></td>' +
-          '<td class="r">' + formatMoney(row.sales) + '</td>' +
+          '<td class="r"><strong>' + formatNumber(row.qty) + '</strong>' + (state.compareEnabled ? '<div class="kcmp">对比 ' + formatNumber(row.compare_qty) + ' ' + deltaHtml(row.qty, row.compare_qty) + '</div>' : '') + '</td>' +
+          '<td class="r">' + formatMoney(row.sales) + (state.compareEnabled ? '<div class="kcmp">对比 ' + formatMoney(row.compare_sales) + ' ' + deltaHtml(row.sales, row.compare_sales) + '</div>' : '') + '</td>' +
           '<td class="r">' + formatMoney(row.avg_price) + '</td>' +
           '<td class="r">' + formatNumber(row.country_count) + '</td>' +
           '<td class="r">' + formatNumber(row.store_count) + '</td>' +
@@ -392,18 +521,29 @@
       return;
     }
     setLoading(true, refresh ? '正在刷新 SKU 销量数据...' : '正在读取 SKU 销量数据...');
-    fetchData(refresh).then(function(data) {
+    var jobs = [fetchRange(sinceInput.value, untilInput.value, refresh)];
+    if (state.compareEnabled && compareSinceInput.value && compareUntilInput.value) {
+      jobs.push(fetchRange(compareSinceInput.value, compareUntilInput.value, refresh));
+    }
+    Promise.all(jobs).then(function(results) {
+      var data = results[0];
+      state.compare = state.compareEnabled ? (results[1] || null) : null;
       state.data = data;
       state.rows = data.rows || [];
+      state.compareRows = state.compare?.rows || [];
       state.filteredRows = state.rows;
-      state.skuRows = groupSkuRows(state.rows);
+      state.compareSkuRows = groupSkuRows(state.compareRows);
+      state.skuRows = attachSkuCompare(groupSkuRows(state.rows), state.compareSkuRows);
       setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条 SKU 销量数据');
       render();
     }).catch(function(err) {
       state.data = null;
+      state.compare = null;
       state.rows = [];
+      state.compareRows = [];
       state.filteredRows = [];
       state.skuRows = [];
+      state.compareSkuRows = [];
       Object.keys(charts).forEach(destroyChart);
       kpiGrid.innerHTML = '';
       skuTable.innerHTML = '<tbody><tr><td><div class="empty">加载失败：' + escapeHtml(err.message) + '</div></td></tr></tbody>';
@@ -429,7 +569,23 @@
       loadData(false);
     });
     [sinceInput, untilInput].forEach(function(input) {
-      input.addEventListener('change', function() { loadData(false); });
+      input.addEventListener('change', function() {
+        setComparePreviousPeriod();
+        loadData(false);
+      });
+    });
+    compareToggle.addEventListener('click', function() {
+      state.compareEnabled = !state.compareEnabled;
+      compareToggle.classList.toggle('on', state.compareEnabled);
+      compareToggle.textContent = state.compareEnabled ? '取消对比时段' : '添加对比时段';
+      compareBox.style.display = state.compareEnabled ? 'flex' : 'none';
+      if (state.compareEnabled) setComparePreviousPeriod();
+      loadData(false);
+    });
+    [compareSinceInput, compareUntilInput].forEach(function(input) {
+      input.addEventListener('change', function() {
+        if (state.compareEnabled) loadData(false);
+      });
     });
     searchInput.addEventListener('input', applyFilter);
     loadBtn.addEventListener('click', function() { loadData(false); });

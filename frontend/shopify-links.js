@@ -18,9 +18,11 @@
     data: null,
     rows: [],
     filteredRows: [],
+    compare: null,
     store: 'ALL',
     page: 1,
-    pageSize: 5,
+    pageSize: 8,
+    compareEnabled: false,
     loading: false,
     sortCol: 'sessions',
     sortDir: 'desc'
@@ -29,6 +31,10 @@
 
   var sinceInput = document.getElementById('sinceInput');
   var untilInput = document.getElementById('untilInput');
+  var compareSinceInput = document.getElementById('compareSinceInput');
+  var compareUntilInput = document.getElementById('compareUntilInput');
+  var compareToggle = document.getElementById('compareToggle');
+  var compareBox = document.getElementById('compareBox');
   var storeTabs = document.getElementById('storeTabs');
   var channelSelect = document.getElementById('channelSelect');
   var searchInput = document.getElementById('searchInput');
@@ -83,10 +89,24 @@
     return next;
   }
 
+  function daysBetween(since, until) {
+    return Math.max(1, Math.round((new Date(until) - new Date(since)) / 86400000) + 1);
+  }
+
+  function setComparePreviousPeriod() {
+    if (!sinceInput.value || !untilInput.value) return;
+    var len = daysBetween(sinceInput.value, untilInput.value);
+    var compareUntil = dateAdd(new Date(sinceInput.value), -1);
+    var compareSince = dateAdd(compareUntil, -len + 1);
+    compareSinceInput.value = formatDate(compareSince);
+    compareUntilInput.value = formatDate(compareUntil);
+  }
+
   function setDefaultDates() {
     var now = new Date();
     sinceInput.value = formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
     untilInput.value = formatDate(now);
+    setComparePreviousPeriod();
   }
 
   function setPreset(type) {
@@ -97,6 +117,7 @@
       sinceInput.value = formatDate(dateAdd(now, -Number(type) + 1));
     }
     untilInput.value = formatDate(now);
+    setComparePreviousPeriod();
     loadData(false);
   }
 
@@ -107,11 +128,11 @@
     statusText.textContent = text || (isLoading ? '正在加载...' : '准备就绪');
   }
 
-  function fetchData(refresh) {
+  function fetchRange(since, until, refresh) {
     var params = new URLSearchParams({
       store: state.store,
-      since: sinceInput.value,
-      until: untilInput.value,
+      since: since,
+      until: until,
       limit: '1000'
     });
     if (channelSelect.value) params.set('channel', channelSelect.value);
@@ -152,9 +173,67 @@
     return Number(row.checkout_conversion_rate || row.conversion_rate || 0);
   }
 
+  function deltaHtml(current, previous, percentInput) {
+    previous = Number(previous || 0);
+    current = Number(current || 0);
+    if (!previous) return '<span class="delta flat">-</span>';
+    var diff = percentInput ? current - previous : (current - previous) / previous;
+    var label = percentInput ? ((diff * 100).toFixed(2) + 'pt') : (Math.abs(diff) * 100).toFixed(1) + '%';
+    var cls = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
+    var sign = diff > 0 ? '+' : diff < 0 ? '-' : '';
+    return '<span class="delta ' + cls + '">' + sign + label + '</span>';
+  }
+
+  function kpiCard(highlight, label, value, compareValue, formatter, foot, percentInput) {
+    var cmp = state.compareEnabled && state.compare && compareValue != null
+      ? '<div class="kcmp">对比：' + formatter(compareValue) + ' ' + deltaHtml(value, compareValue, percentInput) + '</div>'
+      : '';
+    return '<div class="kpi' + (highlight ? ' hi' : '') + '">' +
+      '<div class="kl">' + label + '</div>' +
+      '<div class="kv">' + formatter(value) + '</div>' +
+      cmp +
+      '<div class="kft">' + foot + '</div>' +
+    '</div>';
+  }
+
+  function linkKey(row) {
+    return [
+      row.store_label || row.store_key || '',
+      row.landing_page_type || '',
+      row.landing_page_path || row.url || '',
+      row.referring_channel || '',
+      row.traffic_type || ''
+    ].join('|');
+  }
+
+  function attachCompareRows(rows, compareRows) {
+    var map = new Map();
+    (compareRows || []).forEach(function(row) {
+      map.set(linkKey(row), row);
+    });
+    return (rows || []).map(function(row) {
+      var cmp = map.get(linkKey(row)) || {};
+      return Object.assign({}, row, {
+        compare_online_store_visitors: Number(cmp.online_store_visitors || 0),
+        compare_sessions: Number(cmp.sessions || 0),
+        compare_added_to_cart_rate: Number(cmp.added_to_cart_rate || 0),
+        compare_checkout_conversion_rate: Number(cmp.checkout_conversion_rate || 0),
+        compare_conversion_rate: Number(cmp.conversion_rate || 0)
+      });
+    });
+  }
+
   function renderKpis() {
     var totals = state.data?.totals || {};
+    var cmp = state.compare?.totals || {};
     var rows = state.rows || [];
+    kpiGrid.innerHTML =
+      kpiCard(true, 'Sessions', totals.sessions, cmp.sessions, formatNumber, '链接 ' + formatNumber(rows.length) + ' 条') +
+      kpiCard(false, '访客 UV', totals.online_store_visitors, cmp.online_store_visitors, formatNumber, 'Pageviews ' + formatNumber(totals.pageviews)) +
+      kpiCard(false, '到达结账', totals.sessions_that_reached_checkout, cmp.sessions_that_reached_checkout, formatNumber, '到达率 ' + formatRate(totals.reached_checkout_rate)) +
+      kpiCard(false, '完成结账', totals.sessions_that_completed_checkout, cmp.sessions_that_completed_checkout, formatNumber, '完成率 ' + formatRate(totals.completed_checkout_rate)) +
+      kpiCard(true, '转化率', totals.conversion_rate, cmp.conversion_rate, formatRate, '平均时长 ' + formatDuration(totals.average_session_duration), true);
+    return;
     kpiGrid.innerHTML =
       '<div class="kpi hi"><div class="kl">Sessions</div><div class="kv">' + formatNumber(totals.sessions) + '</div><div class="kft">链接 ' + formatNumber(rows.length) + ' 条</div></div>' +
       '<div class="kpi"><div class="kl">访客 UV</div><div class="kv">' + formatNumber(totals.online_store_visitors) + '</div><div class="kft">Pageviews ' + formatNumber(totals.pageviews) + '</div></div>' +
@@ -280,6 +359,28 @@
 
   function renderDailyChart() {
     var rows = state.data?.breakdowns?.daily || [];
+    var compareRows = state.compare?.breakdowns?.daily || [];
+    var datasets = [
+      { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), borderColor: '#3b6ef5', backgroundColor: 'rgba(59,110,245,.12)', borderWidth: 2, pointRadius: 2, tension: .35 },
+      { label: '访客', data: rows.map(function(row) { return row.online_store_visitors; }), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.12)', borderWidth: 2, pointRadius: 2, tension: .35 }
+    ];
+    if (state.compareEnabled && state.compare) {
+      datasets.push(
+        { label: 'Sessions 对比', data: compareRows.map(function(row) { return row.sessions; }), borderColor: '#3b6ef599', borderDash: [5, 3], borderWidth: 2, pointRadius: 1, tension: .35 },
+        { label: '访客 对比', data: compareRows.map(function(row) { return row.online_store_visitors; }), borderColor: '#05966999', borderDash: [5, 3], borderWidth: 2, pointRadius: 1, tension: .35 }
+      );
+    }
+    dailyLegend.innerHTML = '<span class="leg"><span class="ld" style="background:#3b6ef5"></span>Sessions</span><span class="leg"><span class="ld" style="background:#059669"></span>访客</span>' + (state.compareEnabled && state.compare ? '<span class="leg"><span class="ld" style="background:#facc15"></span>对比</span>' : '');
+    destroyChart('daily');
+    charts.daily = new Chart(document.getElementById('dailyChart'), {
+      type: 'line',
+      data: {
+        labels: rows.map(function(row) { return String(row.label).slice(5); }),
+        datasets: datasets
+      },
+      options: chartBaseOptions(formatNumber, false)
+    });
+    return;
     dailyLegend.innerHTML = '<span class="leg"><span class="ld" style="background:#3b6ef5"></span>Sessions</span><span class="leg"><span class="ld" style="background:#059669"></span>访客</span>';
     destroyChart('daily');
     charts.daily = new Chart(document.getElementById('dailyChart'), {
@@ -372,11 +473,11 @@
           '<td><span class="pt ' + typeInfo[1] + '">' + escapeHtml(typeInfo[0]) + '</span></td>' +
           '<td class="wrap-cell">' + escapeHtml(row.referring_channel || '-') + '</td>' +
           '<td class="wrap-cell">' + escapeHtml(row.traffic_type || '-') + '</td>' +
-          '<td class="r">' + formatNumber(row.online_store_visitors) + '</td>' +
-          '<td class="r"><strong>' + formatNumber(row.sessions) + '</strong></td>' +
+          '<td class="r">' + formatNumber(row.online_store_visitors) + (state.compareEnabled ? '<div class="kcmp">对比 ' + formatNumber(row.compare_online_store_visitors) + ' ' + deltaHtml(row.online_store_visitors, row.compare_online_store_visitors) + '</div>' : '') + '</td>' +
+          '<td class="r"><strong>' + formatNumber(row.sessions) + '</strong>' + (state.compareEnabled ? '<div class="kcmp">对比 ' + formatNumber(row.compare_sessions) + ' ' + deltaHtml(row.sessions, row.compare_sessions) + '</div>' : '') + '</td>' +
           '<td class="r">' + formatRate(row.added_to_cart_rate) + '</td>' +
           '<td class="r">' + formatRate(row.checkout_conversion_rate) + '</td>' +
-          '<td class="r">' + formatRate(row.conversion_rate) + '</td>' +
+          '<td class="r">' + formatRate(row.conversion_rate) + (state.compareEnabled ? '<div class="kcmp">对比 ' + formatRate(row.compare_conversion_rate) + ' ' + deltaHtml(row.conversion_rate, row.compare_conversion_rate, true) + '</div>' : '') + '</td>' +
         '</tr>';
       }).join('') + '</tbody>';
   }
@@ -417,9 +518,15 @@
       return;
     }
     setLoading(true, refresh ? '正在刷新链接流量数据...' : '正在读取链接流量数据...');
-    fetchData(refresh).then(function(data) {
+    var jobs = [fetchRange(sinceInput.value, untilInput.value, refresh)];
+    if (state.compareEnabled && compareSinceInput.value && compareUntilInput.value) {
+      jobs.push(fetchRange(compareSinceInput.value, compareUntilInput.value, refresh));
+    }
+    Promise.all(jobs).then(function(results) {
+      var data = results[0];
+      state.compare = state.compareEnabled ? (results[1] || null) : null;
       state.data = data;
-      state.rows = data.rows || [];
+      state.rows = attachCompareRows(data.rows || [], state.compare?.rows || []);
       state.filteredRows = state.rows;
       state.page = 1;
       renderChannelOptions(data);
@@ -427,6 +534,7 @@
       renderAll();
     }).catch(function(err) {
       state.data = null;
+      state.compare = null;
       state.rows = [];
       state.filteredRows = [];
       Object.keys(charts).forEach(destroyChart);
@@ -455,7 +563,23 @@
       loadData(false);
     });
     [sinceInput, untilInput].forEach(function(input) {
-      input.addEventListener('change', function() { loadData(false); });
+      input.addEventListener('change', function() {
+        setComparePreviousPeriod();
+        loadData(false);
+      });
+    });
+    compareToggle.addEventListener('click', function() {
+      state.compareEnabled = !state.compareEnabled;
+      compareToggle.classList.toggle('on', state.compareEnabled);
+      compareToggle.textContent = state.compareEnabled ? '取消对比时段' : '添加对比时段';
+      compareBox.style.display = state.compareEnabled ? 'flex' : 'none';
+      if (state.compareEnabled) setComparePreviousPeriod();
+      loadData(false);
+    });
+    [compareSinceInput, compareUntilInput].forEach(function(input) {
+      input.addEventListener('change', function() {
+        if (state.compareEnabled) loadData(false);
+      });
     });
     channelSelect.addEventListener('change', function() { loadData(false); });
     searchInput.addEventListener('input', applyFilter);
@@ -488,7 +612,7 @@
       }
     });
     pageSizeSelect.addEventListener('change', function() {
-      state.pageSize = Number(pageSizeSelect.value) || 5;
+      state.pageSize = Number(pageSizeSelect.value) || 8;
       state.page = 1;
       renderTable();
     });
