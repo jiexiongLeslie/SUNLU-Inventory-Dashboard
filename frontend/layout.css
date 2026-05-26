@@ -8,11 +8,11 @@ body.sunlu-layout {
   z-index: 3000;
   width: 248px;
   background:
-    radial-gradient(circle at 24% 8%, rgba(45, 212, 191, .34), transparent 28%),
-    linear-gradient(180deg, #1246d8 0%, #0f6bff 46%, #08306b 100%);
+    radial-gradient(circle at 24% 8%, rgba(45, 212, 191, .16), transparent 30%),
+    linear-gradient(180deg, #123a73 0%, #164b8f 48%, #0b294f 100%);
   color: #fff;
-  border-right: 1px solid rgba(255, 255, 255, .18);
-  box-shadow: 16px 0 38px rgba(37, 99, 235, .22);
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 14px 0 34px rgba(15, 35, 70, .16);
   display: flex;
   flex-direction: column;
 }
@@ -33,8 +33,8 @@ body.sunlu-layout {
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #fff 0%, #dff7ff 100%);
-  color: #0f6bff;
+  background: linear-gradient(135deg, #f7fbff 0%, #d9edf8 100%);
+  color: #1d5fae;
   display: grid;
   place-items: center;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .72);
@@ -54,7 +54,7 @@ body.sunlu-layout {
 .sunlu-sidebar__sub {
   margin-top: 2px;
   font-size: 11px;
-  color: rgba(255, 255, 255, .72);
+  color: rgba(255, 255, 255, .64);
 }
 
 .sunlu-sidebar__nav {
@@ -68,7 +68,7 @@ body.sunlu-layout {
   font-size: 11px;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, .58);
+  color: rgba(255, 255, 255, .48);
   font-weight: 800;
 }
 
@@ -80,7 +80,7 @@ body.sunlu-layout {
   padding: 9px 11px;
   margin: 2px 0;
   border-radius: 8px;
-  color: rgba(255, 255, 255, .84);
+  color: rgba(255, 255, 255, .78);
   text-decoration: none;
   font-size: 13px;
   font-weight: 700;
@@ -88,23 +88,23 @@ body.sunlu-layout {
 }
 
 .sunlu-nav-item:hover {
-  background: rgba(255, 255, 255, .13);
+  background: rgba(255, 255, 255, .09);
   color: #fff;
   transform: translateX(2px);
 }
 
 .sunlu-nav-item.active {
-  background: linear-gradient(90deg, rgba(255, 255, 255, .24), rgba(45, 212, 191, .14));
+  background: linear-gradient(90deg, rgba(255, 255, 255, .16), rgba(45, 212, 191, .09));
   color: #fff;
-  box-shadow: inset 3px 0 0 #2dd4bf, 0 10px 24px rgba(15, 107, 255, .22);
+  box-shadow: inset 3px 0 0 #7dd3fc, 0 10px 22px rgba(8, 47, 73, .16);
 }
 
 .sunlu-nav-icon {
   width: 22px;
   height: 22px;
   border-radius: 7px;
-  background: rgba(224, 247, 255, .2);
-  color: #dff7ff;
+  background: rgba(224, 247, 255, .14);
+  color: #cfe8f7;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
@@ -123,7 +123,7 @@ body.sunlu-layout {
 .sunlu-sidebar__foot {
   padding: 14px 18px 18px;
   border-top: 1px solid rgba(255, 255, 255, .1);
-  color: rgba(255, 255, 255, .68);
+  color: rgba(255, 255, 255, .58);
   font-size: 11px;
   line-height: 1.55;
 }
