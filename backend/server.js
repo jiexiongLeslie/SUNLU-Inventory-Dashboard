@@ -11,6 +11,7 @@ const META_FILE = path.join(ROOT_DIR, 'data', 'meta.json');
 const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
 const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
 const SHOPIFY_LINK_ANALYTICS_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_link_analytics_cache.json');
+const SHOPIFY_AMS_HEATER_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_ams_heater_sales_cache.json');
 const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
@@ -832,6 +833,130 @@ async function fetchShopifyLinkAnalyticsPayload(stores, config, options) {
   };
 }
 
+function createAmsSalesMetric(label) {
+  return {
+    label,
+    net_items_sold: 0,
+    total_sales: 0
+  };
+}
+
+function addAmsSalesMetric(target, row) {
+  target.net_items_sold += numberValue(row.net_items_sold);
+  target.total_sales += numberValue(row.total_sales);
+}
+
+function mapAmsSalesBreakdown(map) {
+  return [...map.values()].sort((a, b) => b.net_items_sold - a.net_items_sold || b.total_sales - a.total_sales);
+}
+
+function buildAmsSalesBreakdowns(rows) {
+  const daily = new Map();
+  const byStore = new Map();
+  const byCountry = new Map();
+  const bySku = new Map();
+
+  rows.forEach(row => {
+    const day = row.day || '';
+    const store = row.store_label || 'Unknown';
+    const country = row.shipping_country || 'Unknown';
+    const sku = row.product_variant_sku || 'Unknown';
+
+    if (day) {
+      if (!daily.has(day)) daily.set(day, createAmsSalesMetric(day));
+      addAmsSalesMetric(daily.get(day), row);
+    }
+    if (!byStore.has(store)) byStore.set(store, createAmsSalesMetric(store));
+    addAmsSalesMetric(byStore.get(store), row);
+    if (!byCountry.has(country)) byCountry.set(country, createAmsSalesMetric(country));
+    addAmsSalesMetric(byCountry.get(country), row);
+    if (!bySku.has(sku)) bySku.set(sku, createAmsSalesMetric(sku));
+    addAmsSalesMetric(bySku.get(sku), row);
+  });
+
+  return {
+    daily: [...daily.values()].sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    by_store: mapAmsSalesBreakdown(byStore),
+    by_country: mapAmsSalesBreakdown(byCountry),
+    by_sku: mapAmsSalesBreakdown(bySku)
+  };
+}
+
+function summarizeAmsSales(rows) {
+  return rows.reduce((total, row) => {
+    total.net_items_sold += numberValue(row.net_items_sold);
+    total.total_sales += numberValue(row.total_sales);
+    return total;
+  }, { net_items_sold: 0, total_sales: 0 });
+}
+
+async function fetchAmsHeaterSalesForStore(store, config, options) {
+  const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
+  const since = options.since;
+  const until = options.until;
+  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const shopifyql = `
+FROM sales
+  SHOW net_items_sold, total_sales
+  WHERE product_title CONTAINS 'AMS Heater'
+  GROUP BY day, shipping_country, product_variant_sku WITH GROUP_TOTALS, TOTALS,
+    CURRENCY 'USD'
+  TIMESERIES day
+  SINCE ${since} UNTIL ${until}
+  ORDER BY day ASC, shipping_country ASC, product_variant_sku ASC
+  LIMIT ${limit}
+`;
+  const rows = await runShopifyQl(store.shop, token, shopifyql);
+  const mappedRows = rows.map(row => ({
+    store_key: store.key,
+    store_label: store.label,
+    shop: store.shop,
+    day: row.day || '',
+    shipping_country: row.shipping_country || 'Unknown',
+    product_variant_sku: row.product_variant_sku || 'Unknown',
+    net_items_sold: numberValue(row.net_items_sold),
+    total_sales: numberValue(row.total_sales)
+  }));
+
+  return {
+    store: {
+      key: store.key,
+      label: store.label,
+      region: store.region,
+      public_domain: store.public_domain || store.shop,
+      shop: store.shop
+    },
+    raw_rows: rows.length,
+    rows: mappedRows,
+    totals: summarizeAmsSales(mappedRows)
+  };
+}
+
+async function fetchAmsHeaterSalesPayload(stores, config, options) {
+  const storeResults = [];
+  for (const store of stores) {
+    storeResults.push(await fetchAmsHeaterSalesForStore(store, config, options));
+  }
+  const rows = storeResults.flatMap(result => result.rows);
+  return {
+    generated_at: new Date().toISOString(),
+    since: options.since,
+    until: options.until,
+    limit: Number(options.limit) || 1000,
+    product_query: 'AMS Heater',
+    currency: 'USD',
+    stores: storeResults.map(result => ({
+      ...result.store,
+      raw_rows: result.raw_rows,
+      rows: result.rows.length,
+      totals: result.totals
+    })),
+    totals: summarizeAmsSales(rows),
+    breakdowns: buildAmsSalesBreakdowns(rows),
+    rows: rows.sort((a, b) => String(a.day).localeCompare(String(b.day)) || b.net_items_sold - a.net_items_sold)
+  };
+}
+
 function getShopifyCacheKey(stores) {
   return stores.map(store => store.key).sort().join('+') || 'all';
 }
@@ -887,6 +1012,36 @@ function saveShopifyLinkAnalyticsCacheEntry(cacheKey, payload) {
     payload
   };
   writeJsonFile(SHOPIFY_LINK_ANALYTICS_CACHE_FILE, cache);
+}
+
+function getShopifyAmsHeaterSalesCacheKey(stores, options) {
+  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
+  const since = options.since || 'unknown';
+  const until = options.until || 'unknown';
+  const limit = Number(options.limit) || 1000;
+  return [storePart, since, until, limit, 'ams-heater'].join('|');
+}
+
+function readShopifyAmsHeaterSalesCache() {
+  const cache = readJsonFile(SHOPIFY_AMS_HEATER_SALES_CACHE_FILE, { version: 1, entries: {} });
+  if (!cache || typeof cache !== 'object' || !cache.entries) {
+    return { version: 1, entries: {} };
+  }
+  return cache;
+}
+
+function getShopifyAmsHeaterSalesCacheEntry(cacheKey) {
+  return readShopifyAmsHeaterSalesCache().entries[cacheKey] || null;
+}
+
+function saveShopifyAmsHeaterSalesCacheEntry(cacheKey, payload) {
+  const cache = readShopifyAmsHeaterSalesCache();
+  cache.version = 1;
+  cache.entries[cacheKey] = {
+    saved_at: new Date().toISOString(),
+    payload
+  };
+  writeJsonFile(SHOPIFY_AMS_HEATER_SALES_CACHE_FILE, cache);
 }
 
 async function fetchShopifyInventoryPayload(selectedStores, config) {
@@ -1056,6 +1211,76 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
       return;
     }
     sendJson(res, 502, { error: e.message || 'Failed to fetch Shopify link analytics' });
+  }
+}
+
+async function handleShopifyAmsHeaterSales(parsedUrl, res) {
+  const config = getShopifyLinkAnalyticsConfig();
+  if (!config.clientId || !config.clientSecret) {
+    sendJson(res, 500, { error: 'Missing Shopify client_id/client_secret' });
+    return;
+  }
+
+  const storeParam = parsedUrl.query.store || 'ALL';
+  const stores = storeParam === 'ALL'
+    ? config.stores
+    : config.stores.filter(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
+  if (!stores.length) {
+    sendJson(res, 404, { error: 'No matching Shopify store configured' });
+    return;
+  }
+
+  const since = String(parsedUrl.query.since || '').trim();
+  const until = String(parsedUrl.query.until || '').trim();
+  if (!isValidDateString(since) || !isValidDateString(until)) {
+    sendJson(res, 400, { error: 'since/until must use YYYY-MM-DD format' });
+    return;
+  }
+  if (new Date(`${since}T00:00:00Z`) > new Date(`${until}T00:00:00Z`)) {
+    sendJson(res, 400, { error: 'since must be earlier than or equal to until' });
+    return;
+  }
+
+  const options = {
+    since,
+    until,
+    limit: parsedUrl.query.limit
+  };
+  const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
+  const cacheKey = getShopifyAmsHeaterSalesCacheKey(stores, options);
+  const cacheEntry = getShopifyAmsHeaterSalesCacheEntry(cacheKey);
+
+  if (!shouldRefresh && cacheEntry?.payload) {
+    sendJson(res, 200, {
+      ...cacheEntry.payload,
+      from_cache: true,
+      cache_key: cacheKey,
+      cached_at: cacheEntry.saved_at
+    });
+    return;
+  }
+
+  try {
+    const payload = await fetchAmsHeaterSalesPayload(stores, config, options);
+    saveShopifyAmsHeaterSalesCacheEntry(cacheKey, payload);
+    sendJson(res, 200, {
+      ...payload,
+      from_cache: false,
+      cache_key: cacheKey,
+      cached_at: new Date().toISOString()
+    });
+  } catch (e) {
+    if (cacheEntry?.payload) {
+      sendJson(res, 200, {
+        ...cacheEntry.payload,
+        from_cache: true,
+        cache_key: cacheKey,
+        cached_at: cacheEntry.saved_at,
+        warning: e.message || 'Refresh failed, returned cached AMS Heater sales'
+      });
+      return;
+    }
+    sendJson(res, 502, { error: e.message || 'Failed to fetch AMS Heater sales' });
   }
 }
 
@@ -1415,9 +1640,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pathname === '/api/shopify/ams-heater-sales' && req.method === 'GET') {
+    handleShopifyAmsHeaterSales(parsedUrl, res);
+    return;
+  }
+
   if (pathname === '/api/shopify/cache' && req.method === 'GET') {
     const cache = readShopifyCache();
     const linkCache = readShopifyLinkAnalyticsCache();
+    const amsCache = readShopifyAmsHeaterSalesCache();
     sendJson(res, 200, {
       entries: Object.keys(cache.entries).map(key => ({
         key,
@@ -1433,6 +1664,14 @@ const server = http.createServer((req, res) => {
         stores: linkCache.entries[key].payload?.stores || [],
         since: linkCache.entries[key].payload?.since || null,
         until: linkCache.entries[key].payload?.until || null
+      })),
+      ams_heater_sales_entries: Object.keys(amsCache.entries).map(key => ({
+        key,
+        saved_at: amsCache.entries[key].saved_at,
+        rows: amsCache.entries[key].payload?.rows?.length || 0,
+        stores: amsCache.entries[key].payload?.stores || [],
+        since: amsCache.entries[key].payload?.since || null,
+        until: amsCache.entries[key].payload?.until || null
       }))
     });
     return;

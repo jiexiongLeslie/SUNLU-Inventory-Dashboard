@@ -6,6 +6,7 @@
     { group: '核心看板', title: '库龄分析', desc: '库存结构和动销', href: '/inventory-age.html', icon: 'age' },
     { group: 'Shopify', title: 'Shopify 库存', desc: '店铺 SKU 库存', href: '/shopify.html', icon: 'box' },
     { group: 'Shopify', title: '链接访问量', desc: '站点链接数据', href: '/shopify-links.html', icon: 'link' },
+    { group: 'Shopify', title: 'AMS Heater 销售', desc: '5 站点 AMS Heater 销售', href: '/ams-heater-sales.html', icon: 'sales' },
     { group: '维护工具', title: 'SKU 映射', desc: '单品与套装规则', href: '/sku-mapping.html', icon: 'tag' },
     { group: '维护工具', title: '数据诊断', desc: '质量问题检查', href: '/quality.html', icon: 'check' }
   ];
@@ -15,6 +16,7 @@
     age: '<path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/><path d="M3 12h3M18 12h3"/>',
     box: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/>',
     link: '<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>',
+    sales: '<path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-4 3 2 4-7"/><path d="M17 6h1v1"/>',
     tag: '<path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><path d="M7 7h.01"/>',
     check: '<path d="M9 12l2 2 4-5"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>'
   };
