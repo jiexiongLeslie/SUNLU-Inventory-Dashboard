@@ -233,6 +233,34 @@
     }, {});
   }
 
+  function combinedBreakdownRows(primaryRows, compareRows, limit) {
+    var map = new Map();
+    (primaryRows || []).forEach(function(row) {
+      map.set(row.label, Object.assign({}, row, { compare: null }));
+    });
+    (compareRows || []).forEach(function(row) {
+      if (map.has(row.label)) {
+        map.get(row.label).compare = row;
+      } else {
+        map.set(row.label, Object.assign({}, row, {
+          sessions: 0,
+          online_store_visitors: 0,
+          pageviews: 0,
+          sessions_that_reached_checkout: 0,
+          sessions_that_completed_checkout: 0,
+          conversion_rate: 0,
+          checkout_conversion_rate: 0,
+          compare: row
+        }));
+      }
+    });
+    return Array.from(map.values()).sort(function(a, b) {
+      var av = Number(a.sessions || 0) + Number(a.compare?.sessions || 0);
+      var bv = Number(b.sessions || 0) + Number(b.compare?.sessions || 0);
+      return bv - av;
+    }).slice(0, limit);
+  }
+
   function renderKpis() {
     var totals = state.data?.totals || {};
     var cmp = state.compare?.totals || {};
@@ -253,7 +281,7 @@
   }
 
   function renderFunnel() {
-    var rows = state.data?.breakdowns?.by_store || [];
+    var rows = combinedBreakdownRows(state.data?.breakdowns?.by_store || [], state.compare?.breakdowns?.by_store || [], 12);
     funnelRange.textContent = (state.data?.since || '') + ' ~ ' + (state.data?.until || '') + (state.data?.channel ? ' · ' + state.data.channel : ' · 全部渠道');
     if (!rows.length) {
       funnelGrid.innerHTML = '<div class="empty">暂无数据</div>';
@@ -267,19 +295,23 @@
       return '<div class="fn-store">' +
         '<div class="fn-title"><span class="ld" style="background:' + color + '"></span>' + escapeHtml(row.label) + '</div>' +
         '<div class="fn-stages">' +
-          funnelRow('Sessions', row.sessions, 1, color, max) +
-          funnelRow('到达结账', row.sessions_that_reached_checkout, reachedPct, '#b45309', max) +
-          funnelRow('完成结账', row.sessions_that_completed_checkout, completedPct, '#059669', max) +
+          funnelRow('Sessions', row.sessions, 1, color, max, row.compare?.sessions) +
+          funnelRow('到达结账', row.sessions_that_reached_checkout, reachedPct, '#b45309', max, row.compare?.sessions_that_reached_checkout) +
+          funnelRow('完成结账', row.sessions_that_completed_checkout, completedPct, '#059669', max, row.compare?.sessions_that_completed_checkout) +
         '</div>' +
       '</div>';
     }).join('');
   }
 
-  function funnelRow(label, value, pct, color, max) {
+  function funnelRow(label, value, pct, color, max, compareValue) {
+    var compareLine = state.compareEnabled && state.compare && compareValue != null
+      ? '<div class="kcmp">对比 ' + formatNumber(compareValue || 0) + ' ' + deltaHtml(value, compareValue || 0) + '</div>'
+      : '';
     return '<div class="fn-row">' +
       '<div class="fn-lbl">' + label + '</div>' +
       '<div class="fn-bg"><div class="fn-fill" style="background:' + color + ';width:' + Math.max(2, value / max * 100) + '%"></div><span class="fn-num">' + formatNumber(value) + '</span></div>' +
       '<div class="fn-pct">' + Math.round(pct * 100) + '%</div>' +
+      compareLine +
     '</div>';
   }
 
@@ -300,7 +332,7 @@
   }
 
   function renderChannelChart() {
-    var rows = (state.data?.breakdowns?.by_channel || []).slice(0, 12);
+    var rows = combinedBreakdownRows(state.data?.breakdowns?.by_channel || [], state.compare?.breakdowns?.by_channel || [], 12);
     var cmpMap = compareBreakdownMap(['breakdowns', 'by_channel']);
     var datasets = [
       { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#3b6ef588', borderColor: '#3b6ef5', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
@@ -333,7 +365,7 @@
   }
 
   function renderTrafficChart() {
-    var rows = (state.data?.breakdowns?.by_traffic || []).slice(0, 8);
+    var rows = combinedBreakdownRows(state.data?.breakdowns?.by_traffic || [], state.compare?.breakdowns?.by_traffic || [], 8);
     var cmpMap = compareBreakdownMap(['breakdowns', 'by_traffic']);
     var datasets = [{ label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: colors, borderWidth: 0 }];
     if (state.compareEnabled && state.compare) {
@@ -347,17 +379,19 @@
     trafficChartLabel.textContent = rows.length + ' 种类型';
     destroyChart('traffic');
     charts.traffic = new Chart(document.getElementById('trafficChart'), {
-      type: 'doughnut',
+      type: state.compareEnabled && state.compare ? 'bar' : 'doughnut',
       data: {
         labels: rows.map(function(row) { return row.label; }),
         datasets: datasets
       },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } } }
+      options: state.compareEnabled && state.compare
+        ? chartBaseOptions(formatNumber, true)
+        : { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } } }
     });
   }
 
   function renderLandingChart() {
-    var rows = (state.data?.breakdowns?.by_type || []).slice(0, 10);
+    var rows = combinedBreakdownRows(state.data?.breakdowns?.by_type || [], state.compare?.breakdowns?.by_type || [], 10);
     var cmpMap = compareBreakdownMap(['breakdowns', 'by_type']);
     var datasets = [
       { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#05966988', borderColor: '#059669', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
