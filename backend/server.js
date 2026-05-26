@@ -613,6 +613,23 @@ function summarizeLinkAnalyticsTotals(storeResults) {
   });
 
   storeResults.forEach(result => {
+    if (result.channel) {
+      const row = result.totals || {};
+      const sessions = numberValue(row.sessions);
+      totals.online_store_visitors += numberValue(row.online_store_visitors);
+      totals.sessions += sessions;
+      totals.sessions_that_reached_checkout += numberValue(row.sessions_that_reached_checkout);
+      totals.sessions_that_reached_and_completed_checkout += numberValue(row.sessions_that_reached_and_completed_checkout);
+      totals.sessions_that_completed_checkout += numberValue(row.sessions_that_completed_checkout);
+      totals.pageviews += numberValue(row.pageviews);
+      totals.average_session_duration_weighted_sum += numberValue(row.average_session_duration) * sessions;
+      totals.average_session_duration_weight += sessions;
+      LINK_ANALYTICS_RATE_FIELDS.forEach(field => {
+        totals[`${field}_weighted_sum`] += numberValue(row[field]) * sessions;
+        totals[`${field}_weight`] += sessions;
+      });
+      return;
+    }
     const row = result.raw_first_row || {};
     const sessions = numberValue(row.sessions__totals);
     totals.online_store_visitors += numberValue(row.online_store_visitors__totals);
@@ -726,7 +743,9 @@ async function fetchShopifyLinkAnalytics(store, config, options) {
   const since = options.since;
   const until = options.until;
   const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
-  const shopifyql = `
+  const channel = String(options.channel || '').trim();
+  const channelFilter = channel ? `\n    AND referring_channel = '${channel.replace(/'/g, "\\'")}'` : '';
+  const createShopifyQl = filter => `
 FROM sessions
   SHOW online_store_visitors, sessions, sessions_that_reached_checkout,
     sessions_that_reached_and_completed_checkout, sessions_that_completed_checkout,
@@ -734,14 +753,17 @@ FROM sessions
     reached_checkout_rate, completed_checkout_rate, checkout_conversion_rate,
     conversion_rate
   WHERE landing_page_path IS NOT NULL
-    AND human_or_bot_session IN ('human', 'bot')
+    AND human_or_bot_session IN ('human', 'bot')${filter || ''}
   GROUP BY day, shop_name, landing_page_type, landing_page_path,
     referring_channel, traffic_type WITH TOTALS
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC
   LIMIT ${limit}
 `;
-  const rows = await runShopifyQl(store.shop, token, shopifyql);
+  const optionRows = channel
+    ? await runShopifyQl(store.shop, token, createShopifyQl(''))
+    : null;
+  const rows = await runShopifyQl(store.shop, token, createShopifyQl(channelFilter));
   const grouped = aggregateLinkAnalyticsRows(store, rows).sort((a, b) => b.sessions - a.sessions);
   const mapped = await Promise.all(grouped.map(async row => ({
     ...row,
@@ -760,7 +782,9 @@ FROM sessions
     since,
     until,
     limit,
-    raw_rows: rows.length,
+    channel,
+    raw_rows: optionRows ? optionRows.length : rows.length,
+    scoped_rows: rows.length,
     totals: {
       online_store_visitors: numberValue(first.online_store_visitors__totals),
       sessions: numberValue(first.sessions__totals),
@@ -778,6 +802,7 @@ FROM sessions
     },
     raw_first_row: first,
     breakdowns: buildLinkAnalyticsBreakdowns(store, rows),
+    channel_options: buildLinkAnalyticsBreakdowns(store, optionRows || rows).by_channel,
     rows: mapped
   };
 }
@@ -793,13 +818,16 @@ async function fetchShopifyLinkAnalyticsPayload(stores, config, options) {
     since: options.since,
     until: options.until,
     limit: Number(options.limit) || 1000,
+    channel: options.channel || '',
     stores: storeResults.map(result => ({
       ...result.store,
       raw_rows: result.raw_rows,
+      scoped_rows: result.scoped_rows,
       rows: result.rows.length
     })),
     totals: summarizeLinkAnalyticsTotals(storeResults),
     breakdowns: mergeLinkAnalyticsBreakdowns(storeResults),
+    channel_options: mergeBreakdownList(storeResults.map(result => result.channel_options || [])),
     rows: rows.sort((a, b) => b.sessions - a.sessions)
   };
 }
@@ -835,7 +863,8 @@ function getShopifyLinkAnalyticsCacheKey(stores, options) {
   const since = options.since || 'unknown';
   const until = options.until || 'unknown';
   const limit = Number(options.limit) || 1000;
-  return [storePart, since, until, limit].join('|');
+  const channel = options.channel || 'all_channels';
+  return [storePart, since, until, limit, channel].join('|');
 }
 
 function readShopifyLinkAnalyticsCache() {
@@ -989,7 +1018,8 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
   const options = {
     since,
     until,
-    limit: parsedUrl.query.limit
+    limit: parsedUrl.query.limit,
+    channel: String(parsedUrl.query.channel || '').trim()
   };
   const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
   const cacheKey = getShopifyLinkAnalyticsCacheKey(stores, options);

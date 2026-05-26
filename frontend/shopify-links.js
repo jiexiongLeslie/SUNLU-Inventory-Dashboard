@@ -15,6 +15,7 @@
   var compareSinceInput = document.getElementById('compareSinceInput');
   var compareUntilInput = document.getElementById('compareUntilInput');
   var limitSelect = document.getElementById('limitSelect');
+  var channelSelect = document.getElementById('channelSelect');
   var searchInput = document.getElementById('searchInput');
   var loadBtn = document.getElementById('loadBtn');
   var refreshBtn = document.getElementById('refreshBtn');
@@ -97,6 +98,7 @@
       until: until,
       limit: '1000'
     });
+    if (channelSelect.value) params.set('channel', channelSelect.value);
     if (refresh) params.set('refresh', '1');
     return fetch('/api/shopify/link-analytics?' + params.toString()).then(function(res) {
       return res.json().then(function(data) {
@@ -246,6 +248,25 @@
     });
   }
 
+  function renderChannelOptions(data) {
+    var selected = channelSelect.value;
+    var channels = (data?.channel_options || data?.breakdowns?.by_channel || [])
+      .map(function(item) { return item.label || 'Unknown'; })
+      .filter(Boolean);
+    var seen = {};
+    channels = channels.filter(function(channel) {
+      if (seen[channel]) return false;
+      seen[channel] = true;
+      return true;
+    }).sort(function(a, b) { return a.localeCompare(b); });
+    channelSelect.innerHTML = '<option value="">全部渠道（汇总所有访问量）</option>' + channels.map(function(channel) {
+      return '<option value="' + escapeHtml(channel) + '"' + (channel === selected ? ' selected' : '') + '>' + escapeHtml(channel) + '</option>';
+    }).join('');
+    if (selected && !seen[selected]) {
+      channelSelect.insertAdjacentHTML('beforeend', '<option value="' + escapeHtml(selected) + '" selected>' + escapeHtml(selected) + '</option>');
+    }
+  }
+
   function renderKpis() {
     var cur = state.current?.totals || {};
     var cmp = state.compare?.totals || {};
@@ -362,6 +383,7 @@
       var storeNames = (state.current.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
       meta.textContent = storeNames + ' · 当前 ' + state.current.since + ' 至 ' + state.current.until +
         ' · 对比 ' + state.compare.since + ' 至 ' + state.compare.until;
+      meta.textContent += ' · 渠道 ' + (state.current.channel || '全部渠道');
       if (state.current.cached_at || state.compare.cached_at) {
         meta.textContent += ' | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare);
       }
@@ -389,6 +411,7 @@
       state.compare = results[1];
       state.rows = combineRows(state.current.rows || [], state.compare.rows || []);
       state.page = 1;
+      renderChannelOptions(state.current);
       setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据 | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare));
       render();
     }).catch(function(err) {
@@ -411,6 +434,10 @@
   limitSelect.addEventListener('change', function() {
     state.page = 1;
     renderTable();
+  });
+  channelSelect.addEventListener('change', function() {
+    state.page = 1;
+    loadData(false);
   });
   pagerButtons.addEventListener('click', function(e) {
     var btn = e.target.closest('.page-btn');
