@@ -27,7 +27,7 @@
     compare: null,
     loading: false,
     page: 1,
-    pageSize: 50
+    pageSize: 8
   };
   var charts = {};
 

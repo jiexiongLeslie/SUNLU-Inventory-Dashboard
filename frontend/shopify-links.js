@@ -223,6 +223,16 @@
     });
   }
 
+  function compareBreakdownMap(keys) {
+    var rows = keys.reduce(function(value, key) {
+      return value?.[key];
+    }, state.compare) || [];
+    return rows.reduce(function(map, row) {
+      map[row.label] = row;
+      return map;
+    }, {});
+  }
+
   function renderKpis() {
     var totals = state.data?.totals || {};
     var cmp = state.compare?.totals || {};
@@ -291,16 +301,22 @@
 
   function renderChannelChart() {
     var rows = (state.data?.breakdowns?.by_channel || []).slice(0, 12);
+    var cmpMap = compareBreakdownMap(['breakdowns', 'by_channel']);
+    var datasets = [
+      { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#3b6ef588', borderColor: '#3b6ef5', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
+      { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#facc15', backgroundColor: 'rgba(250,204,21,.12)', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
+    ];
+    if (state.compareEnabled && state.compare) {
+      datasets.splice(1, 0, { label: 'Sessions 对比', data: rows.map(function(row) { return cmpMap[row.label]?.sessions || 0; }), backgroundColor: '#9ca3af55', borderColor: '#9ca3af', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' });
+      datasets.push({ label: 'CVR 对比', data: rows.map(function(row) { return cvr(cmpMap[row.label] || {}); }), type: 'line', borderColor: '#f59e0b99', borderDash: [5, 3], borderWidth: 2, pointRadius: 2, yAxisID: 'rate', tension: .3 });
+    }
     channelChartLabel.textContent = rows.length + ' 个渠道';
     destroyChart('channel');
     charts.channel = new Chart(document.getElementById('channelChart'), {
       type: 'bar',
       data: {
         labels: rows.map(function(row) { return shortLabel(row.label, 16); }),
-        datasets: [
-          { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#3b6ef588', borderColor: '#3b6ef5', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
-          { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#facc15', backgroundColor: 'rgba(250,204,21,.12)', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
-        ]
+        datasets: datasets
       },
       options: {
         responsive: true,
@@ -318,13 +334,23 @@
 
   function renderTrafficChart() {
     var rows = (state.data?.breakdowns?.by_traffic || []).slice(0, 8);
+    var cmpMap = compareBreakdownMap(['breakdowns', 'by_traffic']);
+    var datasets = [{ label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: colors, borderWidth: 0 }];
+    if (state.compareEnabled && state.compare) {
+      datasets.push({
+        label: 'Sessions 对比',
+        data: rows.map(function(row) { return cmpMap[row.label]?.sessions || 0; }),
+        backgroundColor: colors.map(function(color) { return color + '55'; }),
+        borderWidth: 0
+      });
+    }
     trafficChartLabel.textContent = rows.length + ' 种类型';
     destroyChart('traffic');
     charts.traffic = new Chart(document.getElementById('trafficChart'), {
       type: 'doughnut',
       data: {
         labels: rows.map(function(row) { return row.label; }),
-        datasets: [{ data: rows.map(function(row) { return row.sessions; }), backgroundColor: colors, borderWidth: 0 }]
+        datasets: datasets
       },
       options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } } }
     });
@@ -332,16 +358,22 @@
 
   function renderLandingChart() {
     var rows = (state.data?.breakdowns?.by_type || []).slice(0, 10);
+    var cmpMap = compareBreakdownMap(['breakdowns', 'by_type']);
+    var datasets = [
+      { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#05966988', borderColor: '#059669', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
+      { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#dc2626', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
+    ];
+    if (state.compareEnabled && state.compare) {
+      datasets.splice(1, 0, { label: 'Sessions 对比', data: rows.map(function(row) { return cmpMap[row.label]?.sessions || 0; }), backgroundColor: '#9ca3af55', borderColor: '#9ca3af', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' });
+      datasets.push({ label: 'CVR 对比', data: rows.map(function(row) { return cvr(cmpMap[row.label] || {}); }), type: 'line', borderColor: '#f59e0b99', borderDash: [5, 3], borderWidth: 2, pointRadius: 2, yAxisID: 'rate', tension: .3 });
+    }
     landingChartLabel.textContent = rows.length + ' 类页面';
     destroyChart('landing');
     charts.landing = new Chart(document.getElementById('landingChart'), {
       type: 'bar',
       data: {
         labels: rows.map(function(row) { return shortLabel(row.label, 16); }),
-        datasets: [
-          { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#05966988', borderColor: '#059669', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
-          { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#dc2626', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
-        ]
+        datasets: datasets
       },
       options: {
         responsive: true,
