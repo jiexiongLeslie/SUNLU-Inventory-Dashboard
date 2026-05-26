@@ -12,6 +12,7 @@ const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
 const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
 const SHOPIFY_LINK_ANALYTICS_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_link_analytics_cache.json');
 const SHOPIFY_AMS_HEATER_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_ams_heater_sales_cache.json');
+const SHOPIFY_DAILY_SKU_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_daily_sku_sales_cache.json');
 const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
@@ -957,6 +958,134 @@ async function fetchAmsHeaterSalesPayload(stores, config, options) {
   };
 }
 
+function createDailySkuSalesMetric(label) {
+  return {
+    label,
+    net_items_sold: 0,
+    total_sales: 0
+  };
+}
+
+function addDailySkuSalesMetric(target, row) {
+  target.net_items_sold += numberValue(row.net_items_sold);
+  target.total_sales += numberValue(row.total_sales);
+}
+
+function mapDailySkuSalesBreakdown(map) {
+  return [...map.values()].sort((a, b) => b.total_sales - a.total_sales || b.net_items_sold - a.net_items_sold);
+}
+
+function buildDailySkuSalesBreakdowns(rows) {
+  const daily = new Map();
+  const byStore = new Map();
+  const byCountry = new Map();
+  const byProduct = new Map();
+  const bySku = new Map();
+
+  rows.forEach(row => {
+    const day = row.day || '';
+    const store = row.store_label || row.shop_name || 'Unknown';
+    const country = row.shipping_country || 'Unknown';
+    const product = row.product_title || 'Unknown';
+    const sku = row.product_variant_sku || 'Unknown';
+
+    if (day) {
+      if (!daily.has(day)) daily.set(day, createDailySkuSalesMetric(day));
+      addDailySkuSalesMetric(daily.get(day), row);
+    }
+    if (!byStore.has(store)) byStore.set(store, createDailySkuSalesMetric(store));
+    addDailySkuSalesMetric(byStore.get(store), row);
+    if (!byCountry.has(country)) byCountry.set(country, createDailySkuSalesMetric(country));
+    addDailySkuSalesMetric(byCountry.get(country), row);
+    if (!byProduct.has(product)) byProduct.set(product, createDailySkuSalesMetric(product));
+    addDailySkuSalesMetric(byProduct.get(product), row);
+    if (!bySku.has(sku)) bySku.set(sku, createDailySkuSalesMetric(sku));
+    addDailySkuSalesMetric(bySku.get(sku), row);
+  });
+
+  return {
+    daily: [...daily.values()].sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    by_store: mapDailySkuSalesBreakdown(byStore),
+    by_country: mapDailySkuSalesBreakdown(byCountry),
+    by_product: mapDailySkuSalesBreakdown(byProduct),
+    by_sku: mapDailySkuSalesBreakdown(bySku)
+  };
+}
+
+function summarizeDailySkuSales(rows) {
+  return rows.reduce((total, row) => {
+    total.net_items_sold += numberValue(row.net_items_sold);
+    total.total_sales += numberValue(row.total_sales);
+    return total;
+  }, { net_items_sold: 0, total_sales: 0 });
+}
+
+async function fetchDailySkuSalesForStore(store, config, options) {
+  const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
+  const since = options.since;
+  const until = options.until;
+  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const shopifyql = `
+FROM sales
+  SHOW net_items_sold, total_sales
+  GROUP BY day, shop_name, shipping_country, product_title, product_variant_sku WITH GROUP_TOTALS,
+    TOTALS, CURRENCY 'USD'
+  SINCE ${since} UNTIL ${until}
+  ORDER BY day ASC, shop_name ASC, shipping_country ASC, product_title ASC, product_variant_sku ASC
+  LIMIT ${limit}
+`;
+  const rows = await runShopifyQl(store.shop, token, shopifyql);
+  const mappedRows = rows.map(row => ({
+    store_key: store.key,
+    store_label: store.label,
+    shop: store.shop,
+    shop_name: row.shop_name || store.label,
+    day: row.day || '',
+    shipping_country: row.shipping_country || 'Unknown',
+    product_title: row.product_title || 'Unknown',
+    product_variant_sku: row.product_variant_sku || 'Unknown',
+    net_items_sold: numberValue(row.net_items_sold),
+    total_sales: numberValue(row.total_sales)
+  }));
+
+  return {
+    store: {
+      key: store.key,
+      label: store.label,
+      region: store.region,
+      public_domain: store.public_domain || store.shop,
+      shop: store.shop
+    },
+    raw_rows: rows.length,
+    rows: mappedRows,
+    totals: summarizeDailySkuSales(mappedRows)
+  };
+}
+
+async function fetchDailySkuSalesPayload(stores, config, options) {
+  const storeResults = [];
+  for (const store of stores) {
+    storeResults.push(await fetchDailySkuSalesForStore(store, config, options));
+  }
+  const rows = storeResults.flatMap(result => result.rows);
+  return {
+    generated_at: new Date().toISOString(),
+    since: options.since,
+    until: options.until,
+    limit: Number(options.limit) || 1000,
+    currency: 'USD',
+    stores: storeResults.map(result => ({
+      ...result.store,
+      raw_rows: result.raw_rows,
+      rows: result.rows.length,
+      totals: result.totals
+    })),
+    totals: summarizeDailySkuSales(rows),
+    breakdowns: buildDailySkuSalesBreakdowns(rows),
+    rows: rows.sort((a, b) => String(a.day).localeCompare(String(b.day)) || b.total_sales - a.total_sales)
+  };
+}
+
 function getShopifyCacheKey(stores) {
   return stores.map(store => store.key).sort().join('+') || 'all';
 }
@@ -1042,6 +1171,36 @@ function saveShopifyAmsHeaterSalesCacheEntry(cacheKey, payload) {
     payload
   };
   writeJsonFile(SHOPIFY_AMS_HEATER_SALES_CACHE_FILE, cache);
+}
+
+function getShopifyDailySkuSalesCacheKey(stores, options) {
+  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
+  const since = options.since || 'unknown';
+  const until = options.until || 'unknown';
+  const limit = Number(options.limit) || 1000;
+  return [storePart, since, until, limit, 'daily-sku-sales'].join('|');
+}
+
+function readShopifyDailySkuSalesCache() {
+  const cache = readJsonFile(SHOPIFY_DAILY_SKU_SALES_CACHE_FILE, { version: 1, entries: {} });
+  if (!cache || typeof cache !== 'object' || !cache.entries) {
+    return { version: 1, entries: {} };
+  }
+  return cache;
+}
+
+function getShopifyDailySkuSalesCacheEntry(cacheKey) {
+  return readShopifyDailySkuSalesCache().entries[cacheKey] || null;
+}
+
+function saveShopifyDailySkuSalesCacheEntry(cacheKey, payload) {
+  const cache = readShopifyDailySkuSalesCache();
+  cache.version = 1;
+  cache.entries[cacheKey] = {
+    saved_at: new Date().toISOString(),
+    payload
+  };
+  writeJsonFile(SHOPIFY_DAILY_SKU_SALES_CACHE_FILE, cache);
 }
 
 async function fetchShopifyInventoryPayload(selectedStores, config) {
@@ -1281,6 +1440,76 @@ async function handleShopifyAmsHeaterSales(parsedUrl, res) {
       return;
     }
     sendJson(res, 502, { error: e.message || 'Failed to fetch AMS Heater sales' });
+  }
+}
+
+async function handleShopifyDailySkuSales(parsedUrl, res) {
+  const config = getShopifyLinkAnalyticsConfig();
+  if (!config.clientId || !config.clientSecret) {
+    sendJson(res, 500, { error: 'Missing Shopify client_id/client_secret' });
+    return;
+  }
+
+  const storeParam = parsedUrl.query.store || 'ALL';
+  const stores = storeParam === 'ALL'
+    ? config.stores
+    : config.stores.filter(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
+  if (!stores.length) {
+    sendJson(res, 404, { error: 'No matching Shopify store configured' });
+    return;
+  }
+
+  const since = String(parsedUrl.query.since || '').trim();
+  const until = String(parsedUrl.query.until || '').trim();
+  if (!isValidDateString(since) || !isValidDateString(until)) {
+    sendJson(res, 400, { error: 'since/until must use YYYY-MM-DD format' });
+    return;
+  }
+  if (new Date(`${since}T00:00:00Z`) > new Date(`${until}T00:00:00Z`)) {
+    sendJson(res, 400, { error: 'since must be earlier than or equal to until' });
+    return;
+  }
+
+  const options = {
+    since,
+    until,
+    limit: parsedUrl.query.limit
+  };
+  const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
+  const cacheKey = getShopifyDailySkuSalesCacheKey(stores, options);
+  const cacheEntry = getShopifyDailySkuSalesCacheEntry(cacheKey);
+
+  if (!shouldRefresh && cacheEntry?.payload) {
+    sendJson(res, 200, {
+      ...cacheEntry.payload,
+      from_cache: true,
+      cache_key: cacheKey,
+      cached_at: cacheEntry.saved_at
+    });
+    return;
+  }
+
+  try {
+    const payload = await fetchDailySkuSalesPayload(stores, config, options);
+    saveShopifyDailySkuSalesCacheEntry(cacheKey, payload);
+    sendJson(res, 200, {
+      ...payload,
+      from_cache: false,
+      cache_key: cacheKey,
+      cached_at: new Date().toISOString()
+    });
+  } catch (e) {
+    if (cacheEntry?.payload) {
+      sendJson(res, 200, {
+        ...cacheEntry.payload,
+        from_cache: true,
+        cache_key: cacheKey,
+        cached_at: cacheEntry.saved_at,
+        warning: e.message || 'Refresh failed, returned cached daily SKU sales'
+      });
+      return;
+    }
+    sendJson(res, 502, { error: e.message || 'Failed to fetch daily SKU sales' });
   }
 }
 
@@ -1645,10 +1874,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pathname === '/api/shopify/daily-sku-sales' && req.method === 'GET') {
+    handleShopifyDailySkuSales(parsedUrl, res);
+    return;
+  }
+
   if (pathname === '/api/shopify/cache' && req.method === 'GET') {
     const cache = readShopifyCache();
     const linkCache = readShopifyLinkAnalyticsCache();
     const amsCache = readShopifyAmsHeaterSalesCache();
+    const dailySkuCache = readShopifyDailySkuSalesCache();
     sendJson(res, 200, {
       entries: Object.keys(cache.entries).map(key => ({
         key,
@@ -1672,6 +1907,14 @@ const server = http.createServer((req, res) => {
         stores: amsCache.entries[key].payload?.stores || [],
         since: amsCache.entries[key].payload?.since || null,
         until: amsCache.entries[key].payload?.until || null
+      })),
+      daily_sku_sales_entries: Object.keys(dailySkuCache.entries).map(key => ({
+        key,
+        saved_at: dailySkuCache.entries[key].saved_at,
+        rows: dailySkuCache.entries[key].payload?.rows?.length || 0,
+        stores: dailySkuCache.entries[key].payload?.stores || [],
+        since: dailySkuCache.entries[key].payload?.since || null,
+        until: dailySkuCache.entries[key].payload?.until || null
       }))
     });
     return;
