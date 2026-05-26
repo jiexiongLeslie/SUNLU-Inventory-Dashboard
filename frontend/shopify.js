@@ -35,6 +35,7 @@
   var summaryBody = document.getElementById('summaryBody');
   var summaryCount = document.getElementById('summaryCount');
   var summarySearchInput = document.getElementById('summarySearchInput');
+  var summaryStockOnly = document.getElementById('summaryStockOnly');
   var summarySearchHint = document.getElementById('summarySearchHint');
 
   function setLoading(isLoading, text) {
@@ -516,6 +517,48 @@
     });
   }
 
+  function uniqueCount(items, picker) {
+    var set = new Set();
+    items.forEach(function(item) {
+      var value = picker(item);
+      if (value) set.add(value);
+    });
+    return set.size;
+  }
+
+  function applySummaryStockOnly(groups) {
+    if (!summaryStockOnly || !summaryStockOnly.checked) return groups;
+    return groups.map(function(group) {
+      var visibleItems = group.items.filter(function(item) {
+        return Number(item.inventory_quantity || 0) > 0;
+      });
+      var clone = Object.assign({}, group, {
+        items: visibleItems,
+        total_inventory: visibleItems.reduce(function(sum, item) {
+          return sum + Number(item.inventory_quantity || 0);
+        }, 0),
+        sku_count: uniqueCount(visibleItems, function(item) { return normalizeSku(item.sku); }),
+        color_count: uniqueCount(visibleItems, function(item) { return item.mapped_color || item.color || item.variant_title; }),
+        store_count: uniqueCount(visibleItems, function(item) { return item.store_label; }),
+        zero_count: 0,
+        low_count: visibleItems.filter(function(item) {
+          return Number(item.inventory_quantity || 0) > 0 && Number(item.inventory_quantity || 0) < 10;
+        }).length,
+        duplicate_count: visibleItems.filter(function(item) {
+          return (item.duplicate_count || 1) > 1 || (item.display_source_count || 1) > 1;
+        }).length,
+        conflict_count: visibleItems.filter(function(item) {
+          return item.inventory_conflict || item.global_inventory_conflict;
+        }).length,
+        matched_count: visibleItems.filter(function(item) { return item.matched_reference; }).length,
+        unmatched_count: visibleItems.filter(function(item) { return !item.matched_reference; }).length
+      });
+      return clone;
+    }).filter(function(group) {
+      return group.total_inventory > 0 && group.items.length > 0;
+    });
+  }
+
   function applyFilters() {
     var q = searchInput.value.trim().toLowerCase();
     var risk = riskSelect.value;
@@ -562,7 +605,8 @@
   }
 
   function renderSummary(records) {
-    var allGroups = buildProductSummary(records);
+    var stockOnly = summaryStockOnly && summaryStockOnly.checked;
+    var allGroups = applySummaryStockOnly(buildProductSummary(records));
     var summaryQ = summarySearchInput.value.trim().toLowerCase();
     var groups = allGroups.filter(function(group) {
       return groupMatchesSummarySearch(group, summaryQ);
@@ -572,7 +616,10 @@
     summaryCount.textContent = summaryQ
       ? formatNumber(groups.length) + ' / ' + formatNumber(allGroups.length) + ' 个产品'
       : formatNumber(referenceCount) + ' 个' + state.referenceRegion + '单品' + (extraCount ? ' + 疑似未匹配单品' : '');
-    summarySearchHint.textContent = summaryQ ? '已按产品汇总搜索过滤' : '按当前店铺口径过滤';
+    if (stockOnly && !summaryQ) {
+      summaryCount.textContent = formatNumber(groups.length) + ' / ' + formatNumber(referenceCount) + ' 个有库存产品';
+    }
+    summarySearchHint.textContent = (summaryQ ? '已按产品汇总搜索过滤' : '按当前店铺口径过滤') + (stockOnly ? ' · 仅有库存' : '');
 
     if (!groups.length) {
       summaryBody.innerHTML = '<tr><td colspan="8"><div class="empty">' + (summaryQ ? '没有匹配的产品汇总' : '没有匹配的数据') + '</div></td></tr>';
@@ -695,6 +742,9 @@
   riskSelect.addEventListener('change', applyFilters);
   searchInput.addEventListener('input', applyFilters);
   summarySearchInput.addEventListener('input', function() { renderSummary(state.filtered); });
+  if (summaryStockOnly) {
+    summaryStockOnly.addEventListener('change', function() { renderSummary(state.filtered); });
+  }
   document.querySelectorAll('.tab').forEach(function(tab) {
     tab.addEventListener('click', function() {
       switchView(this.dataset.view);
