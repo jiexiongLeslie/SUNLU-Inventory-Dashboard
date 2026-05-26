@@ -1,37 +1,56 @@
 (function() {
   'use strict';
 
+  var stores = [
+    { key: 'ALL', label: '全部', color: '#3b6ef5' },
+    { key: 'SHOPIFY_US_STORE', label: 'US', color: '#3b6ef5' },
+    { key: 'SHOPIFY_UK_STORE', label: 'UK', color: '#059669' },
+    { key: 'SHOPIFY_FR_STORE', label: 'FR', color: '#b45309' },
+    { key: 'SHOPIFY_DE_STORE', label: 'DE', color: '#dc2626' },
+    { key: 'SHOPIFY_IT_STORE', label: 'IT', color: '#805ad5' }
+  ];
+  var colors = ['#3b6ef5', '#059669', '#b45309', '#dc2626', '#805ad5', '#0f766e', '#dd6b20', '#4a5568', '#0891b2', '#7c3aed'];
+  var storeColors = stores.reduce(function(map, store) {
+    map[store.label] = store.color;
+    return map;
+  }, {});
   var state = {
-    current: null,
-    compare: null,
+    data: null,
     rows: [],
+    filteredRows: [],
+    store: 'ALL',
     page: 1,
-    loading: false
+    pageSize: 5,
+    loading: false,
+    sortCol: 'sessions',
+    sortDir: 'desc'
   };
+  var charts = {};
 
-  var storeSelect = document.getElementById('storeSelect');
   var sinceInput = document.getElementById('sinceInput');
   var untilInput = document.getElementById('untilInput');
-  var compareSinceInput = document.getElementById('compareSinceInput');
-  var compareUntilInput = document.getElementById('compareUntilInput');
-  var limitSelect = document.getElementById('limitSelect');
+  var storeTabs = document.getElementById('storeTabs');
   var channelSelect = document.getElementById('channelSelect');
   var searchInput = document.getElementById('searchInput');
   var loadBtn = document.getElementById('loadBtn');
   var refreshBtn = document.getElementById('refreshBtn');
   var statusText = document.getElementById('statusText');
-  var meta = document.getElementById('meta');
   var kpiGrid = document.getElementById('kpiGrid');
-  var tableCount = document.getElementById('tableCount');
-  var tableBody = document.getElementById('tableBody');
-  var pagerInfo = document.getElementById('pagerInfo');
-  var pagerButtons = document.getElementById('pagerButtons');
-  var trendHint = document.getElementById('trendHint');
-  var chartRefs = {};
-  var chartColors = ['#2f80ed', '#218a54', '#b7791f', '#c53030', '#805ad5', '#0f766e', '#dd6b20', '#4a5568'];
+  var funnelRange = document.getElementById('funnelRange');
+  var funnelGrid = document.getElementById('funnelGrid');
+  var channelChartLabel = document.getElementById('channelChartLabel');
+  var trafficChartLabel = document.getElementById('trafficChartLabel');
+  var tableLabel = document.getElementById('tableLabel');
+  var landingChartLabel = document.getElementById('landingChartLabel');
+  var dailyLegend = document.getElementById('dailyLegend');
+  var pageTable = document.getElementById('pageTable');
+  var prevPageBtn = document.getElementById('prevPageBtn');
+  var nextPageBtn = document.getElementById('nextPageBtn');
+  var pageText = document.getElementById('pageText');
+  var pageSizeSelect = document.getElementById('pageSizeSelect');
 
   function formatNumber(value) {
-    return Number(value || 0).toLocaleString('zh-CN');
+    return Math.round(Number(value || 0)).toLocaleString('zh-CN');
   }
 
   function formatRate(value) {
@@ -51,10 +70,6 @@
     });
   }
 
-  function toDate(value) {
-    return new Date(value + 'T00:00:00');
-  }
-
   function formatDate(date) {
     var y = date.getFullYear();
     var m = String(date.getMonth() + 1).padStart(2, '0');
@@ -62,26 +77,27 @@
     return y + '-' + m + '-' + d;
   }
 
-  function diffDays(start, end) {
-    return Math.round((toDate(end) - toDate(start)) / 86400000) + 1;
+  function dateAdd(date, days) {
+    var next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
   }
 
   function setDefaultDates() {
-    sinceInput.value = '2026-05-01';
-    untilInput.value = '2026-05-23';
-    syncCompareDates();
+    var now = new Date();
+    sinceInput.value = formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    untilInput.value = formatDate(now);
   }
 
-  function syncCompareDates() {
-    if (!sinceInput.value || !untilInput.value) return;
-    var days = diffDays(sinceInput.value, untilInput.value);
-    var currentStart = toDate(sinceInput.value);
-    var compareEnd = new Date(currentStart);
-    compareEnd.setDate(compareEnd.getDate() - 1);
-    var compareStart = new Date(compareEnd);
-    compareStart.setDate(compareStart.getDate() - days + 1);
-    compareSinceInput.value = formatDate(compareStart);
-    compareUntilInput.value = formatDate(compareEnd);
+  function setPreset(type) {
+    var now = new Date();
+    if (type === 'month') {
+      sinceInput.value = formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    } else {
+      sinceInput.value = formatDate(dateAdd(now, -Number(type) + 1));
+    }
+    untilInput.value = formatDate(now);
+    loadData(false);
   }
 
   function setLoading(isLoading, text) {
@@ -91,11 +107,11 @@
     statusText.textContent = text || (isLoading ? '正在加载...' : '准备就绪');
   }
 
-  function fetchRange(since, until, refresh) {
+  function fetchData(refresh) {
     var params = new URLSearchParams({
-      store: storeSelect.value,
-      since: since,
-      until: until,
+      store: state.store,
+      since: sinceInput.value,
+      until: untilInput.value,
       limit: '1000'
     });
     if (channelSelect.value) params.set('channel', channelSelect.value);
@@ -108,28 +124,23 @@
     });
   }
 
-  function rowKey(row) {
-    return [row.store_key || row.store_label || '', row.landing_page_type || '', row.landing_page_path || row.url].join('|');
+  function colorFor(label, index) {
+    return storeColors[label] || colors[index % colors.length];
   }
 
-  function deltaPct(current, previous) {
-    current = Number(current || 0);
-    previous = Number(previous || 0);
-    if (!previous && !current) return 0;
-    if (!previous) return 100;
-    return (current - previous) / previous * 100;
+  function destroyChart(name) {
+    if (charts[name]) {
+      charts[name].destroy();
+      charts[name] = null;
+    }
   }
 
-  function deltaClass(value) {
-    if (value > 0) return 'up';
-    if (value < 0) return 'down';
-    return '';
+  function chartTextColor() {
+    return '#9ca3af';
   }
 
-  function deltaText(current, previous) {
-    var pct = deltaPct(current, previous);
-    var sign = pct > 0 ? '+' : '';
-    return sign + pct.toFixed(1) + '%';
+  function chartGridColor() {
+    return 'rgba(0,0,0,.06)';
   }
 
   function shortLabel(value, max) {
@@ -137,115 +148,237 @@
     return value.length > max ? value.slice(0, max - 1) + '…' : value;
   }
 
-  function destroyChart(name) {
-    if (chartRefs[name]) {
-      chartRefs[name].destroy();
-      chartRefs[name] = null;
-    }
+  function cvr(row) {
+    return Number(row.checkout_conversion_rate || row.conversion_rate || 0);
   }
 
-  function chartBaseOptions(extra) {
-    return Object.assign({
+  function renderKpis() {
+    var totals = state.data?.totals || {};
+    var rows = state.rows || [];
+    kpiGrid.innerHTML =
+      '<div class="kpi hi"><div class="kl">Sessions</div><div class="kv">' + formatNumber(totals.sessions) + '</div><div class="kft">链接 ' + formatNumber(rows.length) + ' 条</div></div>' +
+      '<div class="kpi"><div class="kl">访客 UV</div><div class="kv">' + formatNumber(totals.online_store_visitors) + '</div><div class="kft">Pageviews ' + formatNumber(totals.pageviews) + '</div></div>' +
+      '<div class="kpi"><div class="kl">到达结账</div><div class="kv">' + formatNumber(totals.sessions_that_reached_checkout) + '</div><div class="kft">到达率 ' + formatRate(totals.reached_checkout_rate) + '</div></div>' +
+      '<div class="kpi"><div class="kl">完成结账</div><div class="kv">' + formatNumber(totals.sessions_that_completed_checkout) + '</div><div class="kft">完成率 ' + formatRate(totals.completed_checkout_rate) + '</div></div>' +
+      '<div class="kpi hi"><div class="kl">转化率</div><div class="kv">' + formatRate(totals.conversion_rate) + '</div><div class="kft">平均时长 ' + formatDuration(totals.average_session_duration) + '</div></div>';
+  }
+
+  function renderFunnel() {
+    var rows = state.data?.breakdowns?.by_store || [];
+    funnelRange.textContent = (state.data?.since || '') + ' ~ ' + (state.data?.until || '') + (state.data?.channel ? ' · ' + state.data.channel : ' · 全部渠道');
+    if (!rows.length) {
+      funnelGrid.innerHTML = '<div class="empty">暂无数据</div>';
+      return;
+    }
+    funnelGrid.innerHTML = rows.map(function(row, index) {
+      var max = Math.max(1, row.sessions || 0);
+      var reachedPct = row.sessions ? row.sessions_that_reached_checkout / row.sessions : 0;
+      var completedPct = row.sessions ? row.sessions_that_completed_checkout / row.sessions : 0;
+      var color = colorFor(row.label, index);
+      return '<div class="fn-store">' +
+        '<div class="fn-title"><span class="ld" style="background:' + color + '"></span>' + escapeHtml(row.label) + '</div>' +
+        '<div class="fn-stages">' +
+          funnelRow('Sessions', row.sessions, 1, color, max) +
+          funnelRow('到达结账', row.sessions_that_reached_checkout, reachedPct, '#b45309', max) +
+          funnelRow('完成结账', row.sessions_that_completed_checkout, completedPct, '#059669', max) +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function funnelRow(label, value, pct, color, max) {
+    return '<div class="fn-row">' +
+      '<div class="fn-lbl">' + label + '</div>' +
+      '<div class="fn-bg"><div class="fn-fill" style="background:' + color + ';width:' + Math.max(2, value / max * 100) + '%"></div><span class="fn-num">' + formatNumber(value) + '</span></div>' +
+      '<div class="fn-pct">' + Math.round(pct * 100) + '%</div>' +
+    '</div>';
+  }
+
+  function chartBaseOptions(tickFormatter, showLegend) {
+    return {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#4b5563', boxWidth: 10, font: { size: 11 } } },
-        tooltip: {
-          callbacks: {
-            label: function(ctx) {
-              return ' ' + ctx.dataset.label + ': ' + formatNumber(ctx.parsed.y == null ? ctx.parsed : ctx.parsed.y);
-            }
-          }
-        }
+        legend: { display: Boolean(showLegend), labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } },
+        tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + tickFormatter(ctx.raw); } } }
       },
       scales: {
-        x: { ticks: { color: '#6b7280', maxRotation: 0 }, grid: { color: '#edf2f7' } },
-        y: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } }
+        x: { ticks: { color: chartTextColor(), font: { size: 9 }, autoSkip: true, maxTicksLimit: 12, maxRotation: 25 }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: tickFormatter }, grid: { color: chartGridColor() } }
       }
-    }, extra || {});
+    };
   }
 
-  function renderCharts() {
-    if (typeof Chart === 'undefined' || !state.current) return;
-    var breakdowns = state.current.breakdowns || {};
-    var totals = state.current.totals || {};
-
-    destroyChart('trend');
-    var channels = (breakdowns.by_channel || []).slice(0, 10);
-    trendHint.textContent = channels.length + ' 个主要渠道';
-    chartRefs.trend = new Chart(document.getElementById('trendChart'), {
+  function renderChannelChart() {
+    var rows = (state.data?.breakdowns?.by_channel || []).slice(0, 12);
+    channelChartLabel.textContent = rows.length + ' 个渠道';
+    destroyChart('channel');
+    charts.channel = new Chart(document.getElementById('channelChart'), {
       type: 'bar',
       data: {
-        labels: channels.map(function(item) { return shortLabel(item.label, 18); }),
+        labels: rows.map(function(row) { return shortLabel(row.label, 16); }),
         datasets: [
-          { label: 'Sessions', data: channels.map(function(item) { return item.sessions; }), backgroundColor: '#2f80ed' },
-          { label: 'Pageviews', data: channels.map(function(item) { return item.pageviews; }), backgroundColor: 'rgba(33,138,84,.72)' }
+          { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#3b6ef588', borderColor: '#3b6ef5', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
+          { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#facc15', backgroundColor: 'rgba(250,204,21,.12)', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
         ]
       },
-      options: chartBaseOptions({
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } },
         scales: {
-          x: { ticks: { color: '#6b7280', maxRotation: 25 }, grid: { display: false } },
-          y: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } }
+          x: { ticks: { color: chartTextColor(), font: { size: 9 }, maxRotation: 30, minRotation: 20 }, grid: { display: false } },
+          sessions: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: formatNumber }, grid: { color: chartGridColor() } },
+          rate: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: chartTextColor(), font: { size: 9 }, callback: function(value) { return (value * 100).toFixed(1) + '%'; } } }
         }
-      })
-    });
-
-    destroyChart('store');
-    var stores = (breakdowns.by_store || []).slice(0, 8);
-    chartRefs.store = new Chart(document.getElementById('storeChart'), {
-      type: 'bar',
-      data: {
-        labels: stores.map(function(item) { return item.label; }),
-        datasets: [{ label: 'Sessions', data: stores.map(function(item) { return item.sessions; }), backgroundColor: chartColors }]
-      },
-      options: chartBaseOptions({ plugins: { legend: { display: false } } })
-    });
-
-    destroyChart('type');
-    var types = (breakdowns.by_type || []).slice(0, 7);
-    chartRefs.type = new Chart(document.getElementById('typeChart'), {
-      type: 'doughnut',
-      data: {
-        labels: types.map(function(item) { return shortLabel(item.label, 18); }),
-        datasets: [{ label: 'Sessions', data: types.map(function(item) { return item.sessions; }), backgroundColor: chartColors, borderWidth: 0 }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: '#4b5563', boxWidth: 10, font: { size: 11 } } } } }
-    });
-
-    destroyChart('funnel');
-    chartRefs.funnel = new Chart(document.getElementById('funnelChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Sessions', '到达结账', '完成结账'],
-        datasets: [{
-          label: '数量',
-          data: [totals.sessions || 0, totals.sessions_that_reached_checkout || 0, totals.sessions_that_completed_checkout || 0],
-          backgroundColor: ['#2f80ed', '#b7791f', '#218a54']
-        }]
-      },
-      options: chartBaseOptions({
-        indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } },
-          y: { ticks: { color: '#6b7280' }, grid: { display: false } }
-        }
-      })
+      }
     });
   }
 
-  function combineRows(currentRows, compareRows) {
-    var compareMap = {};
-    compareRows.forEach(function(row) {
-      compareMap[rowKey(row)] = row;
+  function renderTrafficChart() {
+    var rows = (state.data?.breakdowns?.by_traffic || []).slice(0, 8);
+    trafficChartLabel.textContent = rows.length + ' 种类型';
+    destroyChart('traffic');
+    charts.traffic = new Chart(document.getElementById('trafficChart'), {
+      type: 'doughnut',
+      data: {
+        labels: rows.map(function(row) { return row.label; }),
+        datasets: [{ data: rows.map(function(row) { return row.sessions; }), backgroundColor: colors, borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } } }
     });
-    return currentRows.map(function(row) {
-      var previous = compareMap[rowKey(row)] || {};
-      return Object.assign({}, row, {
-        compare_sessions: Number(previous.sessions || 0),
-        sessions_delta_pct: deltaPct(row.sessions, previous.sessions)
-      });
+  }
+
+  function renderLandingChart() {
+    var rows = (state.data?.breakdowns?.by_type || []).slice(0, 10);
+    landingChartLabel.textContent = rows.length + ' 类页面';
+    destroyChart('landing');
+    charts.landing = new Chart(document.getElementById('landingChart'), {
+      type: 'bar',
+      data: {
+        labels: rows.map(function(row) { return shortLabel(row.label, 16); }),
+        datasets: [
+          { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), backgroundColor: '#05966988', borderColor: '#059669', borderWidth: 1, borderRadius: 4, yAxisID: 'sessions' },
+          { label: 'CVR', data: rows.map(cvr), type: 'line', borderColor: '#dc2626', borderWidth: 2, pointRadius: 3, yAxisID: 'rate', tension: .3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } },
+        scales: {
+          x: { ticks: { color: chartTextColor(), font: { size: 9 }, maxRotation: 30, minRotation: 20 }, grid: { display: false } },
+          sessions: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: formatNumber }, grid: { color: chartGridColor() } },
+          rate: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: chartTextColor(), font: { size: 9 }, callback: function(value) { return (value * 100).toFixed(1) + '%'; } } }
+        }
+      }
     });
+  }
+
+  function renderDailyChart() {
+    var rows = state.data?.breakdowns?.daily || [];
+    dailyLegend.innerHTML = '<span class="leg"><span class="ld" style="background:#3b6ef5"></span>Sessions</span><span class="leg"><span class="ld" style="background:#059669"></span>访客</span>';
+    destroyChart('daily');
+    charts.daily = new Chart(document.getElementById('dailyChart'), {
+      type: 'line',
+      data: {
+        labels: rows.map(function(row) { return String(row.label).slice(5); }),
+        datasets: [
+          { label: 'Sessions', data: rows.map(function(row) { return row.sessions; }), borderColor: '#3b6ef5', backgroundColor: 'rgba(59,110,245,.12)', borderWidth: 2, pointRadius: 2, tension: .35 },
+          { label: '访客', data: rows.map(function(row) { return row.online_store_visitors; }), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.12)', borderWidth: 2, pointRadius: 2, tension: .35 }
+        ]
+      },
+      options: chartBaseOptions(formatNumber, false)
+    });
+  }
+
+  function pageTypeClass(type, path) {
+    var raw = String(type || '');
+    var p = String(path || '');
+    if (raw === 'Product' || p.indexOf('/products/') >= 0) return ['产品页', 'pt-prod'];
+    if (raw === 'Collection' || p.indexOf('/collections/') >= 0) return ['分类页', 'pt-coll'];
+    if (raw === 'Homepage' || p === '/') return ['首页', 'pt-home'];
+    if (raw.indexOf('Blog') >= 0 || p.indexOf('/blogs/') >= 0) return ['博客', 'pt-blog'];
+    if (raw === 'Cart' || p.indexOf('/cart') >= 0) return ['购物车', 'pt-cart'];
+    if (raw === 'Custom Page' || p.indexOf('/pages/') >= 0) return ['页面', 'pt-pg'];
+    return [raw || '其他', 'pt-oth'];
+  }
+
+  function matchesSearch(row, q) {
+    if (!q) return true;
+    return [row.title, row.url, row.store_label, row.landing_page_type, row.landing_page_path, row.referring_channel, row.traffic_type].join(' ').toLowerCase().indexOf(q) >= 0;
+  }
+
+  function compareRows(a, b) {
+    var col = state.sortCol;
+    var av = a[col];
+    var bv = b[col];
+    if (typeof av === 'string') {
+      return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    return state.sortDir === 'asc' ? Number(av || 0) - Number(bv || 0) : Number(bv || 0) - Number(av || 0);
+  }
+
+  function sortHeader(label, col, cls) {
+    var arrow = state.sortCol === col ? (state.sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+    return '<th class="' + (cls || '') + '" data-sort="' + col + '">' + label + arrow + '</th>';
+  }
+
+  function applyFilter() {
+    var q = searchInput.value.trim().toLowerCase();
+    state.filteredRows = state.rows.filter(function(row) { return matchesSearch(row, q); });
+    state.page = 1;
+    renderTable();
+  }
+
+  function renderTable() {
+    var rows = state.filteredRows.slice().sort(compareRows);
+    var totalPages = Math.max(1, Math.ceil(rows.length / state.pageSize));
+    if (state.page > totalPages) state.page = totalPages;
+    var start = (state.page - 1) * state.pageSize;
+    var pageRows = rows.slice(start, start + state.pageSize);
+    tableLabel.textContent = formatNumber(rows.length) + ' 条链接';
+    pageText.textContent = '第 ' + state.page + ' / ' + totalPages + ' 页';
+    prevPageBtn.disabled = state.loading || state.page <= 1;
+    nextPageBtn.disabled = state.loading || state.page >= totalPages;
+    if (!pageRows.length) {
+      pageTable.innerHTML = '<tbody><tr><td><div class="empty">暂无匹配数据</div></td></tr></tbody>';
+      return;
+    }
+    pageTable.innerHTML = '<thead><tr>' +
+      '<th style="width:34px">#</th>' +
+      sortHeader('站点', 'store_label') +
+      sortHeader('标题', 'title') +
+      sortHeader('链接', 'url') +
+      sortHeader('类型', 'landing_page_type') +
+      sortHeader('渠道', 'referring_channel') +
+      sortHeader('流量类型', 'traffic_type') +
+      sortHeader('访客', 'online_store_visitors', 'r') +
+      sortHeader('Sessions', 'sessions', 'r') +
+      sortHeader('加购率', 'added_to_cart_rate', 'r') +
+      sortHeader('结账转化率', 'checkout_conversion_rate', 'r') +
+      sortHeader('转化率', 'conversion_rate', 'r') +
+    '</tr></thead><tbody>' +
+      pageRows.map(function(row, index) {
+        var typeInfo = pageTypeClass(row.landing_page_type, row.landing_page_path);
+        return '<tr>' +
+          '<td style="color:var(--t3)">' + (start + index + 1) + '</td>' +
+          '<td>' + escapeHtml(row.store_label || '-') + '</td>' +
+          '<td><div class="link-title">' + escapeHtml(row.title || '-') + '</div></td>' +
+          '<td><a class="url" href="' + escapeHtml(row.url || '#') + '" target="_blank" rel="noreferrer">' + escapeHtml(row.url || '-') + '</a></td>' +
+          '<td><span class="pt ' + typeInfo[1] + '">' + escapeHtml(typeInfo[0]) + '</span></td>' +
+          '<td class="wrap-cell">' + escapeHtml(row.referring_channel || '-') + '</td>' +
+          '<td class="wrap-cell">' + escapeHtml(row.traffic_type || '-') + '</td>' +
+          '<td class="r">' + formatNumber(row.online_store_visitors) + '</td>' +
+          '<td class="r"><strong>' + formatNumber(row.sessions) + '</strong></td>' +
+          '<td class="r">' + formatRate(row.added_to_cart_rate) + '</td>' +
+          '<td class="r">' + formatRate(row.checkout_conversion_rate) + '</td>' +
+          '<td class="r">' + formatRate(row.conversion_rate) + '</td>' +
+        '</tr>';
+      }).join('') + '</tbody>';
   }
 
   function renderChannelOptions(data) {
@@ -259,7 +392,7 @@
       seen[channel] = true;
       return true;
     }).sort(function(a, b) { return a.localeCompare(b); });
-    channelSelect.innerHTML = '<option value="">全部渠道（汇总所有访问量）</option>' + channels.map(function(channel) {
+    channelSelect.innerHTML = '<option value="">全部渠道</option>' + channels.map(function(channel) {
       return '<option value="' + escapeHtml(channel) + '"' + (channel === selected ? ' selected' : '') + '>' + escapeHtml(channel) + '</option>';
     }).join('');
     if (selected && !seen[selected]) {
@@ -267,188 +400,102 @@
     }
   }
 
-  function renderKpis() {
-    var cur = state.current?.totals || {};
-    var cmp = state.compare?.totals || {};
-    var items = [
-      ['总访客', cur.online_store_visitors, cmp.online_store_visitors],
-      ['Sessions', cur.sessions, cmp.sessions],
-      ['到达结账', cur.sessions_that_reached_checkout, cmp.sessions_that_reached_checkout],
-      ['到达并完成结账', cur.sessions_that_reached_and_completed_checkout, cmp.sessions_that_reached_and_completed_checkout],
-      ['完成结账', cur.sessions_that_completed_checkout, cmp.sessions_that_completed_checkout],
-      ['Pageviews', cur.pageviews, cmp.pageviews],
-      ['跳出率', cur.bounce_rate, cmp.bounce_rate, 'rate'],
-      ['平均时长', cur.average_session_duration, cmp.average_session_duration, 'duration'],
-      ['加购率', cur.added_to_cart_rate, cmp.added_to_cart_rate, 'rate'],
-      ['到达结账率', cur.reached_checkout_rate, cmp.reached_checkout_rate, 'rate'],
-      ['完成结账率', cur.completed_checkout_rate, cmp.completed_checkout_rate, 'rate'],
-      ['结账转化率', cur.checkout_conversion_rate, cmp.checkout_conversion_rate, 'rate'],
-      ['转化率', cur.conversion_rate, cmp.conversion_rate, 'rate']
-    ];
-    kpiGrid.innerHTML = items.map(function(item) {
-      var pct = deltaPct(item[1], item[2]);
-      var value = item[3] === 'rate' ? formatRate(item[1]) : item[3] === 'duration' ? formatDuration(item[1]) : formatNumber(item[1]);
-      return '<div class="kpi"><div class="label">' + escapeHtml(item[0]) + '</div>' +
-        '<div class="value">' + value + '</div>' +
-        '<div class="delta ' + deltaClass(pct) + '">环比 ' + deltaText(item[1], item[2]) + '</div></div>';
-    }).join('');
-  }
-
-  function matchesSearch(row, q) {
-    if (!q) return true;
-    return [
-      row.title,
-      row.url,
-      row.store_label,
-      row.landing_page_type,
-      row.landing_page_path,
-      row.referring_channel,
-      row.traffic_type
-    ].join(' ').toLowerCase().indexOf(q) >= 0;
-  }
-
-  function renderPager(total, pageSize) {
-    var totalPages = Math.max(1, Math.ceil(total / pageSize));
-    if (state.page > totalPages) state.page = totalPages;
-    var start = total ? (state.page - 1) * pageSize + 1 : 0;
-    var end = Math.min(total, state.page * pageSize);
-    pagerInfo.textContent = formatNumber(start) + '-' + formatNumber(end) + ' / ' + formatNumber(total);
-
-    var buttons = [
-      '<button type="button" class="page-btn" data-page="' + (state.page - 1) + '"' + (state.page <= 1 ? ' disabled' : '') + '>上一页</button>'
-    ];
-    var from = Math.max(1, state.page - 2);
-    var to = Math.min(totalPages, state.page + 2);
-    if (from > 1) {
-      buttons.push('<button type="button" class="page-btn" data-page="1">1</button>');
-      if (from > 2) buttons.push('<button type="button" class="page-btn" disabled>...</button>');
-    }
-    for (var page = from; page <= to; page += 1) {
-      buttons.push('<button type="button" class="page-btn ' + (page === state.page ? 'active' : '') + '" data-page="' + page + '">' + page + '</button>');
-    }
-    if (to < totalPages) {
-      if (to < totalPages - 1) buttons.push('<button type="button" class="page-btn" disabled>...</button>');
-      buttons.push('<button type="button" class="page-btn" data-page="' + totalPages + '">' + totalPages + '</button>');
-    }
-    buttons.push('<button type="button" class="page-btn" data-page="' + (state.page + 1) + '"' + (state.page >= totalPages ? ' disabled' : '') + '>下一页</button>');
-    pagerButtons.innerHTML = buttons.join('');
-  }
-
-  function renderTable() {
-    var q = searchInput.value.trim().toLowerCase();
-    var rows = state.rows.filter(function(row) { return matchesSearch(row, q); });
-    var pageSize = Number(limitSelect.value) || 5;
-    var totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
-    if (state.page > totalPages) state.page = totalPages;
-    var offset = (state.page - 1) * pageSize;
-    tableCount.textContent = formatNumber(rows.length) + ' 条';
-    renderPager(rows.length, pageSize);
-    if (!rows.length) {
-      tableBody.innerHTML = '<tr><td colspan="21"><div class="empty">没有匹配的数据</div></td></tr>';
-      return;
-    }
-    tableBody.innerHTML = rows.slice(offset, offset + pageSize).map(function(row, index) {
-      var pctClass = deltaClass(row.sessions_delta_pct);
-      return '<tr>' +
-        '<td class="rank">' + (offset + index + 1) + '</td>' +
-        '<td><span class="type">' + escapeHtml(row.store_label || '-') + '</span></td>' +
-        '<td class="title">' + escapeHtml(row.title || '-') + '</td>' +
-        '<td><a class="url" href="' + escapeHtml(row.url) + '" target="_blank" rel="noreferrer">' + escapeHtml(row.url) + '</a></td>' +
-        '<td><span class="type">' + escapeHtml(row.landing_page_type || '-') + '</span></td>' +
-        '<td>' + escapeHtml(row.referring_channel || '-') + '</td>' +
-        '<td>' + escapeHtml(row.traffic_type || '-') + '</td>' +
-        '<td class="number">' + formatNumber(row.online_store_visitors) + '</td>' +
-        '<td class="number">' + formatNumber(row.sessions) + '</td>' +
-        '<td class="number"><span class="delta ' + pctClass + '">' + deltaText(row.sessions, row.compare_sessions) + '</span><div class="muted">对比 ' + formatNumber(row.compare_sessions) + '</div></td>' +
-        '<td class="number">' + formatNumber(row.sessions_that_reached_checkout) + '</td>' +
-        '<td class="number">' + formatNumber(row.sessions_that_reached_and_completed_checkout) + '</td>' +
-        '<td class="number">' + formatNumber(row.sessions_that_completed_checkout) + '</td>' +
-        '<td class="number">' + formatNumber(row.pageviews) + '</td>' +
-        '<td class="number">' + formatRate(row.bounce_rate) + '</td>' +
-        '<td class="number">' + formatDuration(row.average_session_duration) + '</td>' +
-        '<td class="number">' + formatRate(row.added_to_cart_rate) + '</td>' +
-        '<td class="number">' + formatRate(row.reached_checkout_rate) + '</td>' +
-        '<td class="number">' + formatRate(row.completed_checkout_rate) + '</td>' +
-        '<td class="number">' + formatRate(row.checkout_conversion_rate) + '</td>' +
-        '<td class="number">' + formatRate(row.conversion_rate) + '</td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  function render() {
+  function renderAll() {
     renderKpis();
-    renderCharts();
-    renderTable();
-    if (state.current) {
-      var storeNames = (state.current.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
-      meta.textContent = storeNames + ' · 当前 ' + state.current.since + ' 至 ' + state.current.until +
-        ' · 对比 ' + state.compare.since + ' 至 ' + state.compare.until;
-      meta.textContent += ' · 渠道 ' + (state.current.channel || '全部渠道');
-      if (state.current.cached_at || state.compare.cached_at) {
-        meta.textContent += ' | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare);
-      }
-    }
-  }
-
-  function cacheLabel(data) {
-    if (!data || !data.cached_at) return '';
-    var label = data.from_cache ? '缓存' : '已刷新';
-    return label + ' ' + new Date(data.cached_at).toLocaleString('zh-CN');
+    renderFunnel();
+    renderChannelChart();
+    renderTrafficChart();
+    renderLandingChart();
+    renderDailyChart();
+    applyFilter();
   }
 
   function loadData(refresh) {
     if (state.loading) return;
-    if (!sinceInput.value || !untilInput.value || !compareSinceInput.value || !compareUntilInput.value) {
+    if (!sinceInput.value || !untilInput.value) {
       setLoading(false, '请先选择完整日期');
       return;
     }
-    setLoading(true, refresh ? '正在刷新 Shopify 链接访问量...' : '正在读取链接访问量缓存...');
-    Promise.all([
-      fetchRange(sinceInput.value, untilInput.value, refresh),
-      fetchRange(compareSinceInput.value, compareUntilInput.value, refresh)
-    ]).then(function(results) {
-      state.current = results[0];
-      state.compare = results[1];
-      state.rows = combineRows(state.current.rows || [], state.compare.rows || []);
+    setLoading(true, refresh ? '正在刷新链接流量数据...' : '正在读取链接流量数据...');
+    fetchData(refresh).then(function(data) {
+      state.data = data;
+      state.rows = data.rows || [];
+      state.filteredRows = state.rows;
       state.page = 1;
-      renderChannelOptions(state.current);
-      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据 | 当前' + cacheLabel(state.current) + ' | 对比' + cacheLabel(state.compare));
-      render();
+      renderChannelOptions(data);
+      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条链接数据' + (data.from_cache ? '（缓存）' : ''));
+      renderAll();
     }).catch(function(err) {
-      state.current = null;
-      state.compare = null;
+      state.data = null;
       state.rows = [];
-      renderTable();
+      state.filteredRows = [];
+      Object.keys(charts).forEach(destroyChart);
       kpiGrid.innerHTML = '';
-      Object.keys(chartRefs).forEach(destroyChart);
+      funnelGrid.innerHTML = '<div class="empty">加载失败：' + escapeHtml(err.message) + '</div>';
+      pageTable.innerHTML = '';
       setLoading(false, '加载失败：' + err.message);
     });
   }
 
-  sinceInput.addEventListener('change', syncCompareDates);
-  untilInput.addEventListener('change', syncCompareDates);
-  searchInput.addEventListener('input', function() {
-    state.page = 1;
-    renderTable();
-  });
-  limitSelect.addEventListener('change', function() {
-    state.page = 1;
-    renderTable();
-  });
-  channelSelect.addEventListener('change', function() {
-    state.page = 1;
-    loadData(false);
-  });
-  pagerButtons.addEventListener('click', function(e) {
-    var btn = e.target.closest('.page-btn');
-    if (!btn || btn.disabled || !btn.dataset.page) return;
-    state.page = Number(btn.dataset.page) || 1;
-    renderTable();
-  });
-  loadBtn.addEventListener('click', function() { loadData(false); });
-  refreshBtn.addEventListener('click', function() { loadData(true); });
+  function renderStoreTabs() {
+    storeTabs.innerHTML = stores.map(function(store) {
+      return '<button class="store-tab' + (store.key === state.store ? ' on' : '') + '" data-store="' + store.key + '">' + store.label + '</button>';
+    }).join('');
+  }
+
+  function bindEvents() {
+    document.querySelectorAll('.preset').forEach(function(btn) {
+      btn.addEventListener('click', function() { setPreset(btn.dataset.preset); });
+    });
+    storeTabs.addEventListener('click', function(event) {
+      var btn = event.target.closest('[data-store]');
+      if (!btn) return;
+      state.store = btn.dataset.store;
+      renderStoreTabs();
+      loadData(false);
+    });
+    [sinceInput, untilInput].forEach(function(input) {
+      input.addEventListener('change', function() { loadData(false); });
+    });
+    channelSelect.addEventListener('change', function() { loadData(false); });
+    searchInput.addEventListener('input', applyFilter);
+    loadBtn.addEventListener('click', function() { loadData(false); });
+    refreshBtn.addEventListener('click', function() { loadData(true); });
+    pageTable.addEventListener('click', function(event) {
+      var th = event.target.closest('[data-sort]');
+      if (!th) return;
+      var col = th.dataset.sort;
+      if (state.sortCol === col) {
+        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.sortCol = col;
+        state.sortDir = ['store_label', 'title', 'url', 'landing_page_type', 'referring_channel', 'traffic_type'].indexOf(col) >= 0 ? 'asc' : 'desc';
+      }
+      state.page = 1;
+      renderTable();
+    });
+    prevPageBtn.addEventListener('click', function() {
+      if (state.page > 1) {
+        state.page -= 1;
+        renderTable();
+      }
+    });
+    nextPageBtn.addEventListener('click', function() {
+      var totalPages = Math.max(1, Math.ceil((state.filteredRows || []).length / state.pageSize));
+      if (state.page < totalPages) {
+        state.page += 1;
+        renderTable();
+      }
+    });
+    pageSizeSelect.addEventListener('change', function() {
+      state.pageSize = Number(pageSizeSelect.value) || 5;
+      state.page = 1;
+      renderTable();
+    });
+  }
 
   setDefaultDates();
-  renderTable();
+  renderStoreTabs();
+  bindEvents();
   loadData(false);
 })();

@@ -3,210 +3,219 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SUNLU 链接访问量统计</title>
+<title>SUNLU 链接流量分析</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/layout.css">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --primary: #16325c;
-  --accent: #2f80ed;
-  --bg: #f4f7fb;
+  --bg: #f0f3f9;
   --card: #fff;
-  --text: #172033;
-  --muted: #6b7280;
-  --border: #dfe7f1;
-  --ok: #218a54;
-  --warn: #b7791f;
-  --bad: #c53030;
+  --muted: #f4f7fc;
+  --hover: #eef1f8;
+  --br: #e3e7f0;
+  --br2: #d0d6e6;
+  --t1: #111827;
+  --t2: #4b5563;
+  --t3: #9ca3af;
+  --ac: #3b6ef5;
+  --ac-bg: #eef2ff;
+  --ac-t: #2952cc;
+  --gn: #059669;
+  --gn-bg: #ecfdf5;
+  --rd: #dc2626;
+  --rd-bg: #fef2f2;
+  --am: #b45309;
+  --am-bg: #fffbeb;
+  --grid: rgba(0,0,0,.06);
+  --sh: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --r: 10px;
+  --r-sm: 6px;
 }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif; background: var(--bg); color: var(--text); }
-.container { max-width: 1680px; margin: 0 auto; padding: 24px; }
-.header { background: var(--primary); color: #fff; padding: 24px 28px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 18px; }
-.header h1 { font-size: 24px; font-weight: 760; }
-.header .meta { color: rgba(255,255,255,.78); font-size: 13px; margin-top: 4px; }
-.header a { color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,.4); padding: 8px 12px; border-radius: 6px; font-size: 13px; }
-.header strong { color: #fff; }
-.toolbar { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field label { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-select, input { height: 36px; border: 1px solid var(--border); border-radius: 6px; background: #fff; padding: 0 10px; font-size: 13px; color: var(--text); }
-input[type="search"] { min-width: 280px; flex: 1; }
-button { height: 36px; border: 0; border-radius: 6px; background: var(--primary); color: #fff; padding: 0 16px; font-weight: 700; cursor: pointer; }
-button.secondary { background: #eef3f8; color: var(--primary); border: 1px solid var(--border); }
-button:disabled { opacity: .55; cursor: wait; }
-.status { font-size: 13px; color: var(--muted); padding-bottom: 9px; }
-.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-.kpi .label { font-size: 12px; color: var(--muted); margin-bottom: 5px; }
-.kpi .value { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
-.kpi .delta { margin-top: 5px; font-size: 12px; color: var(--muted); }
-.delta.up { color: var(--ok); }
-.delta.down { color: var(--bad); }
-.charts { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-bottom: 16px; }
-.chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; min-height: 320px; }
-.chart-card.wide { grid-column: span 1; }
-.chart-head { padding: 13px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); gap: 10px; }
-.chart-head h2 { font-size: 15px; }
-.chart-head span { color: var(--muted); font-size: 12px; }
-.chart-body { height: 280px; padding: 14px 16px; }
-.chart-body.short { height: 250px; }
-.panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.panel-head { padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); gap: 12px; }
-.panel-head h2 { font-size: 15px; }
-.count { font-size: 12px; color: var(--muted); background: #eef3f8; border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
-.pager { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border); background: #fbfdff; flex-wrap: wrap; }
-.pager-info { color: var(--muted); font-size: 12px; }
-.pager-buttons { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.page-btn { min-width: 32px; height: 30px; border: 1px solid var(--border); background: #fff; color: var(--text); border-radius: 6px; padding: 0 10px; font-size: 12px; }
-.page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.page-btn:disabled { opacity: .45; cursor: not-allowed; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--t1); font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; font-size: 13px; line-height: 1.5; }
+button, input, select { font-family: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+.page { max-width: 1760px; margin: 0 auto; padding: 14px 18px 24px; }
+.topbar { min-height: 54px; background: var(--card); border: 1px solid var(--br); border-radius: var(--r); display: flex; align-items: center; flex-wrap: wrap; padding: 10px 14px; gap: 8px; box-shadow: var(--sh); margin-bottom: 12px; }
+.topbar h1 { font-size: 14px; font-weight: 700; white-space: nowrap; margin-right: 4px; }
+.sep { width: 1px; height: 22px; background: var(--br); }
+.date-box { display: flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: var(--r-sm); border: 1px solid var(--br2); background: var(--muted); color: var(--t2); font-size: 11px; white-space: nowrap; }
+.date-box input, .date-box select { height: 25px; border: 1px solid var(--br); border-radius: 4px; padding: 0 6px; font-size: 11px; color: var(--t1); background: var(--card); }
+.preset, .store-tab { padding: 5px 10px; font-size: 11px; border-radius: var(--r-sm); border: 1px solid var(--br); background: transparent; color: var(--t2); transition: all .12s; white-space: nowrap; }
+.preset:hover, .store-tab:hover { border-color: var(--ac); color: var(--ac); }
+.store-tab.on { background: var(--ac-bg); border-color: var(--ac); color: var(--ac-t); font-weight: 700; }
+.search-inp { height: 31px; min-width: 240px; padding: 4px 10px; font-size: 11px; border: 1px solid var(--br); border-radius: var(--r-sm); background: var(--muted); color: var(--t1); outline: none; }
+.search-inp:focus { border-color: var(--ac); }
+.action { padding: 6px 14px; border-radius: var(--r-sm); background: var(--ac); color: #fff; font-size: 12px; font-weight: 700; margin-left: auto; }
+.action.secondary { margin-left: 0; background: var(--muted); color: var(--ac-t); border: 1px solid var(--br2); }
+.action:disabled { opacity: .55; cursor: wait; }
+.status { color: var(--t3); font-size: 11px; min-width: 170px; }
+.store-tabs { display: flex; gap: 3px; flex-wrap: wrap; }
+.krow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 12px; }
+.kpi { background: var(--card); border: 1px solid var(--br); border-radius: var(--r); padding: 12px 14px; box-shadow: var(--sh); min-height: 92px; }
+.kpi.hi { border-color: var(--ac); background: var(--ac-bg); }
+.kl { font-size: 10px; color: var(--t3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+.kv { font-size: 20px; font-weight: 800; line-height: 1.05; letter-spacing: 0; }
+.kft { margin-top: 7px; font-size: 10px; color: var(--t3); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.row { display: grid; gap: 12px; margin-bottom: 12px; }
+.c1 { grid-template-columns: 1fr; }
+.c2 { grid-template-columns: 1fr 1fr; }
+.card { background: var(--card); border: 1px solid var(--br); border-radius: var(--r); padding: 14px 16px; box-shadow: var(--sh); }
+.ch { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.ct { font-size: 11px; font-weight: 800; color: var(--t2); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+.bdg { font-size: 10px; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--br); background: var(--muted); color: var(--t3); white-space: nowrap; }
+.bdg.ac { background: var(--ac-bg); border-color: var(--ac); color: var(--ac-t); }
+.ml { margin-left: auto; }
+.note { font-size: 10px; color: var(--t3); margin-bottom: 8px; line-height: 1.6; }
+.cw { position: relative; width: 100%; }
+.h220 { height: 220px; }
+.h240 { height: 240px; }
+.h260 { height: 260px; }
+.leg-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.leg { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--t2); }
+.ld { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.funnel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; padding-top: 4px; }
+.fn-store { margin-bottom: 2px; }
+.fn-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; color: var(--t1); margin-bottom: 8px; }
+.fn-stages { display: flex; flex-direction: column; gap: 5px; }
+.fn-row { display: flex; align-items: center; gap: 9px; }
+.fn-lbl { width: 76px; font-size: 9px; color: var(--t3); text-align: right; flex-shrink: 0; }
+.fn-bg { flex: 1; height: 20px; background: var(--muted); border-radius: 5px; overflow: hidden; position: relative; border: 1px solid var(--br); }
+.fn-fill { height: 100%; border-radius: 4px; transition: width .4s ease; }
+.fn-num { position: absolute; right: 7px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 800; }
+.fn-pct { width: 50px; font-size: 10px; text-align: right; color: var(--t2); flex-shrink: 0; font-weight: 700; }
 .table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; min-width: 2100px; }
-th, td { padding: 10px 12px; border-bottom: 1px solid #edf2f7; font-size: 13px; text-align: left; vertical-align: top; }
-th { background: #f8fafc; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
-tr:hover td { background: #f8fafc; }
-.rank { width: 54px; color: var(--muted); font-weight: 800; }
-.title { font-weight: 750; max-width: 430px; }
-.url { color: var(--accent); text-decoration: none; word-break: break-all; }
-.type { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; background: #eef3f8; color: var(--muted); }
-.number { font-weight: 750; text-align: right; white-space: nowrap; }
-.muted { color: var(--muted); }
-.empty { padding: 40px; text-align: center; color: var(--muted); }
-@media (max-width: 980px) {
-  .container { padding: 12px; }
-  .header { align-items: flex-start; flex-direction: column; }
-  .charts { grid-template-columns: 1fr; }
-  input[type="search"] { min-width: 100%; }
+table.dt { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 980px; }
+.dt th { padding: 7px 9px; font-size: 9px; font-weight: 800; color: var(--t3); text-transform: uppercase; letter-spacing: .07em; border-bottom: 2px solid var(--br); text-align: left; white-space: nowrap; cursor: pointer; user-select: none; }
+.dt th.r, .dt td.r { text-align: right; }
+.dt th:hover { color: var(--ac); }
+.dt td { padding: 7px 9px; border-bottom: 1px solid var(--muted); color: var(--t1); vertical-align: middle; white-space: nowrap; }
+.dt tbody tr:hover td { background: var(--hover); }
+.link-title { font-weight: 700; max-width: 320px; white-space: normal; line-height: 1.35; }
+.url { color: var(--ac); text-decoration: none; word-break: break-all; white-space: normal; line-height: 1.35; }
+.wrap-cell { max-width: 240px; white-space: normal !important; line-height: 1.35; color: var(--t2); }
+.pt { display: inline-flex; align-items: center; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+.pt-prod { background: #dbeafe; color: #1e40af; }
+.pt-coll { background: #d1fae5; color: #065f46; }
+.pt-pg { background: #fef3c7; color: #92400e; }
+.pt-home { background: #ede9fe; color: #5b21b6; }
+.pt-blog { background: #fee2e2; color: #991b1b; }
+.pt-cart { background: #fce7f3; color: #9d174d; }
+.pt-oth { background: #f3f4f6; color: #374151; }
+.pager { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-top: 10px; font-size: 11px; color: var(--t2); }
+.pager button { min-width: 28px; height: 26px; padding: 0 7px; border: 1px solid var(--br); border-radius: 4px; color: var(--t2); }
+.pager button:disabled { opacity: .35; cursor: default; }
+.pager select { height: 26px; border: 1px solid var(--br); border-radius: 4px; background: var(--card); color: var(--t2); font-size: 11px; }
+.empty { padding: 36px; text-align: center; color: var(--t3); }
+@media (max-width: 1100px) {
+  .krow { grid-template-columns: repeat(2, 1fr); }
+  .c2 { grid-template-columns: 1fr; }
+  .action { margin-left: 0; }
+}
+@media (max-width: 720px) {
+  .page { padding: 10px; }
+  .krow { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <header class="header">
-    <div>
-      <h1>链接访问量统计</h1>
-      <div class="meta" id="meta">5 站点 · <strong>访客 / Sessions / Pageviews / 转化率</strong></div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <a href="/shopify.html">Shopify 库存</a>
-      <a href="/inventory-age.html">库龄分析</a>
-      <a href="/">返回独立站库存看板</a>
-    </div>
-  </header>
-
-  <section class="toolbar">
-    <div class="field">
-      <label for="storeSelect">店铺</label>
-      <select id="storeSelect">
-        <option value="ALL">全部站点</option>
-        <option value="SHOPIFY_US_STORE">US - store.sunlu.com</option>
-        <option value="SHOPIFY_UK_STORE">UK - uk.store.sunlu.com</option>
-        <option value="SHOPIFY_FR_STORE">FR - fr.store.sunlu.com</option>
-        <option value="SHOPIFY_DE_STORE">DE - de.store.sunlu.com</option>
-        <option value="SHOPIFY_IT_STORE">IT - it.store.sunlu.com</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="sinceInput">当前开始</label>
+<main class="page">
+  <section class="topbar">
+    <h1>链接流量分析</h1>
+    <div class="sep"></div>
+    <div class="date-box">
+      主时段
       <input id="sinceInput" type="date">
-    </div>
-    <div class="field">
-      <label for="untilInput">当前结束</label>
+      <span>至</span>
       <input id="untilInput" type="date">
     </div>
-    <div class="field">
-      <label for="compareSinceInput">对比开始</label>
-      <input id="compareSinceInput" type="date">
+    <button class="preset" data-preset="month">本月</button>
+    <button class="preset" data-preset="30">近30天</button>
+    <button class="preset" data-preset="7">近7天</button>
+    <div class="sep"></div>
+    <div class="store-tabs" id="storeTabs"></div>
+    <div class="date-box">
+      渠道
+      <select id="channelSelect"><option value="">全部渠道</option></select>
     </div>
-    <div class="field">
-      <label for="compareUntilInput">对比结束</label>
-      <input id="compareUntilInput" type="date">
-    </div>
-    <div class="field">
-      <label for="limitSelect">数量</label>
-      <select id="limitSelect">
-        <option value="5">Top 5</option>
-        <option value="10">Top 10</option>
-        <option value="20">Top 20</option>
-        <option value="50">Top 50</option>
-        <option value="100">Top 100</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="channelSelect">渠道</label>
-      <select id="channelSelect">
-        <option value="">全部渠道</option>
-      </select>
-    </div>
-    <input id="searchInput" type="search" placeholder="搜索标题、链接、类型">
-    <button id="loadBtn">加载数据</button>
-    <button id="refreshBtn" class="secondary">刷新并更新缓存</button>
+    <input id="searchInput" class="search-inp" type="search" placeholder="搜索链接、标题、类型">
+    <button class="action" id="loadBtn">加载数据</button>
+    <button class="action secondary" id="refreshBtn">刷新缓存</button>
     <span class="status" id="statusText">准备就绪</span>
   </section>
 
-  <section class="kpis" id="kpiGrid"></section>
+  <section class="krow" id="kpiGrid"></section>
 
-  <section class="charts">
-    <div class="chart-card">
-      <div class="chart-head"><h2>渠道 Sessions Top</h2><span id="trendHint">按 referring_channel</span></div>
-      <div class="chart-body"><canvas id="trendChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-head"><h2>站点 Sessions 分布</h2><span>按站点汇总</span></div>
-      <div class="chart-body"><canvas id="storeChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-head"><h2>Landing Page 类型占比</h2><span>按 Sessions</span></div>
-      <div class="chart-body short"><canvas id="typeChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-head"><h2>转化漏斗</h2><span>Sessions → Checkout → Complete</span></div>
-      <div class="chart-body short"><canvas id="funnelChart"></canvas></div>
+  <section class="row c1">
+    <div class="card">
+      <div class="ch">
+        <span class="ct">转化漏斗</span>
+        <span class="bdg ac ml" id="funnelRange"></span>
+      </div>
+      <div class="funnel-grid" id="funnelGrid"></div>
     </div>
   </section>
 
-  <section class="panel">
-    <div class="panel-head">
-      <h2>链接访问量排行</h2>
-      <span class="count" id="tableCount">0 条</span>
+  <section class="row c2">
+    <div class="card">
+      <div class="ch">
+        <span class="ct">渠道 Sessions vs CVR</span>
+        <span class="bdg ml" id="channelChartLabel"></span>
+        <span class="bdg ac">响应日期 + 店铺 + 渠道筛选</span>
+      </div>
+      <p class="note">柱：Sessions | 折线：结账转化率 | 体量大且转化高的渠道优先关注</p>
+      <div class="cw h240"><canvas id="channelChart"></canvas></div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="rank">排名</th>
-            <th>站点</th>
-            <th>标题</th>
-            <th>链接</th>
-            <th>类型</th>
-            <th>渠道</th>
-            <th>流量类型</th>
-            <th class="number">访客</th>
-            <th class="number">Sessions</th>
-            <th class="number">Sessions 环比</th>
-            <th class="number">到达结账</th>
-            <th class="number">到达并完成结账</th>
-            <th class="number">完成结账</th>
-            <th class="number">Pageviews</th>
-            <th class="number">跳出率</th>
-            <th class="number">平均时长</th>
-            <th class="number">加购率</th>
-            <th class="number">到达结账率</th>
-            <th class="number">完成结账率</th>
-            <th class="number">结账转化率</th>
-            <th class="number">转化率</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-    <div class="pager">
-      <div class="pager-info" id="pagerInfo">0-0 / 0</div>
-      <div class="pager-buttons" id="pagerButtons"></div>
+    <div class="card">
+      <div class="ch">
+        <span class="ct">流量类型占比</span>
+        <span class="bdg ml" id="trafficChartLabel"></span>
+      </div>
+      <div class="cw h260"><canvas id="trafficChart"></canvas></div>
     </div>
   </section>
-</div>
+
+  <section class="row c1">
+    <div class="card">
+      <div class="ch">
+        <span class="ct">各链接页面流量明细</span>
+        <span class="bdg ml" id="tableLabel"></span>
+        <span class="bdg">响应日期 + 店铺 + 渠道筛选</span>
+      </div>
+      <div class="table-wrap"><table class="dt" id="pageTable"></table></div>
+      <div class="pager">
+        <button id="prevPageBtn">&lt;</button>
+        <span id="pageText">第 1 / 1 页</span>
+        <button id="nextPageBtn">&gt;</button>
+        <span>每页</span>
+        <select id="pageSizeSelect">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="row c2">
+    <div class="card">
+      <div class="ch">
+        <span class="ct">落地页类型 Sessions & CVR</span>
+        <span class="bdg ml" id="landingChartLabel"></span>
+      </div>
+      <div class="cw h240"><canvas id="landingChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="ch">
+        <span class="ct">每日 Sessions 趋势</span>
+        <div class="leg-row ml" id="dailyLegend"></div>
+      </div>
+      <div class="cw h240"><canvas id="dailyChart"></canvas></div>
+    </div>
+  </section>
+</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/shopify-links.js"></script>
