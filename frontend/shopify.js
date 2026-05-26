@@ -605,20 +605,31 @@
     });
   }
 
-  function formatPrice(value) {
+  function currencyInfo(entry) {
+    var text = [
+      entry && entry.store_key,
+      entry && entry.store_label,
+      entry && entry.shop
+    ].join(' ').toUpperCase();
+    if (/UK|UNITED KINGDOM|GB/.test(text)) return { symbol: '£', cls: 'gbp' };
+    if (/DE|FR|IT|EU|EUROPE|欧洲|歐洲/.test(text)) return { symbol: '€', cls: 'eur' };
+    return { symbol: '$', cls: 'usd' };
+  }
+
+  function formatPrice(value, entry) {
     if (value === '' || value == null) return '-';
     var num = Number(value);
-    return Number.isFinite(num) ? '$' + num.toFixed(2) : String(value);
+    var info = currencyInfo(entry || {});
+    return Number.isFinite(num) ? info.symbol + num.toFixed(2) : info.symbol + String(value);
   }
 
   function priceSummary(entries) {
     var prices = Array.from(new Set(entries.map(function(entry) {
-      return String(entry.price == null ? '' : entry.price).trim();
+      return String(entry.price == null ? '' : entry.price).trim() ? formatPrice(entry.price, entry) : '';
     }).filter(Boolean)));
     if (!prices.length) return '<span class="badge warn">缺价格</span>';
-    if (prices.length === 1) return '<span class="price-pill">' + formatPrice(prices[0]) + '</span>';
-    var nums = prices.map(Number).filter(Number.isFinite).sort(function(a, b) { return a - b; });
-    var label = nums.length ? ('$' + nums[0].toFixed(2) + ' - $' + nums[nums.length - 1].toFixed(2)) : prices.join(' / ');
+    if (prices.length === 1) return '<span class="price-pill">' + escapeHtml(prices[0]) + '</span>';
+    var label = prices.slice(0, 3).join(' / ') + (prices.length > 3 ? ' +' + (prices.length - 3) : '');
     return '<span class="badge warn">多价格</span> <span class="price-pill">' + escapeHtml(label) + '</span>';
   }
 
@@ -675,18 +686,19 @@
           return String(a.store_label).localeCompare(String(b.store_label)) || Number(b.inventory_quantity || 0) - Number(a.inventory_quantity || 0);
         })
         .map(function(entry) {
+          var currency = currencyInfo(entry);
           var linkText = entry.url ? escapeHtml(entry.product_title || entry.handle || entry.url) : escapeHtml(entry.product_title || '-');
           var link = entry.url
             ? '<a href="' + escapeHtml(entry.url) + '" target="_blank" rel="noreferrer">' + linkText + '</a>'
             : linkText;
           return '<tr>' +
-            '<td>' + escapeHtml(entry.store_label || '-') + '<div class="muted">' + escapeHtml(entry.shop || '') + '</div></td>' +
-            '<td class="link-cell">' + link + '<div class="muted">' + escapeHtml(entry.handle || '') + '</div></td>' +
-            '<td>' + escapeHtml(entry.color || '-') + '<div class="muted">' + escapeHtml(entry.variant_title || '') + '</div></td>' +
+            '<td><span class="store-pill">' + escapeHtml(entry.store_label || '-') + '</span><div class="source-meta">' + escapeHtml(entry.shop || '') + '</div></td>' +
+            '<td class="link-cell"><div class="source-title">' + link + '</div><div class="source-meta">' + escapeHtml(entry.handle || '') + '</div></td>' +
+            '<td><span class="variant-chip">' + escapeHtml(entry.color || '-') + '</span><div class="source-meta">' + escapeHtml(entry.variant_title || '') + '</div></td>' +
             '<td class="sku">' + escapeHtml(entry.sku || group.display_sku) + '</td>' +
-            '<td><span class="price-pill">' + formatPrice(entry.price) + '</span></td>' +
-            '<td class="number">' + formatNumber(entry.inventory_quantity) + '</td>' +
-            '<td>' + escapeHtml(entry.status || '-') + '</td>' +
+            '<td><span class="price-pill ' + currency.cls + '">' + formatPrice(entry.price, entry) + '</span></td>' +
+            '<td><span class="inventory-pill">' + formatNumber(entry.inventory_quantity) + '</span></td>' +
+            '<td><span class="status-dot">' + escapeHtml(entry.status || '-') + '</span></td>' +
           '</tr>';
         }).join('');
       return head + rows;

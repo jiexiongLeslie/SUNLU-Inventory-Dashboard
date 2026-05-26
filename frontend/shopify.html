@@ -79,11 +79,25 @@ tr:hover td { background: #f8fafc; }
 .detail-row.show { display: table-row; }
 .detail-cell { padding: 0; background: #f8fafc; }
 .detail-inner { margin: 0 12px 12px 34px; border-left: 3px solid var(--accent); background: #fff; border-radius: 0 8px 8px 0; overflow: hidden; }
-.detail-inner table { min-width: 860px; }
-.sku-group { background: #f8fbff; }
-.sku-group td { border-bottom-color: #dbeafe; }
+.detail-inner table { min-width: 1040px; }
+.detail-inner th { background: #f0f7ff; color: #38608f; }
+.detail-inner td { vertical-align: middle; }
+.detail-inner tbody tr:not(.sku-group):hover td { background: #fbfdff; }
+.sku-group { background: linear-gradient(90deg, #eff6ff, #f8fbff); }
+.sku-group td { border-bottom-color: #cfe1ff; padding-top: 13px; padding-bottom: 13px; }
 .sku-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.price-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 8px; background: #eef7ff; color: var(--primary); font-size: 11px; font-weight: 750; }
+.sku-line .sku { font-size: 13px; font-weight: 800; color: #0f3f8a; }
+.store-pill { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; height: 24px; padding: 0 9px; border-radius: 999px; background: #e8f2ff; color: var(--primary); font-size: 12px; font-weight: 800; }
+.source-title { font-weight: 750; color: var(--text); max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.source-meta { margin-top: 3px; font-size: 11px; color: var(--muted); word-break: break-all; }
+.variant-chip { display: inline-flex; align-items: center; border-radius: 6px; padding: 3px 8px; background: #f1f5f9; color: #475569; font-size: 12px; font-weight: 650; }
+.price-pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 9px; background: #eef7ff; color: var(--primary); font-size: 12px; font-weight: 800; white-space: nowrap; }
+.price-pill.gbp { background: #eefdf3; color: #047857; }
+.price-pill.eur { background: #fff7ed; color: #c2410c; }
+.price-pill.usd { background: #eef7ff; color: var(--primary); }
+.inventory-pill { display: inline-flex; align-items: center; justify-content: flex-end; min-width: 64px; border-radius: 999px; padding: 3px 9px; background: #ecfdf5; color: var(--ok); font-size: 12px; font-weight: 800; }
+.status-dot { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 12px; }
+.status-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
 .link-cell a { color: var(--primary); font-weight: 650; text-decoration: none; }
 .link-cell a:hover { text-decoration: underline; }
 @media (max-width: 980px) {
