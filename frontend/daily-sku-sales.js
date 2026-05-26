@@ -1,34 +1,57 @@
 (function() {
   'use strict';
 
-  var state = { data: null, rows: [], filteredRows: [], page: 1, pageSize: 50, loading: false };
-  var storeSelect = document.getElementById('storeSelect');
+  var stores = [
+    { key: 'ALL', label: '全部', color: '#3b6ef5' },
+    { key: 'SHOPIFY_US_STORE', label: 'US', color: '#3b6ef5' },
+    { key: 'SHOPIFY_UK_STORE', label: 'UK', color: '#059669' },
+    { key: 'SHOPIFY_FR_STORE', label: 'FR', color: '#b45309' },
+    { key: 'SHOPIFY_DE_STORE', label: 'DE', color: '#dc2626' },
+    { key: 'SHOPIFY_IT_STORE', label: 'IT', color: '#805ad5' }
+  ];
+  var colors = ['#3b6ef5', '#059669', '#b45309', '#dc2626', '#805ad5', '#0f766e', '#dd6b20', '#4a5568', '#0891b2', '#7c3aed'];
+  var storeColors = stores.reduce(function(map, store) {
+    map[store.label] = store.color;
+    return map;
+  }, {});
+  var state = {
+    data: null,
+    rows: [],
+    filteredRows: [],
+    skuRows: [],
+    store: 'ALL',
+    page: 1,
+    pageSize: 15,
+    sortCol: 'qty',
+    sortDir: 'desc',
+    loading: false
+  };
+  var charts = {};
+
   var sinceInput = document.getElementById('sinceInput');
   var untilInput = document.getElementById('untilInput');
+  var storeTabs = document.getElementById('storeTabs');
   var searchInput = document.getElementById('searchInput');
   var loadBtn = document.getElementById('loadBtn');
   var refreshBtn = document.getElementById('refreshBtn');
   var statusText = document.getElementById('statusText');
-  var meta = document.getElementById('meta');
   var kpiGrid = document.getElementById('kpiGrid');
-  var productBody = document.getElementById('productBody');
-  var skuBody = document.getElementById('skuBody');
-  var tableBody = document.getElementById('tableBody');
-  var productCount = document.getElementById('productCount');
-  var skuCount = document.getElementById('skuCount');
-  var rowCount = document.getElementById('rowCount');
+  var dailyLegend = document.getElementById('dailyLegend');
+  var skuChartLabel = document.getElementById('skuChartLabel');
+  var countryChartLabel = document.getElementById('countryChartLabel');
+  var tableLabel = document.getElementById('tableLabel');
+  var skuTable = document.getElementById('skuTable');
   var prevPageBtn = document.getElementById('prevPageBtn');
   var nextPageBtn = document.getElementById('nextPageBtn');
   var pageText = document.getElementById('pageText');
-  var charts = {};
-  var colors = ['#2f80ed', '#218a54', '#b7791f', '#c53030', '#805ad5', '#0f766e', '#dd6b20', '#4a5568'];
+  var pageSizeSelect = document.getElementById('pageSizeSelect');
 
   function formatNumber(value) {
-    return Number(value || 0).toLocaleString('zh-CN');
+    return Math.round(Number(value || 0)).toLocaleString('zh-CN');
   }
 
   function formatMoney(value) {
-    return '$' + Number(value || 0).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '$' + Math.round(Number(value || 0)).toLocaleString('zh-CN');
   }
 
   function escapeHtml(value) {
@@ -44,10 +67,29 @@
     return y + '-' + m + '-' + d;
   }
 
+  function dateAdd(date, days) {
+    var next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+  }
+
   function setDefaultDates() {
     var now = new Date();
     sinceInput.value = formatDate(new Date(now.getFullYear(), 0, 1));
     untilInput.value = formatDate(now);
+  }
+
+  function setPreset(type) {
+    var now = new Date();
+    if (type === 'ytd') {
+      sinceInput.value = formatDate(new Date(now.getFullYear(), 0, 1));
+    } else if (type === 'month') {
+      sinceInput.value = formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    } else {
+      sinceInput.value = formatDate(dateAdd(now, -Number(type) + 1));
+    }
+    untilInput.value = formatDate(now);
+    loadData(false);
   }
 
   function setLoading(isLoading, text) {
@@ -59,7 +101,7 @@
 
   function fetchData(refresh) {
     var params = new URLSearchParams({
-      store: storeSelect.value,
+      store: state.store,
       since: sinceInput.value,
       until: untilInput.value,
       limit: '1000'
@@ -73,11 +115,39 @@
     });
   }
 
+  function colorFor(label, index) {
+    return storeColors[label] || colors[index % colors.length];
+  }
+
   function destroyChart(name) {
     if (charts[name]) {
       charts[name].destroy();
       charts[name] = null;
     }
+  }
+
+  function chartTextColor() {
+    return '#9ca3af';
+  }
+
+  function chartGridColor() {
+    return 'rgba(0,0,0,.06)';
+  }
+
+  function chartOptions(tickFormatter, showLegend) {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: Boolean(showLegend), labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } },
+        tooltip: { callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ' + tickFormatter(ctx.raw); } } }
+      },
+      scales: {
+        x: { ticks: { color: chartTextColor(), font: { size: 9 }, autoSkip: true, maxTicksLimit: 14, maxRotation: 0 }, grid: { color: chartGridColor() } },
+        y: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: tickFormatter }, grid: { color: chartGridColor() } }
+      }
+    };
   }
 
   function getUniqueCount(rows, field) {
@@ -87,135 +157,232 @@
   function renderKpis() {
     var totals = state.data?.totals || {};
     var rows = state.rows || [];
-    var stores = state.data?.stores || [];
+    var days = state.data?.breakdowns?.daily?.length || 1;
     var avgPrice = totals.net_items_sold ? totals.total_sales / totals.net_items_sold : 0;
-    var items = [
-      ['总销量', formatNumber(totals.net_items_sold), 'net_items_sold'],
-      ['总销售额', formatMoney(totals.total_sales), 'USD'],
-      ['覆盖站点', formatNumber(stores.length), 'US / UK / FR / DE / IT'],
-      ['销售国家', formatNumber(getUniqueCount(rows, 'shipping_country')), 'shipping_country'],
-      ['产品数', formatNumber(getUniqueCount(rows, 'product_title')), 'product_title'],
-      ['SKU 数', formatNumber(getUniqueCount(rows, 'product_variant_sku')), 'product_variant_sku'],
-      ['件均销售额', formatMoney(avgPrice), 'total_sales / net_items_sold']
-    ];
-    kpiGrid.innerHTML = items.map(function(item) {
-      return '<div class="kpi"><div class="label">' + item[0] + '</div><div class="value">' + item[1] + '</div><div class="sub">' + item[2] + '</div></div>';
-    }).join('');
+    var bestDay = (state.data?.breakdowns?.daily || []).reduce(function(best, row) {
+      return row.net_items_sold > (best.net_items_sold || 0) ? row : best;
+    }, {});
+    kpiGrid.innerHTML =
+      '<div class="kpi hi"><div class="kl">销售额</div><div class="kv">' + formatMoney(totals.total_sales) + '</div><div class="kft">日均 ' + formatMoney(totals.total_sales / days) + '</div></div>' +
+      '<div class="kpi"><div class="kl">总销量（件）</div><div class="kv">' + formatNumber(totals.net_items_sold) + '</div><div class="kft">日均 ' + formatNumber(totals.net_items_sold / days) + ' 件/天</div></div>' +
+      '<div class="kpi"><div class="kl">最高单日</div><div class="kv">' + formatNumber(bestDay.net_items_sold || 0) + '</div><div class="kft">' + escapeHtml(bestDay.label || '-') + '</div></div>' +
+      '<div class="kpi"><div class="kl">SKU 数</div><div class="kv">' + formatNumber(getUniqueCount(rows, 'product_variant_sku')) + '</div><div class="kft">产品 ' + formatNumber(getUniqueCount(rows, 'product_title')) + ' 个</div></div>' +
+      '<div class="kpi"><div class="kl">件均销售额</div><div class="kv">' + formatMoney(avgPrice) + '</div><div class="kft">' + formatNumber(getUniqueCount(rows, 'shipping_country')) + ' 个发货国家</div></div>';
   }
 
-  function renderCharts() {
-    if (typeof Chart === 'undefined' || !state.data) return;
-    var daily = state.data.breakdowns?.daily || [];
-    var stores = state.data.breakdowns?.by_store || [];
+  function buildDailyStoreSeries() {
+    var days = state.data?.breakdowns?.daily?.map(function(row) { return row.label; }) || [];
+    var labels = (state.data?.stores || []).map(function(store) { return store.label; });
+    var series = {};
+    labels.forEach(function(label) {
+      series[label] = days.map(function(day) {
+        return state.rows.filter(function(row) {
+          return row.day === day && row.store_label === label;
+        }).reduce(function(total, row) {
+          return total + Number(row.net_items_sold || 0);
+        }, 0);
+      });
+    });
+    return { days: days, labels: labels, series: series };
+  }
 
+  function renderDailyChart() {
+    var data = buildDailyStoreSeries();
+    dailyLegend.innerHTML = data.labels.map(function(label, index) {
+      return '<span class="leg"><span class="ld" style="background:' + colorFor(label, index) + '"></span>' + escapeHtml(label) + '</span>';
+    }).join('');
     destroyChart('daily');
     charts.daily = new Chart(document.getElementById('dailyChart'), {
       type: 'line',
       data: {
-        labels: daily.map(function(item) { return item.label; }),
+        labels: data.days.map(function(day) { return day.slice(5); }),
+        datasets: data.labels.map(function(label, index) {
+          return {
+            label: label,
+            data: data.series[label] || [],
+            borderColor: colorFor(label, index),
+            backgroundColor: colorFor(label, index) + '22',
+            borderWidth: 2,
+            pointRadius: 2,
+            tension: .35
+          };
+        })
+      },
+      options: chartOptions(formatNumber)
+    });
+  }
+
+  function groupSkuRows(rows) {
+    var map = new Map();
+    rows.forEach(function(row) {
+      var sku = row.product_variant_sku || 'Unknown';
+      if (!map.has(sku)) {
+        map.set(sku, {
+          sku: sku,
+          title: row.product_title || '',
+          qty: 0,
+          sales: 0,
+          countries: new Set(),
+          stores: new Set()
+        });
+      }
+      var item = map.get(sku);
+      item.qty += Number(row.net_items_sold || 0);
+      item.sales += Number(row.total_sales || 0);
+      if (row.shipping_country) item.countries.add(row.shipping_country);
+      if (row.store_label) item.stores.add(row.store_label);
+    });
+    return Array.from(map.values()).map(function(item) {
+      item.country_count = item.countries.size;
+      item.store_count = item.stores.size;
+      item.avg_price = item.qty ? item.sales / item.qty : 0;
+      delete item.countries;
+      delete item.stores;
+      return item;
+    });
+  }
+
+  function renderSkuChart() {
+    var top15 = state.skuRows.slice().sort(function(a, b) {
+      return b.qty - a.qty || b.sales - a.sales;
+    }).slice(0, 15);
+    skuChartLabel.textContent = top15.length + ' 个 SKU';
+    destroyChart('sku');
+    charts.sku = new Chart(document.getElementById('skuChart'), {
+      type: 'bar',
+      data: {
+        labels: top15.map(function(row) { return row.sku; }),
         datasets: [
-          { label: '销量', data: daily.map(function(item) { return item.net_items_sold; }), borderColor: '#2f80ed', backgroundColor: 'rgba(47,128,237,.12)', tension: .28, yAxisID: 'y' },
-          { label: '销售额', data: daily.map(function(item) { return item.total_sales; }), borderColor: '#218a54', backgroundColor: 'rgba(33,138,84,.12)', tension: .28, yAxisID: 'y1' }
+          {
+            label: '销量',
+            data: top15.map(function(row) { return row.qty; }),
+            backgroundColor: '#3b6ef588',
+            borderColor: '#3b6ef5',
+            borderWidth: 1,
+            borderRadius: 3,
+            yAxisID: 'qty'
+          },
+          {
+            label: '销售额($)',
+            data: top15.map(function(row) { return row.sales; }),
+            type: 'line',
+            borderColor: '#facc15',
+            backgroundColor: 'rgba(250,204,21,.12)',
+            borderWidth: 2,
+            pointRadius: 3,
+            yAxisID: 'sales',
+            tension: .3
+          }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } },
         scales: {
-          y: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#edf2f7' } },
-          y1: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#6b7280' } },
-          x: { ticks: { color: '#6b7280', maxRotation: 0, autoSkip: true, maxTicksLimit: 14 }, grid: { display: false } }
+          x: { ticks: { color: chartTextColor(), font: { size: 9 }, maxRotation: 45, minRotation: 30 }, grid: { display: false } },
+          qty: { beginAtZero: true, ticks: { color: chartTextColor(), font: { size: 9 }, callback: formatNumber }, grid: { color: chartGridColor() } },
+          sales: { beginAtZero: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: chartTextColor(), font: { size: 9 }, callback: function(value) { return '$' + Math.round(value / 1000) + 'k'; } } }
         }
       }
     });
-
-    destroyChart('store');
-    charts.store = new Chart(document.getElementById('storeChart'), {
-      type: 'doughnut',
-      data: {
-        labels: stores.map(function(item) { return item.label; }),
-        datasets: [{ data: stores.map(function(item) { return item.total_sales; }), backgroundColor: colors, borderWidth: 0 }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom' } } }
-    });
   }
 
-  function renderBreakdown(body, rows, type) {
-    if (!rows.length) {
-      body.innerHTML = '<tr><td colspan="3"><div class="empty">暂无数据</div></td></tr>';
-      return;
-    }
-    body.innerHTML = rows.slice(0, 15).map(function(row) {
-      var label = type === 'sku'
-        ? '<span class="sku">' + escapeHtml(row.label) + '</span>'
-        : '<div class="product">' + escapeHtml(row.label) + '</div>';
-      return '<tr><td>' + label + '</td><td class="number">' + formatNumber(row.net_items_sold) + '</td><td class="number">' + formatMoney(row.total_sales) + '</td></tr>';
-    }).join('');
+  function renderCountryChart() {
+    var rows = state.data?.breakdowns?.by_country || [];
+    countryChartLabel.textContent = rows.length + ' 个国家';
+    var top = rows.slice(0, 10);
+    destroyChart('country');
+    charts.country = new Chart(document.getElementById('countryChart'), {
+      type: 'doughnut',
+      data: {
+        labels: top.map(function(row) { return row.label; }),
+        datasets: [{ data: top.map(function(row) { return row.net_items_sold; }), backgroundColor: colors, borderWidth: 0 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: { legend: { position: 'bottom', labels: { color: chartTextColor(), font: { size: 10 }, boxWidth: 8 } } } }
+    });
   }
 
   function matchesSearch(row, q) {
     if (!q) return true;
-    return [
-      row.store_label,
-      row.shop_name,
-      row.shipping_country,
-      row.product_title,
-      row.product_variant_sku,
-      row.day
-    ].join(' ').toLowerCase().indexOf(q) >= 0;
+    return [row.store_label, row.shipping_country, row.product_title, row.product_variant_sku].join(' ').toLowerCase().indexOf(q) >= 0;
   }
 
   function applyFilter() {
     var q = searchInput.value.trim().toLowerCase();
     state.filteredRows = state.rows.filter(function(row) { return matchesSearch(row, q); });
+    state.skuRows = groupSkuRows(state.filteredRows);
     state.page = 1;
+    renderSkuChart();
     renderTable();
   }
 
+  function compareSku(a, b) {
+    var col = state.sortCol;
+    var av = a[col];
+    var bv = b[col];
+    if (typeof av === 'string') {
+      return state.sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    return state.sortDir === 'asc' ? Number(av || 0) - Number(bv || 0) : Number(bv || 0) - Number(av || 0);
+  }
+
+  function sortHeader(label, col, cls) {
+    var arrow = state.sortCol === col ? (state.sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+    return '<th class="' + (cls || '') + '" data-sort="' + col + '">' + label + arrow + '</th>';
+  }
+
   function renderTable() {
-    var rows = state.filteredRows || [];
-    var totalPages = Math.max(1, Math.ceil(rows.length / state.pageSize));
+    var sorted = state.skuRows.slice().sort(compareSku);
+    var totalPages = Math.max(1, Math.ceil(sorted.length / state.pageSize));
     if (state.page > totalPages) state.page = totalPages;
     var start = (state.page - 1) * state.pageSize;
-    var pageRows = rows.slice(start, start + state.pageSize);
-    rowCount.textContent = formatNumber(rows.length) + ' 条';
+    var pageRows = sorted.slice(start, start + state.pageSize);
+    var totalQty = sorted.reduce(function(total, row) { return total + row.qty; }, 0) || 1;
+    var maxQty = Math.max.apply(null, pageRows.map(function(row) { return row.qty; }).concat([1]));
+    tableLabel.textContent = formatNumber(sorted.length) + ' 个 SKU';
     pageText.textContent = '第 ' + state.page + ' / ' + totalPages + ' 页';
     prevPageBtn.disabled = state.loading || state.page <= 1;
     nextPageBtn.disabled = state.loading || state.page >= totalPages;
 
     if (!pageRows.length) {
-      tableBody.innerHTML = '<tr><td colspan="7"><div class="empty">暂无匹配数据</div></td></tr>';
+      skuTable.innerHTML = '<tbody><tr><td><div class="empty">暂无匹配数据</div></td></tr></tbody>';
       return;
     }
-    tableBody.innerHTML = pageRows.map(function(row) {
-      return '<tr>' +
-        '<td>' + escapeHtml(row.day || '-') + '</td>' +
-        '<td><span class="badge">' + escapeHtml(row.store_label || '-') + '</span></td>' +
-        '<td>' + escapeHtml(row.shipping_country || '-') + '</td>' +
-        '<td><div class="product">' + escapeHtml(row.product_title || '-') + '</div></td>' +
-        '<td><span class="sku">' + escapeHtml(row.product_variant_sku || '-') + '</span></td>' +
-        '<td class="number">' + formatNumber(row.net_items_sold) + '</td>' +
-        '<td class="number">' + formatMoney(row.total_sales) + '</td>' +
-      '</tr>';
-    }).join('');
+
+    skuTable.innerHTML = '<thead><tr>' +
+      '<th style="width:32px">#</th>' +
+      sortHeader('SKU', 'sku') +
+      sortHeader('产品标题', 'title') +
+      sortHeader('销量(件)', 'qty', 'r') +
+      sortHeader('销售额', 'sales', 'r') +
+      sortHeader('均价', 'avg_price', 'r') +
+      sortHeader('覆盖国家', 'country_count', 'r') +
+      sortHeader('覆盖店铺', 'store_count', 'r') +
+      '<th style="min-width:80px">条</th>' +
+    '</tr></thead><tbody>' +
+      pageRows.map(function(row, index) {
+        var pct = (row.qty / totalQty * 100).toFixed(1);
+        return '<tr>' +
+          '<td style="color:var(--t3)">' + (start + index + 1) + '</td>' +
+          '<td><span class="sku">' + escapeHtml(row.sku) + '</span></td>' +
+          '<td>' + escapeHtml(row.title || '-') + '</td>' +
+          '<td class="r"><strong>' + formatNumber(row.qty) + '</strong></td>' +
+          '<td class="r">' + formatMoney(row.sales) + '</td>' +
+          '<td class="r">' + formatMoney(row.avg_price) + '</td>' +
+          '<td class="r">' + formatNumber(row.country_count) + '</td>' +
+          '<td class="r">' + formatNumber(row.store_count) + '</td>' +
+          '<td><div class="bar" style="width:' + Math.max(3, Math.round(row.qty / maxQty * 100)) + '%"></div><span style="font-size:9px;color:var(--t3)">' + pct + '%</span></td>' +
+        '</tr>';
+      }).join('') + '</tbody>';
   }
 
   function render() {
     renderKpis();
-    renderCharts();
-    var products = state.data?.breakdowns?.by_product || [];
-    var skus = state.data?.breakdowns?.by_sku || [];
-    productCount.textContent = formatNumber(products.length) + ' 个产品';
-    skuCount.textContent = formatNumber(skus.length) + ' 个 SKU';
-    renderBreakdown(productBody, products, 'product');
-    renderBreakdown(skuBody, skus, 'sku');
+    renderDailyChart();
+    renderCountryChart();
     applyFilter();
-    if (state.data) {
-      var stores = (state.data.stores || []).map(function(store) { return store.label; }).join(' / ') || '站点';
-      var cacheText = state.data.cached_at ? (state.data.from_cache ? '缓存 ' : '已刷新 ') + new Date(state.data.cached_at).toLocaleString('zh-CN') : '';
-      meta.textContent = stores + ' · sales · ' + state.data.since + ' 至 ' + state.data.until + (cacheText ? ' · ' + cacheText : '');
-    }
   }
 
   function loadData(refresh) {
@@ -224,44 +391,84 @@
       setLoading(false, '请先选择完整日期');
       return;
     }
-    setLoading(true, refresh ? '正在刷新每日 SKU 销量数据...' : '正在读取每日 SKU 销量缓存...');
+    setLoading(true, refresh ? '正在刷新 SKU 销量数据...' : '正在读取 SKU 销量数据...');
     fetchData(refresh).then(function(data) {
       state.data = data;
       state.rows = data.rows || [];
       state.filteredRows = state.rows;
-      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条每日 SKU 销量数据');
+      state.skuRows = groupSkuRows(state.rows);
+      setLoading(false, '已加载 ' + formatNumber(state.rows.length) + ' 条 SKU 销量数据');
       render();
     }).catch(function(err) {
       state.data = null;
       state.rows = [];
       state.filteredRows = [];
+      state.skuRows = [];
       Object.keys(charts).forEach(destroyChart);
       kpiGrid.innerHTML = '';
-      productBody.innerHTML = '<tr><td colspan="3"><div class="empty">加载失败</div></td></tr>';
-      skuBody.innerHTML = '<tr><td colspan="3"><div class="empty">加载失败</div></td></tr>';
-      renderTable();
+      skuTable.innerHTML = '<tbody><tr><td><div class="empty">加载失败：' + escapeHtml(err.message) + '</div></td></tr></tbody>';
       setLoading(false, '加载失败：' + err.message);
     });
   }
 
-  storeSelect.addEventListener('change', function() { loadData(false); });
-  searchInput.addEventListener('input', applyFilter);
-  loadBtn.addEventListener('click', function() { loadData(false); });
-  refreshBtn.addEventListener('click', function() { loadData(true); });
-  prevPageBtn.addEventListener('click', function() {
-    if (state.page > 1) {
-      state.page -= 1;
+  function renderStoreTabs() {
+    storeTabs.innerHTML = stores.map(function(store) {
+      return '<button class="store-tab' + (store.key === state.store ? ' on' : '') + '" data-store="' + store.key + '">' + store.label + '</button>';
+    }).join('');
+  }
+
+  function bindEvents() {
+    document.querySelectorAll('.preset').forEach(function(btn) {
+      btn.addEventListener('click', function() { setPreset(btn.dataset.preset); });
+    });
+    storeTabs.addEventListener('click', function(event) {
+      var btn = event.target.closest('[data-store]');
+      if (!btn) return;
+      state.store = btn.dataset.store;
+      renderStoreTabs();
+      loadData(false);
+    });
+    [sinceInput, untilInput].forEach(function(input) {
+      input.addEventListener('change', function() { loadData(false); });
+    });
+    searchInput.addEventListener('input', applyFilter);
+    loadBtn.addEventListener('click', function() { loadData(false); });
+    refreshBtn.addEventListener('click', function() { loadData(true); });
+    skuTable.addEventListener('click', function(event) {
+      var th = event.target.closest('[data-sort]');
+      if (!th) return;
+      var col = th.dataset.sort;
+      if (state.sortCol === col) {
+        state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        state.sortCol = col;
+        state.sortDir = col === 'sku' || col === 'title' ? 'asc' : 'desc';
+      }
+      state.page = 1;
       renderTable();
-    }
-  });
-  nextPageBtn.addEventListener('click', function() {
-    var totalPages = Math.max(1, Math.ceil((state.filteredRows || []).length / state.pageSize));
-    if (state.page < totalPages) {
-      state.page += 1;
+    });
+    prevPageBtn.addEventListener('click', function() {
+      if (state.page > 1) {
+        state.page -= 1;
+        renderTable();
+      }
+    });
+    nextPageBtn.addEventListener('click', function() {
+      var totalPages = Math.max(1, Math.ceil((state.skuRows || []).length / state.pageSize));
+      if (state.page < totalPages) {
+        state.page += 1;
+        renderTable();
+      }
+    });
+    pageSizeSelect.addEventListener('change', function() {
+      state.pageSize = Number(pageSizeSelect.value) || 15;
+      state.page = 1;
       renderTable();
-    }
-  });
+    });
+  }
 
   setDefaultDates();
+  renderStoreTabs();
+  bindEvents();
   loadData(false);
 })();
