@@ -270,6 +270,22 @@ function normalizeVariantNode(node, store, shop) {
   const stock = Number(node.inventoryQuantity) || 0;
   const productTitle = product.title || '';
   const color = extractVariantColor(node);
+  const sourceEntry = {
+    store_key: store.key,
+    store_label: store.label,
+    shop,
+    product_id: product.id || '',
+    product_title: productTitle,
+    handle: product.handle || '',
+    url: product.handle ? `https://${shop}/products/${product.handle}` : '',
+    variant_id: node.id || '',
+    variant_title: node.title || '',
+    color,
+    sku,
+    price: node.price || '',
+    inventory_quantity: stock,
+    status: product.status || ''
+  };
   return {
     store_key: store.key,
     store_label: store.label,
@@ -290,6 +306,7 @@ function normalizeVariantNode(node, store, shop) {
     inventory_tracked: Boolean(node.inventoryItem?.tracked),
     duplicate_count: 1,
     source_variant_ids: [node.id || ''].filter(Boolean),
+    source_entries: [sourceEntry],
     unique_key: [
       normalizeKey(store.key),
       normalizeKey(sku || productTitle)
@@ -301,6 +318,7 @@ function normalizeVariantNode(node, store, shop) {
 function mergeShopifyRecord(target, item) {
   target.duplicate_count += item.duplicate_count || 1;
   target.source_variant_ids.push(...item.source_variant_ids);
+  target.source_entries = (target.source_entries || []).concat(item.source_entries || []);
   if (item.product_title && !target.product_title.includes(item.product_title)) {
     target.product_title += ` / ${item.product_title}`;
   }
@@ -336,12 +354,14 @@ function chooseRepresentativeInventory(items) {
     ...winner.items[0],
     inventory_quantity: winner.inventory,
     duplicate_count: items.length,
-    source_variant_ids: []
+    source_variant_ids: [],
+    source_entries: []
   };
 
   winner.items.slice(1).forEach(item => mergeShopifyRecord(base, item));
   base.duplicate_count = items.length;
   base.source_variant_ids = items.flatMap(item => item.source_variant_ids);
+  base.source_entries = items.flatMap(item => item.source_entries || []);
   base.inventory_values = ranked.map(group => ({
     inventory_quantity: group.inventory,
     count: group.count

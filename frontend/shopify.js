@@ -63,6 +63,50 @@
     return Boolean(sku && sku !== '/' && sku !== '-' && sku !== '旧品无需SKU');
   }
 
+  function productUrl(shop, handle) {
+    return shop && handle ? 'https://' + shop + '/products/' + handle : '';
+  }
+
+  function normalizeSourceEntries(item) {
+    var entries = Array.isArray(item.source_entries) && item.source_entries.length
+      ? item.source_entries
+      : [{
+          store_key: item.store_key,
+          store_label: item.store_label,
+          shop: item.shop,
+          product_id: item.product_id,
+          product_title: item.product_title,
+          handle: item.handle,
+          url: productUrl(item.shop, item.handle),
+          variant_id: item.variant_id,
+          variant_title: item.variant_title,
+          color: item.color || item.variant_title || '',
+          sku: item.sku,
+          price: item.price,
+          inventory_quantity: item.inventory_quantity,
+          status: item.status
+        }];
+
+    return entries.map(function(entry) {
+      return {
+        store_key: entry.store_key || item.store_key || '',
+        store_label: entry.store_label || item.store_label || '',
+        shop: entry.shop || item.shop || '',
+        product_id: entry.product_id || item.product_id || '',
+        product_title: entry.product_title || item.product_title || '',
+        handle: entry.handle || item.handle || '',
+        url: entry.url || productUrl(entry.shop || item.shop, entry.handle || item.handle),
+        variant_id: entry.variant_id || item.variant_id || '',
+        variant_title: entry.variant_title || item.variant_title || '',
+        color: entry.color || item.color || item.variant_title || '',
+        sku: entry.sku || item.sku || '',
+        price: entry.price == null ? (item.price || '') : entry.price,
+        inventory_quantity: Number(entry.inventory_quantity == null ? item.inventory_quantity : entry.inventory_quantity) || 0,
+        status: entry.status || item.status || ''
+      };
+    });
+  }
+
   function riskLabel(risk) {
     if (risk === 'out_of_stock') return { text: '零库存', cls: 'bad' };
     if (risk === 'low') return { text: '低库存', cls: 'warn' };
@@ -243,7 +287,8 @@
           source_product_set: new Set([item.product_title || ''].filter(Boolean)),
           source_variant_set: new Set([item.variant_title || ''].filter(Boolean)),
           source_color_set: new Set([item.color || ''].filter(Boolean)),
-          source_variant_ids: Array.isArray(item.source_variant_ids) ? item.source_variant_ids.slice() : []
+          source_variant_ids: Array.isArray(item.source_variant_ids) ? item.source_variant_ids.slice() : [],
+          source_entries: normalizeSourceEntries(item)
         });
       } else {
         var target = map[key];
@@ -256,6 +301,7 @@
         if (Array.isArray(item.source_variant_ids)) {
           target.source_variant_ids = target.source_variant_ids.concat(item.source_variant_ids);
         }
+        target.source_entries = target.source_entries.concat(normalizeSourceEntries(item));
       }
     });
 
@@ -559,6 +605,94 @@
     });
   }
 
+  function formatPrice(value) {
+    if (value === '' || value == null) return '-';
+    var num = Number(value);
+    return Number.isFinite(num) ? '$' + num.toFixed(2) : String(value);
+  }
+
+  function priceSummary(entries) {
+    var prices = Array.from(new Set(entries.map(function(entry) {
+      return String(entry.price == null ? '' : entry.price).trim();
+    }).filter(Boolean)));
+    if (!prices.length) return '<span class="badge warn">缺价格</span>';
+    if (prices.length === 1) return '<span class="price-pill">' + formatPrice(prices[0]) + '</span>';
+    var nums = prices.map(Number).filter(Number.isFinite).sort(function(a, b) { return a - b; });
+    var label = nums.length ? ('$' + nums[0].toFixed(2) + ' - $' + nums[nums.length - 1].toFixed(2)) : prices.join(' / ');
+    return '<span class="badge warn">多价格</span> <span class="price-pill">' + escapeHtml(label) + '</span>';
+  }
+
+  function buildSkuSourceGroups(items) {
+    var map = new Map();
+    items.forEach(function(item) {
+      var sku = normalizeSku(item.sku) || 'NO-SKU';
+      if (!map.has(sku)) {
+        map.set(sku, {
+          sku: sku,
+          display_sku: item.sku || '无 SKU',
+          colorSet: new Set(),
+          inventory: 0,
+          entries: []
+        });
+      }
+      var group = map.get(sku);
+      var itemEntries = normalizeSourceEntries(item);
+      var visibleEntries = summaryStockOnly && summaryStockOnly.checked
+        ? itemEntries.filter(function(entry) { return Number(entry.inventory_quantity || 0) > 0; })
+        : itemEntries;
+      visibleEntries.forEach(function(entry) {
+        if (entry.color) group.colorSet.add(entry.color);
+        group.inventory += Number(entry.inventory_quantity || 0);
+        group.entries.push(entry);
+      });
+    });
+    return Array.from(map.values()).filter(function(group) {
+      return group.entries.length;
+    }).map(function(group) {
+      group.colors = Array.from(group.colorSet).join(' / ') || '-';
+      group.link_count = uniqueCount(group.entries, function(entry) { return [entry.store_label, entry.url || entry.product_title].join('|'); });
+      return group;
+    }).sort(function(a, b) {
+      return b.inventory - a.inventory || a.display_sku.localeCompare(b.display_sku);
+    });
+  }
+
+  function renderSkuSourceDetails(items) {
+    var groups = buildSkuSourceGroups(items);
+    if (!groups.length) {
+      return '<tr><td colspan="7"><div class="empty">暂无 Shopify 匹配 SKU</div></td></tr>';
+    }
+    return groups.map(function(group) {
+      var head = '<tr class="sku-group">' +
+        '<td colspan="7"><div class="sku-line"><span class="sku">' + escapeHtml(group.display_sku) + '</span>' +
+        '<span class="muted">颜色 ' + escapeHtml(group.colors) + '</span>' +
+        '<span class="badge ok">库存 ' + formatNumber(group.inventory) + '</span>' +
+        '<span class="badge warn">链接 ' + formatNumber(group.link_count) + '</span>' +
+        priceSummary(group.entries) + '</div></td></tr>';
+      var rows = group.entries
+        .slice()
+        .sort(function(a, b) {
+          return String(a.store_label).localeCompare(String(b.store_label)) || Number(b.inventory_quantity || 0) - Number(a.inventory_quantity || 0);
+        })
+        .map(function(entry) {
+          var linkText = entry.url ? escapeHtml(entry.product_title || entry.handle || entry.url) : escapeHtml(entry.product_title || '-');
+          var link = entry.url
+            ? '<a href="' + escapeHtml(entry.url) + '" target="_blank" rel="noreferrer">' + linkText + '</a>'
+            : linkText;
+          return '<tr>' +
+            '<td>' + escapeHtml(entry.store_label || '-') + '<div class="muted">' + escapeHtml(entry.shop || '') + '</div></td>' +
+            '<td class="link-cell">' + link + '<div class="muted">' + escapeHtml(entry.handle || '') + '</div></td>' +
+            '<td>' + escapeHtml(entry.color || '-') + '<div class="muted">' + escapeHtml(entry.variant_title || '') + '</div></td>' +
+            '<td class="sku">' + escapeHtml(entry.sku || group.display_sku) + '</td>' +
+            '<td><span class="price-pill">' + formatPrice(entry.price) + '</span></td>' +
+            '<td class="number">' + formatNumber(entry.inventory_quantity) + '</td>' +
+            '<td>' + escapeHtml(entry.status || '-') + '</td>' +
+          '</tr>';
+        }).join('');
+      return head + rows;
+    }).join('');
+  }
+
   function applyFilters() {
     var q = searchInput.value.trim().toLowerCase();
     var risk = riskSelect.value;
@@ -638,23 +772,7 @@
       var pct = group.total_inventory ? (group.total_inventory / total * 100).toFixed(2) : '-';
       var barW = Math.round(group.total_inventory / maxVal * 100);
       var rankCls = index === 0 ? 'top1' : index === 1 ? 'top2' : index === 2 ? 'top3' : 'normal';
-      var details = group.items.length
-        ? group.items
-          .slice()
-          .sort(function(a, b) { return b.inventory_quantity - a.inventory_quantity; })
-          .map(function(item) {
-            var risk = riskLabel(item.risk_level);
-            return '<tr>' +
-              '<td>' + escapeHtml(item.mapped_color || item.color || '-') + '</td>' +
-              '<td class="sku">' + (item.sku ? escapeHtml(item.sku) : '<span class="muted">无 SKU</span>') + '</td>' +
-              '<td class="number">' + formatNumber(item.inventory_quantity) + '</td>' +
-              '<td>' + escapeHtml(item.store_label || '-') + '</td>' +
-              '<td><span class="badge ' + risk.cls + '">' + risk.text + '</span></td>' +
-              '<td>' + formatNumber(item.duplicate_count || 1) + (item.global_inventory_conflict ? '<div class="muted">同SKU多库存</div>' : '') + '</td>' +
-            '</tr>';
-          }).join('')
-        : '<tr><td colspan="6"><div class="empty">暂无 Shopify 匹配 SKU</div></td></tr>';
-
+      var details = renderSkuSourceDetails(group.items);
       return '<tr>' +
         '<td><div class="rank-cell"><span class="rank-badge ' + rankCls + '">' + (index + 1) + '</span></div></td>' +
         '<td><span class="expand-btn" data-target="' + id + '"><span class="arrow" id="arrow_' + id + '">&#9654;</span><span class="summary-name" title="' + escapeHtml(group.product_title) + '">' + escapeHtml(group.product_title) + '</span></span><div class="muted">' + state.referenceRegion + '表SKU ' + formatNumber(group.reference_sku_count) + ' / 参考库存 ' + formatNumber(group.reference_stock) + '</div></td>' +
@@ -665,7 +783,7 @@
         '<td class="bar-cell"><div class="bar"><div class="fill" style="width:' + barW + '%"></div></div></td>' +
         '<td>' + formatNumber(group.duplicate_count) + '<div class="muted">' + (group.conflict_count ? formatNumber(group.conflict_count) + ' 个冲突' : '已去重') + '</div></td>' +
       '</tr>' +
-      '<tr class="detail-row" id="' + id + '"><td colspan="8" class="detail-cell"><div class="detail-inner"><table><thead><tr><th>颜色</th><th>SKU</th><th>库存</th><th>店铺</th><th>状态</th><th>来源</th></tr></thead><tbody>' + details + '</tbody></table></div></td></tr>';
+      '<tr class="detail-row" id="' + id + '"><td colspan="8" class="detail-cell"><div class="detail-inner"><table><thead><tr><th>店铺</th><th>产品链接</th><th>颜色/变体</th><th>SKU</th><th>即时价格</th><th>库存</th><th>状态</th></tr></thead><tbody>' + details + '</tbody></table></div></td></tr>';
     }).join('');
   }
 
