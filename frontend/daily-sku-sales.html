@@ -8,36 +8,36 @@
 <link rel="stylesheet" href="/layout.css">
 <style>
 :root {
-  --bg: #f0f3f9;
+  --bg: #eef7ff;
   --card: #fff;
-  --muted: #f4f7fc;
-  --hover: #eef1f8;
-  --br: #e3e7f0;
-  --br2: #d0d6e6;
+  --muted: #eaf4ff;
+  --hover: #e6f2ff;
+  --br: #cfe1ff;
+  --br2: #a8c7ff;
   --t1: #111827;
   --t2: #4b5563;
   --t3: #9ca3af;
-  --ac: #3b6ef5;
-  --ac-bg: #eef2ff;
-  --ac-t: #2952cc;
-  --gn: #059669;
-  --gn-bg: #ecfdf5;
-  --rd: #dc2626;
+  --ac: #0f6bff;
+  --ac-bg: #e4efff;
+  --ac-t: #0747b6;
+  --gn: #00a66a;
+  --gn-bg: #e5fff5;
+  --rd: #ef4444;
   --rd-bg: #fef2f2;
-  --am: #b45309;
-  --am-bg: #fffbeb;
+  --am: #f59e0b;
+  --am-bg: #fff7dd;
   --grid: rgba(0,0,0,.06);
   --tick: #b0b8cc;
-  --sh: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --sh: 0 10px 24px rgba(37,99,235,.09), 0 1px 2px rgba(15,23,42,.05);
   --r: 10px;
   --r-sm: 6px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--t1); font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; font-size: 13px; line-height: 1.5; }
+body { background: radial-gradient(circle at 8% 0%, rgba(45,212,191,.18), transparent 28%), var(--bg); color: var(--t1); font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; font-size: 13px; line-height: 1.5; }
 button, input, select { font-family: inherit; }
 button { cursor: pointer; border: 0; background: none; }
 .page { max-width: 1760px; margin: 0 auto; padding: 14px 18px 24px; }
-.topbar { min-height: 54px; background: var(--card); border: 1px solid var(--br); border-radius: var(--r); display: flex; align-items: center; flex-wrap: wrap; padding: 10px 14px; gap: 8px; box-shadow: var(--sh); margin-bottom: 12px; }
+.topbar { min-height: 54px; background: linear-gradient(135deg, #fff 0%, #f0f8ff 100%); border: 1px solid var(--br); border-radius: var(--r); display: flex; align-items: center; flex-wrap: wrap; padding: 10px 14px; gap: 8px; box-shadow: var(--sh); margin-bottom: 12px; }
 .topbar h1 { font-size: 14px; font-weight: 700; white-space: nowrap; margin-right: 4px; }
 .sep { width: 1px; height: 22px; background: var(--br); }
 .date-box { display: flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: var(--r-sm); border: 1px solid var(--br2); background: var(--muted); color: var(--t2); font-size: 11px; white-space: nowrap; }
