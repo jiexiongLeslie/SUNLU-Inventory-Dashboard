@@ -13,6 +13,7 @@ const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.
 const SHOPIFY_LINK_ANALYTICS_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_link_analytics_cache.json');
 const SHOPIFY_AMS_HEATER_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_ams_heater_sales_cache.json');
 const SHOPIFY_DAILY_SKU_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_daily_sku_sales_cache.json');
+const SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_daily_traffic_sales_cache.json');
 const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
@@ -1086,6 +1087,133 @@ async function fetchDailySkuSalesPayload(stores, config, options) {
   };
 }
 
+function createTrafficSalesMetric(label) {
+  return {
+    label,
+    total_sales: 0,
+    orders: 0,
+    online_store_visitors: 0,
+    sessions: 0
+  };
+}
+
+function addTrafficSalesMetric(target, row) {
+  target.total_sales += numberValue(row.total_sales);
+  target.orders += numberValue(row.orders);
+  target.online_store_visitors += numberValue(row.online_store_visitors);
+  target.sessions += numberValue(row.sessions);
+}
+
+function finalizeTrafficSalesMetric(metric) {
+  metric.sales_per_order = metric.orders ? metric.total_sales / metric.orders : 0;
+  metric.order_conversion_rate = metric.sessions ? metric.orders / metric.sessions : 0;
+  return metric;
+}
+
+function mapTrafficSalesBreakdown(map) {
+  return [...map.values()]
+    .map(finalizeTrafficSalesMetric)
+    .sort((a, b) => b.total_sales - a.total_sales || b.sessions - a.sessions);
+}
+
+function buildTrafficSalesBreakdowns(rows) {
+  const daily = new Map();
+  const byStore = new Map();
+
+  rows.forEach(row => {
+    const day = row.day || '';
+    const store = row.store_label || row.shop_name || 'Unknown';
+
+    if (day) {
+      if (!daily.has(day)) daily.set(day, createTrafficSalesMetric(day));
+      addTrafficSalesMetric(daily.get(day), row);
+    }
+    if (!byStore.has(store)) byStore.set(store, createTrafficSalesMetric(store));
+    addTrafficSalesMetric(byStore.get(store), row);
+  });
+
+  return {
+    daily: [...daily.values()].map(finalizeTrafficSalesMetric).sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    by_store: mapTrafficSalesBreakdown(byStore)
+  };
+}
+
+function summarizeTrafficSales(rows) {
+  return finalizeTrafficSalesMetric(rows.reduce((total, row) => {
+    addTrafficSalesMetric(total, row);
+    return total;
+  }, createTrafficSalesMetric('total')));
+}
+
+async function fetchDailyTrafficSalesForStore(store, config, options) {
+  const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
+  const since = options.since;
+  const until = options.until;
+  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const shopifyql = `
+FROM sales, sessions
+  SHOW total_sales, orders, online_store_visitors, sessions
+  GROUP BY day, ONLY TOP 5 shop_name WITH GROUP_TOTALS, TOTALS, CURRENCY 'USD'
+  TIMESERIES day
+  SINCE ${since} UNTIL ${until}
+  ORDER BY day ASC, total_sales DESC, shop_name ASC
+  LIMIT ${limit}
+`;
+  const rows = await runShopifyQl(store.shop, token, shopifyql);
+  const mappedRows = rows.map(row => ({
+    store_key: store.key,
+    store_label: store.label,
+    shop: store.shop,
+    shop_name: row.shop_name || store.label,
+    day: row.day || '',
+    total_sales: numberValue(row.total_sales),
+    orders: numberValue(row.orders),
+    online_store_visitors: numberValue(row.online_store_visitors),
+    sessions: numberValue(row.sessions)
+  })).map(row => ({
+    ...row,
+    sales_per_order: row.orders ? row.total_sales / row.orders : 0,
+    order_conversion_rate: row.sessions ? row.orders / row.sessions : 0
+  }));
+
+  return {
+    store: {
+      key: store.key,
+      label: store.label,
+      region: store.region,
+      public_domain: store.public_domain || store.shop,
+      shop: store.shop
+    },
+    raw_rows: rows.length,
+    rows: mappedRows,
+    totals: summarizeTrafficSales(mappedRows)
+  };
+}
+
+async function fetchDailyTrafficSalesPayload(stores, config, options) {
+  const storeResults = [];
+  for (const store of stores) {
+    storeResults.push(await fetchDailyTrafficSalesForStore(store, config, options));
+  }
+  const rows = storeResults.flatMap(result => result.rows);
+  return {
+    generated_at: new Date().toISOString(),
+    since: options.since,
+    until: options.until,
+    limit: Number(options.limit) || 1000,
+    currency: 'USD',
+    stores: storeResults.map(result => ({
+      ...result.store,
+      raw_rows: result.raw_rows,
+      rows: result.rows.length,
+      totals: result.totals
+    })),
+    totals: summarizeTrafficSales(rows),
+    breakdowns: buildTrafficSalesBreakdowns(rows),
+    rows: rows.sort((a, b) => String(a.day).localeCompare(String(b.day)) || b.total_sales - a.total_sales)
+  };
+}
+
 function getShopifyCacheKey(stores) {
   return stores.map(store => store.key).sort().join('+') || 'all';
 }
@@ -1201,6 +1329,36 @@ function saveShopifyDailySkuSalesCacheEntry(cacheKey, payload) {
     payload
   };
   writeJsonFile(SHOPIFY_DAILY_SKU_SALES_CACHE_FILE, cache);
+}
+
+function getShopifyDailyTrafficSalesCacheKey(stores, options) {
+  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
+  const since = options.since || 'unknown';
+  const until = options.until || 'unknown';
+  const limit = Number(options.limit) || 1000;
+  return [storePart, since, until, limit, 'daily-traffic-sales'].join('|');
+}
+
+function readShopifyDailyTrafficSalesCache() {
+  const cache = readJsonFile(SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE, { version: 1, entries: {} });
+  if (!cache || typeof cache !== 'object' || !cache.entries) {
+    return { version: 1, entries: {} };
+  }
+  return cache;
+}
+
+function getShopifyDailyTrafficSalesCacheEntry(cacheKey) {
+  return readShopifyDailyTrafficSalesCache().entries[cacheKey] || null;
+}
+
+function saveShopifyDailyTrafficSalesCacheEntry(cacheKey, payload) {
+  const cache = readShopifyDailyTrafficSalesCache();
+  cache.version = 1;
+  cache.entries[cacheKey] = {
+    saved_at: new Date().toISOString(),
+    payload
+  };
+  writeJsonFile(SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE, cache);
 }
 
 async function fetchShopifyInventoryPayload(selectedStores, config) {
@@ -1510,6 +1668,76 @@ async function handleShopifyDailySkuSales(parsedUrl, res) {
       return;
     }
     sendJson(res, 502, { error: e.message || 'Failed to fetch daily SKU sales' });
+  }
+}
+
+async function handleShopifyDailyTrafficSales(parsedUrl, res) {
+  const config = getShopifyLinkAnalyticsConfig();
+  if (!config.clientId || !config.clientSecret) {
+    sendJson(res, 500, { error: 'Missing Shopify client_id/client_secret' });
+    return;
+  }
+
+  const storeParam = parsedUrl.query.store || 'ALL';
+  const stores = storeParam === 'ALL'
+    ? config.stores
+    : config.stores.filter(item => item.key === storeParam || item.label === storeParam || item.shop === storeParam);
+  if (!stores.length) {
+    sendJson(res, 404, { error: 'No matching Shopify store configured' });
+    return;
+  }
+
+  const since = String(parsedUrl.query.since || '').trim();
+  const until = String(parsedUrl.query.until || '').trim();
+  if (!isValidDateString(since) || !isValidDateString(until)) {
+    sendJson(res, 400, { error: 'since/until must use YYYY-MM-DD format' });
+    return;
+  }
+  if (new Date(`${since}T00:00:00Z`) > new Date(`${until}T00:00:00Z`)) {
+    sendJson(res, 400, { error: 'since must be earlier than or equal to until' });
+    return;
+  }
+
+  const options = {
+    since,
+    until,
+    limit: parsedUrl.query.limit
+  };
+  const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
+  const cacheKey = getShopifyDailyTrafficSalesCacheKey(stores, options);
+  const cacheEntry = getShopifyDailyTrafficSalesCacheEntry(cacheKey);
+
+  if (!shouldRefresh && cacheEntry?.payload) {
+    sendJson(res, 200, {
+      ...cacheEntry.payload,
+      from_cache: true,
+      cache_key: cacheKey,
+      cached_at: cacheEntry.saved_at
+    });
+    return;
+  }
+
+  try {
+    const payload = await fetchDailyTrafficSalesPayload(stores, config, options);
+    saveShopifyDailyTrafficSalesCacheEntry(cacheKey, payload);
+    sendJson(res, 200, {
+      ...payload,
+      from_cache: false,
+      cache_key: cacheKey,
+      cached_at: new Date().toISOString()
+    });
+  } catch (e) {
+    if (cacheEntry?.payload) {
+      sendJson(res, 200, {
+        ...cacheEntry.payload,
+        from_cache: true,
+        cache_key: cacheKey,
+        cached_at: cacheEntry.saved_at,
+        warning: e.message || 'Refresh failed, returned cached daily traffic sales'
+      });
+      return;
+    }
+    sendJson(res, 502, { error: e.message || 'Failed to fetch daily traffic sales' });
   }
 }
 
@@ -1879,11 +2107,17 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (pathname === '/api/shopify/daily-traffic-sales' && req.method === 'GET') {
+    handleShopifyDailyTrafficSales(parsedUrl, res);
+    return;
+  }
+
   if (pathname === '/api/shopify/cache' && req.method === 'GET') {
     const cache = readShopifyCache();
     const linkCache = readShopifyLinkAnalyticsCache();
     const amsCache = readShopifyAmsHeaterSalesCache();
     const dailySkuCache = readShopifyDailySkuSalesCache();
+    const dailyTrafficCache = readShopifyDailyTrafficSalesCache();
     sendJson(res, 200, {
       entries: Object.keys(cache.entries).map(key => ({
         key,
@@ -1915,6 +2149,14 @@ const server = http.createServer((req, res) => {
         stores: dailySkuCache.entries[key].payload?.stores || [],
         since: dailySkuCache.entries[key].payload?.since || null,
         until: dailySkuCache.entries[key].payload?.until || null
+      })),
+      daily_traffic_sales_entries: Object.keys(dailyTrafficCache.entries).map(key => ({
+        key,
+        saved_at: dailyTrafficCache.entries[key].saved_at,
+        rows: dailyTrafficCache.entries[key].payload?.rows?.length || 0,
+        stores: dailyTrafficCache.entries[key].payload?.stores || [],
+        since: dailyTrafficCache.entries[key].payload?.since || null,
+        until: dailyTrafficCache.entries[key].payload?.until || null
       }))
     });
     return;
