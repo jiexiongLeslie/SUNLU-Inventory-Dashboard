@@ -65,7 +65,7 @@
         '<div><div class="sunlu-sidebar__title">SUNLU 库存系统</div><div class="sunlu-sidebar__sub">Inventory Console</div></div>' +
       '</div>' +
       '<nav class="sunlu-sidebar__nav" aria-label="主导航">' + renderNav() + '</nav>' +
-      '<div class="sunlu-sidebar__foot">统计范围：英国站 + 欧洲站<br>按店铺 SKU 汇总</div>';
+      '<div class="sunlu-sidebar__foot">数据范围：库存表 + Shopify 五站<br>库存 / 流量 / SKU / 销售监控</div>';
     document.body.insertBefore(aside, document.body.firstChild);
   }
 
