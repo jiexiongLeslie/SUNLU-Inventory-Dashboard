@@ -1,0 +1,190 @@
+body.sunlu-layout {
+  padding-left: 248px;
+}
+
+.sunlu-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 3000;
+  width: 248px;
+  background: linear-gradient(180deg, #0f2f68 0%, #16325c 52%, #0b1f42 100%);
+  color: #fff;
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: 14px 0 34px rgba(15, 35, 70, .14);
+  display: flex;
+  flex-direction: column;
+}
+
+.sunlu-sidebar * {
+  box-sizing: border-box;
+}
+
+.sunlu-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.sunlu-sidebar__mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #eaf3ff;
+  color: #1d4ed8;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .72);
+}
+
+.sunlu-sidebar__mark svg {
+  width: 22px;
+  height: 22px;
+}
+
+.sunlu-sidebar__title {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.sunlu-sidebar__sub {
+  margin-top: 2px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, .62);
+}
+
+.sunlu-sidebar__nav {
+  flex: 1;
+  padding: 14px 10px;
+  overflow-y: auto;
+}
+
+.sunlu-nav-label {
+  padding: 10px 10px 6px;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .48);
+  font-weight: 800;
+}
+
+.sunlu-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 11px;
+  margin: 2px 0;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, .78);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+
+.sunlu-nav-item:hover {
+  background: rgba(255, 255, 255, .09);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.sunlu-nav-item.active {
+  background: rgba(234, 243, 255, .15);
+  color: #fff;
+  box-shadow: inset 3px 0 0 #60a5fa;
+}
+
+.sunlu-nav-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: rgba(96, 165, 250, .18);
+  color: #bfdbfe;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.sunlu-nav-icon svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sunlu-sidebar__foot {
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  color: rgba(255, 255, 255, .56);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.sunlu-layout .header a {
+  display: none !important;
+}
+
+@media (max-width: 980px) {
+  body.sunlu-layout {
+    padding-left: 0;
+    padding-top: 64px;
+  }
+
+  .sunlu-sidebar {
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: 64px;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .sunlu-sidebar__brand {
+    height: 64px;
+    min-width: 178px;
+    padding: 10px 14px;
+    border-bottom: 0;
+    border-right: 1px solid rgba(255, 255, 255, .12);
+  }
+
+  .sunlu-sidebar__mark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .sunlu-sidebar__title {
+    font-size: 13px;
+  }
+
+  .sunlu-sidebar__sub,
+  .sunlu-nav-label,
+  .sunlu-sidebar__foot {
+    display: none;
+  }
+
+  .sunlu-sidebar__nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    overflow: visible;
+  }
+
+  .sunlu-nav-item {
+    min-width: max-content;
+    min-height: 42px;
+    margin: 0;
+    padding: 8px 10px;
+  }
+
+  .sunlu-nav-item:hover {
+    transform: none;
+  }
+}
