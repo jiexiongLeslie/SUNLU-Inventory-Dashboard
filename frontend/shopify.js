@@ -73,6 +73,7 @@
       : [{
           store_key: item.store_key,
           store_label: item.store_label,
+          currency_code: item.currency_code,
           shop: item.shop,
           product_id: item.product_id,
           product_title: item.product_title,
@@ -91,6 +92,7 @@
       return {
         store_key: entry.store_key || item.store_key || '',
         store_label: entry.store_label || item.store_label || '',
+        currency_code: entry.currency_code || item.currency_code || '',
         shop: entry.shop || item.shop || '',
         product_id: entry.product_id || item.product_id || '',
         product_title: entry.product_title || item.product_title || '',
@@ -606,14 +608,18 @@
   }
 
   function currencyInfo(entry) {
+    var code = String(entry && entry.currency_code || '').trim().toUpperCase();
+    if (code === 'GBP') return { symbol: '£', cls: 'gbp', code: code };
+    if (code === 'EUR') return { symbol: '€', cls: 'eur', code: code };
+    if (code === 'USD') return { symbol: '$', cls: 'usd', code: code };
     var text = [
       entry && entry.store_key,
       entry && entry.store_label,
       entry && entry.shop
     ].join(' ').toUpperCase();
-    if (/UK|UNITED KINGDOM|GB/.test(text)) return { symbol: '£', cls: 'gbp' };
-    if (/DE|FR|IT|EU|EUROPE|欧洲|歐洲/.test(text)) return { symbol: '€', cls: 'eur' };
-    return { symbol: '$', cls: 'usd' };
+    if (/UK|UNITED KINGDOM|GB/.test(text)) return { symbol: '£', cls: 'gbp', code: 'GBP' };
+    if (/DE|FR|IT|EU|EUROPE|欧洲|歐洲/.test(text)) return { symbol: '€', cls: 'eur', code: 'EUR' };
+    return { symbol: '$', cls: 'usd', code: 'USD' };
   }
 
   function formatPrice(value, entry) {
@@ -624,12 +630,21 @@
   }
 
   function priceSummary(entries) {
-    var prices = Array.from(new Set(entries.map(function(entry) {
-      return String(entry.price == null ? '' : entry.price).trim() ? formatPrice(entry.price, entry) : '';
-    }).filter(Boolean)));
+    var priceEntries = entries.map(function(entry) {
+      return String(entry.price == null ? '' : entry.price).trim()
+        ? { label: formatPrice(entry.price, entry), cls: currencyInfo(entry).cls }
+        : null;
+    }).filter(Boolean);
+    var seen = new Set();
+    var prices = priceEntries.filter(function(item) {
+      var key = item.cls + '|' + item.label;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
     if (!prices.length) return '<span class="badge warn">缺价格</span>';
-    if (prices.length === 1) return '<span class="price-pill">' + escapeHtml(prices[0]) + '</span>';
-    var label = prices.slice(0, 3).join(' / ') + (prices.length > 3 ? ' +' + (prices.length - 3) : '');
+    if (prices.length === 1) return '<span class="price-pill ' + prices[0].cls + '">' + escapeHtml(prices[0].label) + '</span>';
+    var label = prices.slice(0, 3).map(function(item) { return item.label; }).join(' / ') + (prices.length > 3 ? ' +' + (prices.length - 3) : '');
     return '<span class="badge warn">多价格</span> <span class="price-pill">' + escapeHtml(label) + '</span>';
   }
 

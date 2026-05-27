@@ -19,9 +19,9 @@ const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
 const SHOPIFY_API_VERSION = process.env.SHOPIFY_API_VERSION || '2025-10';
 const SHOPIFY_STORE_DEFINITIONS = [
-  { key: 'SHOPIFY_UK_STORE', label: 'UK', region: '英国' },
-  { key: 'SHOPIFY_DE_STORE', label: 'EU', region: '欧洲' },
-  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', public_domain: 'store.sunlu.com' }
+  { key: 'SHOPIFY_UK_STORE', label: 'UK', region: '英国', currency_code: 'GBP' },
+  { key: 'SHOPIFY_DE_STORE', label: 'EU', region: '欧洲', currency_code: 'EUR' },
+  { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', currency_code: 'USD', public_domain: 'store.sunlu.com' }
 ];
 const SHOPIFY_LINK_ANALYTICS_STORE_DEFINITIONS = [
   { key: 'SHOPIFY_US_STORE', label: 'US', region: '美国', public_domain: 'store.sunlu.com' },
@@ -270,9 +270,11 @@ function normalizeVariantNode(node, store, shop) {
   const stock = Number(node.inventoryQuantity) || 0;
   const productTitle = product.title || '';
   const color = extractVariantColor(node);
+  const currencyCode = store.currency_code || '';
   const sourceEntry = {
     store_key: store.key,
     store_label: store.label,
+    currency_code: currencyCode,
     shop,
     product_id: product.id || '',
     product_title: productTitle,
@@ -289,6 +291,7 @@ function normalizeVariantNode(node, store, shop) {
   return {
     store_key: store.key,
     store_label: store.label,
+    currency_code: currencyCode,
     shop,
     product_id: product.id || '',
     product_title: productTitle,
@@ -388,6 +391,9 @@ async function fetchShopifyInventoryForStore(store, clientId, clientSecret) {
   const token = await getShopifyAccessToken(store.shop, clientId, clientSecret);
   const query = `
     query ProductVariants($cursor: String) {
+      shop {
+        currencyCode
+      }
       productVariants(first: 250, after: $cursor) {
         pageInfo { hasNextPage endCursor }
         nodes {
@@ -418,7 +424,11 @@ async function fetchShopifyInventoryForStore(store, clientId, clientSecret) {
   do {
     const data = await shopifyGraphql(store.shop, token, query, { cursor });
     const connection = data.productVariants;
-    records.push(...connection.nodes.map(node => normalizeVariantNode(node, store, store.shop)));
+    const storeWithCurrency = {
+      ...store,
+      currency_code: data.shop?.currencyCode || store.currency_code || ''
+    };
+    records.push(...connection.nodes.map(node => normalizeVariantNode(node, storeWithCurrency, store.shop)));
     cursor = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;
     pageCount += 1;
   } while (cursor && pageCount < 40);
@@ -426,6 +436,7 @@ async function fetchShopifyInventoryForStore(store, clientId, clientSecret) {
   return {
     store_key: store.key,
     store_label: store.label,
+    currency_code: records.find(record => record.currency_code)?.currency_code || store.currency_code || '',
     shop: store.shop,
     records,
     page_count: pageCount
