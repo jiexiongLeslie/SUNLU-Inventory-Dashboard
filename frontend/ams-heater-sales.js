@@ -59,7 +59,7 @@
       store: storeSelect.value,
       since: sinceInput.value,
       until: untilInput.value,
-      limit: '50000'
+      limit: '200000'
     });
     if (refresh) params.set('refresh', '1');
     return fetch('/api/shopify/ams-heater-sales?' + params.toString()).then(function(res) {

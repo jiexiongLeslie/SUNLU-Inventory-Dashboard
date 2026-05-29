@@ -776,7 +776,7 @@ async function fetchShopifyLinkAnalytics(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 200000, 200000));
   const channel = String(options.channel || '').trim();
   const channelFilter = channel ? `\n    AND referring_channel = '${channel.replace(/'/g, "\\'")}'` : '';
   const createShopifyQl = filter => `
@@ -792,6 +792,7 @@ FROM sessions
     referring_channel, traffic_type WITH TOTALS
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC
+  LIMIT ${limit}
 `;
   const optionRows = channel
     ? await runShopifyQl(store.shop, token, createShopifyQl(''))
@@ -926,7 +927,7 @@ async function fetchAmsHeaterSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 200000, 200000));
   const shopifyql = `
 FROM sales
   SHOW net_items_sold, total_sales
@@ -936,6 +937,7 @@ FROM sales
   TIMESERIES day
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, shipping_country ASC, product_variant_sku ASC
+  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({
@@ -1054,7 +1056,7 @@ async function fetchDailySkuSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 200000, 200000));
   const shopifyql = `
 FROM sales
   SHOW net_items_sold, total_sales
@@ -1062,6 +1064,7 @@ FROM sales
     TOTALS, CURRENCY 'USD'
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, shop_name ASC, shipping_country ASC, product_title ASC, product_variant_sku ASC
+  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({
@@ -1177,7 +1180,7 @@ async function fetchDailyTrafficSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 200000, 200000));
   const shopifyql = `
 FROM sales, sessions
   SHOW total_sales, orders, online_store_visitors, sessions
@@ -1185,6 +1188,7 @@ FROM sales, sessions
   TIMESERIES day
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, total_sales DESC, shop_name ASC
+  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({

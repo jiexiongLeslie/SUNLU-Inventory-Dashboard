@@ -132,7 +132,7 @@
       store: state.store,
       since: since,
       until: until,
-      limit: '50000'
+      limit: '200000'
     });
     if (refresh) params.set('refresh', '1');
     return fetch('/api/shopify/daily-traffic-sales?' + params.toString()).then(function(res) {

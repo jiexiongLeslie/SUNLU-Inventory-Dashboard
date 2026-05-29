@@ -133,7 +133,7 @@
       store: state.store,
       since: since,
       until: until,
-      limit: '50000'
+      limit: '200000'
     });
     if (channelSelect.value) params.set('channel', channelSelect.value);
     if (refresh) params.set('refresh', '1');
