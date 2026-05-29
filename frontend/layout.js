@@ -8,6 +8,7 @@
     { group: 'Shopify', title: '链接访问量', desc: '站点链接数据', href: '/shopify-links.html', icon: 'link' },
     { group: 'Shopify', title: '每日访问销量', desc: '5 站点每日访客和销量', href: '/daily-traffic-sales.html', icon: 'pulse' },
     { group: 'Shopify', title: '每日 SKU 销量', desc: '5 站点每日店铺 SKU 销量', href: '/daily-sku-sales.html', icon: 'trend' },
+    { group: 'Shopify', title: 'AMS Heater 销售', desc: '5 站点 AMS Heater 销售', href: '/ams-heater-sales.html', icon: 'sales' },
     { group: '维护工具', title: 'SKU 映射', desc: '单品与套装规则', href: '/sku-mapping.html', icon: 'tag' },
     { group: '维护工具', title: '数据诊断', desc: '质量问题检查', href: '/quality.html', icon: 'check' }
   ];
