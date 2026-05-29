@@ -4,11 +4,7 @@ node_modules/
 # 数据文件（包含业务数据，不提交到仓库）
 data/data.json
 data/meta.json
-data/shopify_inventory_cache.json
-data/shopify_link_analytics_cache.json
-data/shopify_ams_heater_sales_cache.json
-data/shopify_daily_sku_sales_cache.json
-data/shopify_daily_traffic_sales_cache.json
+data/cache.db
 data/sku_mappings.json
 data/inventory_age.json
 shopify_token.env
