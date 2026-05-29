@@ -792,7 +792,6 @@ FROM sessions
     referring_channel, traffic_type WITH TOTALS
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC
-  LIMIT ${limit}
 `;
   const optionRows = channel
     ? await runShopifyQl(store.shop, token, createShopifyQl(''))
@@ -937,7 +936,6 @@ FROM sales
   TIMESERIES day
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, shipping_country ASC, product_variant_sku ASC
-  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({
@@ -1064,7 +1062,6 @@ FROM sales
     TOTALS, CURRENCY 'USD'
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, shop_name ASC, shipping_country ASC, product_title ASC, product_variant_sku ASC
-  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({
@@ -1188,7 +1185,6 @@ FROM sales, sessions
   TIMESERIES day
   SINCE ${since} UNTIL ${until}
   ORDER BY day ASC, total_sales DESC, shop_name ASC
-  LIMIT ${limit}
 `;
   const rows = await runShopifyQl(store.shop, token, shopifyql);
   const mappedRows = rows.map(row => ({
