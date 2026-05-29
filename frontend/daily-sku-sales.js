@@ -127,7 +127,7 @@
       store: state.store,
       since: since,
       until: until,
-      limit: '1000'
+      limit: '50000'
     });
     if (refresh) params.set('refresh', '1');
     return fetch('/api/shopify/daily-sku-sales?' + params.toString()).then(function(res) {

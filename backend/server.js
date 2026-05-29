@@ -776,7 +776,7 @@ async function fetchShopifyLinkAnalytics(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
   const channel = String(options.channel || '').trim();
   const channelFilter = channel ? `\n    AND referring_channel = '${channel.replace(/'/g, "\\'")}'` : '';
   const createShopifyQl = filter => `
@@ -927,7 +927,7 @@ async function fetchAmsHeaterSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
   const shopifyql = `
 FROM sales
   SHOW net_items_sold, total_sales
@@ -1056,7 +1056,7 @@ async function fetchDailySkuSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
   const shopifyql = `
 FROM sales
   SHOW net_items_sold, total_sales
@@ -1180,7 +1180,7 @@ async function fetchDailyTrafficSalesForStore(store, config, options) {
   const token = await getShopifyAccessToken(store.shop, config.clientId, config.clientSecret);
   const since = options.since;
   const until = options.until;
-  const limit = Math.max(1, Math.min(Number(options.limit) || 1000, 1000));
+  const limit = Math.max(1, Math.min(Number(options.limit) || 50000, 50000));
   const shopifyql = `
 FROM sales, sessions
   SHOW total_sales, orders, online_store_visitors, sessions
