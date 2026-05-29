@@ -1408,6 +1408,7 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
   }
 }
 
+}
 
 async function handleShopifyDailySkuSales(parsedUrl, res) {
   const config = getShopifyLinkAnalyticsConfig();
