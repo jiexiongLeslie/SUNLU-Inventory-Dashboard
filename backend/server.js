@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const cacheDB = require('./db.js');
 
 const PORT = Number(process.env.PORT) || 5002;
 const MAX_BODY_SIZE = 10 * 1024 * 1024;
@@ -9,11 +10,6 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const DATA_FILE = path.join(ROOT_DIR, 'data', 'data.json');
 const META_FILE = path.join(ROOT_DIR, 'data', 'meta.json');
 const SKU_MAPPING_FILE = path.join(ROOT_DIR, 'data', 'sku_mappings.json');
-const SHOPIFY_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_inventory_cache.json');
-const SHOPIFY_LINK_ANALYTICS_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_link_analytics_cache.json');
-const SHOPIFY_AMS_HEATER_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_ams_heater_sales_cache.json');
-const SHOPIFY_DAILY_SKU_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_daily_sku_sales_cache.json');
-const SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE = path.join(ROOT_DIR, 'data', 'shopify_daily_traffic_sales_cache.json');
 const AGE_DATA_FILE = path.join(ROOT_DIR, 'data', 'inventory_age.json');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'frontend');
 const SHOPIFY_ENV_FILE = path.join(ROOT_DIR, 'shopify_token.env');
@@ -1245,151 +1241,25 @@ async function fetchDailyTrafficSalesPayload(stores, config, options) {
   };
 }
 
+// --- cache key builders (string only, no I/O) ---
 function getShopifyCacheKey(stores) {
-  return stores.map(store => store.key).sort().join('+') || 'all';
+  return stores.map(s => s.key).sort().join('+') || 'all';
 }
-
-function readShopifyCache() {
-  const cache = readJsonFile(SHOPIFY_CACHE_FILE, { version: 1, entries: {} });
-  if (!cache || typeof cache !== 'object' || !cache.entries) {
-    return { version: 1, entries: {} };
-  }
-  return cache;
-}
-
-function getShopifyCacheEntry(cacheKey) {
-  return readShopifyCache().entries[cacheKey] || null;
-}
-
-function saveShopifyCacheEntry(cacheKey, payload) {
-  const cache = readShopifyCache();
-  cache.version = 1;
-  cache.entries[cacheKey] = {
-    saved_at: new Date().toISOString(),
-    payload
-  };
-  writeJsonFile(SHOPIFY_CACHE_FILE, cache);
-}
-
 function getShopifyLinkAnalyticsCacheKey(stores, options) {
-  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
-  const since = options.since || 'unknown';
-  const until = options.until || 'unknown';
-  const limit = Number(options.limit) || 1000;
-  const channel = options.channel || 'all_channels';
-  return [storePart, since, until, limit, channel].join('|');
+  const storePart = stores.map(s => s.key).sort().join('+') || 'all';
+  return [storePart, options.since || '', options.until || '', options.limit || '', options.channel || ''].join('|');
 }
-
-function readShopifyLinkAnalyticsCache() {
-  const cache = readJsonFile(SHOPIFY_LINK_ANALYTICS_CACHE_FILE, { version: 1, entries: {} });
-  if (!cache || typeof cache !== 'object' || !cache.entries) {
-    return { version: 1, entries: {} };
-  }
-  return cache;
-}
-
-function getShopifyLinkAnalyticsCacheEntry(cacheKey) {
-  return readShopifyLinkAnalyticsCache().entries[cacheKey] || null;
-}
-
-function saveShopifyLinkAnalyticsCacheEntry(cacheKey, payload) {
-  const cache = readShopifyLinkAnalyticsCache();
-  cache.version = 1;
-  cache.entries[cacheKey] = {
-    saved_at: new Date().toISOString(),
-    payload
-  };
-  writeJsonFile(SHOPIFY_LINK_ANALYTICS_CACHE_FILE, cache);
-}
-
 function getShopifyAmsHeaterSalesCacheKey(stores, options) {
-  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
-  const since = options.since || 'unknown';
-  const until = options.until || 'unknown';
-  const limit = Number(options.limit) || 1000;
-  return [storePart, since, until, limit, 'ams-heater'].join('|');
+  const storePart = stores.map(s => s.key).sort().join('+') || 'all';
+  return [storePart, options.since || '', options.until || '', options.limit || '', 'ams-heater'].join('|');
 }
-
-function readShopifyAmsHeaterSalesCache() {
-  const cache = readJsonFile(SHOPIFY_AMS_HEATER_SALES_CACHE_FILE, { version: 1, entries: {} });
-  if (!cache || typeof cache !== 'object' || !cache.entries) {
-    return { version: 1, entries: {} };
-  }
-  return cache;
-}
-
-function getShopifyAmsHeaterSalesCacheEntry(cacheKey) {
-  return readShopifyAmsHeaterSalesCache().entries[cacheKey] || null;
-}
-
-function saveShopifyAmsHeaterSalesCacheEntry(cacheKey, payload) {
-  const cache = readShopifyAmsHeaterSalesCache();
-  cache.version = 1;
-  cache.entries[cacheKey] = {
-    saved_at: new Date().toISOString(),
-    payload
-  };
-  writeJsonFile(SHOPIFY_AMS_HEATER_SALES_CACHE_FILE, cache);
-}
-
 function getShopifyDailySkuSalesCacheKey(stores, options) {
-  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
-  const since = options.since || 'unknown';
-  const until = options.until || 'unknown';
-  const limit = Number(options.limit) || 1000;
-  return [storePart, since, until, limit, 'daily-sku-sales'].join('|');
+  const storePart = stores.map(s => s.key).sort().join('+') || 'all';
+  return [storePart, options.since || '', options.until || '', options.limit || '', 'daily-sku-sales'].join('|');
 }
-
-function readShopifyDailySkuSalesCache() {
-  const cache = readJsonFile(SHOPIFY_DAILY_SKU_SALES_CACHE_FILE, { version: 1, entries: {} });
-  if (!cache || typeof cache !== 'object' || !cache.entries) {
-    return { version: 1, entries: {} };
-  }
-  return cache;
-}
-
-function getShopifyDailySkuSalesCacheEntry(cacheKey) {
-  return readShopifyDailySkuSalesCache().entries[cacheKey] || null;
-}
-
-function saveShopifyDailySkuSalesCacheEntry(cacheKey, payload) {
-  const cache = readShopifyDailySkuSalesCache();
-  cache.version = 1;
-  cache.entries[cacheKey] = {
-    saved_at: new Date().toISOString(),
-    payload
-  };
-  writeJsonFile(SHOPIFY_DAILY_SKU_SALES_CACHE_FILE, cache);
-}
-
 function getShopifyDailyTrafficSalesCacheKey(stores, options) {
-  const storePart = stores.map(store => store.key).sort().join('+') || 'all';
-  const since = options.since || 'unknown';
-  const until = options.until || 'unknown';
-  const limit = Number(options.limit) || 1000;
-  return [storePart, since, until, limit, 'daily-traffic-sales'].join('|');
-}
-
-function readShopifyDailyTrafficSalesCache() {
-  const cache = readJsonFile(SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE, { version: 1, entries: {} });
-  if (!cache || typeof cache !== 'object' || !cache.entries) {
-    return { version: 1, entries: {} };
-  }
-  return cache;
-}
-
-function getShopifyDailyTrafficSalesCacheEntry(cacheKey) {
-  return readShopifyDailyTrafficSalesCache().entries[cacheKey] || null;
-}
-
-function saveShopifyDailyTrafficSalesCacheEntry(cacheKey, payload) {
-  const cache = readShopifyDailyTrafficSalesCache();
-  cache.version = 1;
-  cache.entries[cacheKey] = {
-    saved_at: new Date().toISOString(),
-    payload
-  };
-  writeJsonFile(SHOPIFY_DAILY_TRAFFIC_SALES_CACHE_FILE, cache);
+  const storePart = stores.map(s => s.key).sort().join('+') || 'all';
+  return [storePart, options.since || '', options.until || '', options.limit || '', 'daily-traffic-sales'].join('|');
 }
 
 async function fetchShopifyInventoryPayload(selectedStores, config) {
@@ -1455,7 +1325,7 @@ async function handleShopifyInventory(parsedUrl, res) {
 
   const cacheKey = getShopifyCacheKey(selectedStores);
   const shouldRefresh = parsedUrl.query.refresh === '1';
-  const cacheEntry = getShopifyCacheEntry(cacheKey);
+  const cacheEntry = cacheDB.get('inventory', cacheKey);
 
   if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
@@ -1469,7 +1339,7 @@ async function handleShopifyInventory(parsedUrl, res) {
 
   try {
     const payload = await fetchShopifyInventoryPayload(selectedStores, config);
-    saveShopifyCacheEntry(cacheKey, payload);
+    cacheDB.set('inventory', cacheKey, payload);
     sendJson(res, 200, {
       ...payload,
       from_cache: false,
@@ -1526,7 +1396,7 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
   };
   const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
   const cacheKey = getShopifyLinkAnalyticsCacheKey(stores, options);
-  const cacheEntry = getShopifyLinkAnalyticsCacheEntry(cacheKey);
+  const cacheEntry = cacheDB.get('link_analytics', cacheKey);
 
   if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
@@ -1540,7 +1410,7 @@ async function handleShopifyLinkAnalytics(parsedUrl, res) {
 
   try {
     const payload = await fetchShopifyLinkAnalyticsPayload(stores, config, options);
-    saveShopifyLinkAnalyticsCacheEntry(cacheKey, payload);
+    cacheDB.set('link_analytics', cacheKey, payload);
     sendJson(res, 200, {
       ...payload,
       from_cache: false,
@@ -1596,7 +1466,7 @@ async function handleShopifyAmsHeaterSales(parsedUrl, res) {
   };
   const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
   const cacheKey = getShopifyAmsHeaterSalesCacheKey(stores, options);
-  const cacheEntry = getShopifyAmsHeaterSalesCacheEntry(cacheKey);
+  const cacheEntry = cacheDB.get('ams_heater', cacheKey);
 
   if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
@@ -1610,7 +1480,7 @@ async function handleShopifyAmsHeaterSales(parsedUrl, res) {
 
   try {
     const payload = await fetchAmsHeaterSalesPayload(stores, config, options);
-    saveShopifyAmsHeaterSalesCacheEntry(cacheKey, payload);
+    cacheDB.set('ams_heater', cacheKey, payload);
     sendJson(res, 200, {
       ...payload,
       from_cache: false,
@@ -1666,7 +1536,7 @@ async function handleShopifyDailySkuSales(parsedUrl, res) {
   };
   const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
   const cacheKey = getShopifyDailySkuSalesCacheKey(stores, options);
-  const cacheEntry = getShopifyDailySkuSalesCacheEntry(cacheKey);
+  const cacheEntry = cacheDB.get('daily_sku', cacheKey);
 
   if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
@@ -1680,7 +1550,7 @@ async function handleShopifyDailySkuSales(parsedUrl, res) {
 
   try {
     const payload = await fetchDailySkuSalesPayload(stores, config, options);
-    saveShopifyDailySkuSalesCacheEntry(cacheKey, payload);
+    cacheDB.set('daily_sku', cacheKey, payload);
     sendJson(res, 200, {
       ...payload,
       from_cache: false,
@@ -1736,7 +1606,7 @@ async function handleShopifyDailyTrafficSales(parsedUrl, res) {
   };
   const shouldRefresh = parsedUrl.query.refresh === '1' || parsedUrl.query.refresh === 'true';
   const cacheKey = getShopifyDailyTrafficSalesCacheKey(stores, options);
-  const cacheEntry = getShopifyDailyTrafficSalesCacheEntry(cacheKey);
+  const cacheEntry = cacheDB.get('daily_traffic', cacheKey);
 
   if (!shouldRefresh && cacheEntry?.payload) {
     sendJson(res, 200, {
@@ -1750,7 +1620,7 @@ async function handleShopifyDailyTrafficSales(parsedUrl, res) {
 
   try {
     const payload = await fetchDailyTrafficSalesPayload(stores, config, options);
-    saveShopifyDailyTrafficSalesCacheEntry(cacheKey, payload);
+    cacheDB.set('daily_traffic', cacheKey, payload);
     sendJson(res, 200, {
       ...payload,
       from_cache: false,
@@ -2144,11 +2014,11 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname === '/api/shopify/cache' && req.method === 'GET') {
-    const cache = readShopifyCache();
-    const linkCache = readShopifyLinkAnalyticsCache();
-    const amsCache = readShopifyAmsHeaterSalesCache();
-    const dailySkuCache = readShopifyDailySkuSalesCache();
-    const dailyTrafficCache = readShopifyDailyTrafficSalesCache();
+    const cache = cacheDB.getAll('inventory');
+    const linkCache = cacheDB.getAll('link_analytics');
+    const amsCache = cacheDB.getAll('ams_heater');
+    const dailySkuCache = cacheDB.getAll('daily_sku');
+    const dailyTrafficCache = cacheDB.getAll('daily_traffic');
     sendJson(res, 200, {
       entries: Object.keys(cache.entries).map(key => ({
         key,
